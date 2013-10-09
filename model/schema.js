@@ -9,9 +9,15 @@ var micropostSchema = new Schema({
   date:   Date
 });
 
-var Micropost = mongoose.model('micropost', micropostSchema);
+var userSchema = new Schema({
+	username: String,
+	email: String,
+	pw: String,
+	joinDate: Date,
+});
 
 
 module.exports = {
-  Micropost: Micropost
+  Micropost: mongoose.model('micropost', micropostSchema),
+  User: mongoose.model('user', userSchema)
 }

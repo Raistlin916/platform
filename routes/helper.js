@@ -20,7 +20,7 @@ var autoCompiler = (function(){
   }
 
   function fix(filename){
-    files.concat(filename);
+    files = files.concat(filename);
   }
 
   function setPath(src, des){

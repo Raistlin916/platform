@@ -1,0 +1,6 @@
+form
+  input(type="text", name="content", ng-model="micropostContent")
+  button(type="button", ng-click="addMicropost(micropostContent)") post
+ul
+  li(ng-repeat="mp in microposts") {{mp.content}}
+    a(ng-click="deleteMicropost($index)", href="javascript:;") [x]
