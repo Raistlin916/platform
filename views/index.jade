@@ -1,0 +1,19 @@
+!!!
+html(ng-app="platform")
+  head
+    title platform
+    meta(charset="utf-8")
+    script(src="/javascripts/lib/angular.js")
+    script(src="/javascripts/lib/angular-resource.js")
+    script(src="/javascripts/main.js")
+  body
+    div(ng-controller="Micropost")
+      form(action="/microposts", method="post")
+        input(type="text", name="content", ng-model="micropostContent")
+        button(type="button", ng-click="addMicropost(micropostContent)") post
+        button(type="button", ng-click="showMicropost()") show
+      ul
+        li(ng-repeat="mp in microposts") {{mp.content}}
+          a(ng-click="deleteMicropost($index)", href="javascript:;") [x]
+
+
