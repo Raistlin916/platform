@@ -1,10 +1,22 @@
 angular.module('platform', ['ngResource', 'ngRoute'])
 .factory('models', function($resource){
     return {
-      Micropost: $resource('/microposts/:postId', {postId:'@_id'}),
-      User: $resource('/users/:uid', {uid: '@_id'})
+      Micropost: $resource('/microposts/:id', {id:'@_id'}),
+      User: $resource('/users/:id', {id: '@_id'})
     }
   })
+.factory('self', function(models, $http){
+  return {
+    login: function(username, pw){
+      $http.post('/login', {username: username, pw: pw})
+      .then(function(v){
+        console.log(v);
+      }, function(s){
+        console.log(s);
+      });
+    }
+  }
+})
 .factory('util', function(){
   return {
     remove: function(a, i){
@@ -15,9 +27,10 @@ angular.module('platform', ['ngResource', 'ngRoute'])
 .config(function($routeProvider, $locationProvider){
   $routeProvider.
       when('/', {
-        templateUrl: '/partials/login.html'
+        templateUrl: '/partials/login.html',
+        controller: 'Login'
       }).
-      when('/microposts', {
+      when('/main', {
         templateUrl: '/partials/microposts.html',
         controller: 'Micropost'
       }).
@@ -26,38 +39,3 @@ angular.module('platform', ['ngResource', 'ngRoute'])
         controller: 'Register'
       });
 })
-.controller('Register', function($scope, models){
-  var User = models.User;
-  $scope.register = function(){
-    var user = new User({username: $scope.username, pw: $scope.pw});
-    user.$save();
-  }
-
-  $scope.users = User.query();
-})
-.controller('Micropost', function($scope, models){
-  var Micropost = models.Micropost;
-  $scope.addMicropost = function(micropostContent){
-    if(!micropostContent.trim().length){
-      return;
-    }
-    var newPost = new Micropost({content: micropostContent});
-    $scope.microposts.push(newPost);
-    newPost.$save();
-    $scope.micropostContent = "";
-  };
-
-  $scope.showMicropost = function(){
-    Micropost.query(function(posts){
-      $scope.microposts = posts;
-    });
-  }
-  $scope.showMicropost();
-
-  $scope.deleteMicropost = function(index){      
-    $scope.microposts[index].$remove(function(){
-      $scope.microposts.splice(index, 1);
-    });
-  }
-
-});

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
-  , Schema = mongoose.Schema;
+  , Schema = mongoose.Schema
+  , ObjectId = mongoose.Schema.Types.ObjectId;
 
 mongoose.connect('localhost', 'platform_db');
 
@@ -16,8 +17,18 @@ var userSchema = new Schema({
 	joinDate: Date,
 });
 
+var onlineUser = new Schema({
+  uid: {
+      type: ObjectId,
+      unique: true,
+      require: true
+  },
+  loginDate: Date
+});
+
 
 module.exports = {
   Micropost: mongoose.model('micropost', micropostSchema),
-  User: mongoose.model('user', userSchema)
+  User: mongoose.model('user', userSchema),
+  OnlineUser: mongoose.model('onlineUser', onlineUser)
 }
