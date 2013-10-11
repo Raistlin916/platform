@@ -1,4 +1,5 @@
-var models = require('../model/schema');
+var models = require('../model/schema')
+, authenticate = require('./authenticate');
 
 
 /*** handle micropost routes ***/
@@ -6,6 +7,7 @@ var Micropost = models.Micropost;
 
 function savePost(req, res){
   var newPost = new Micropost(req.body);
+  newPost.date = new Date;
   newPost.save(function(err){
     if(err){
       return res.send(500, '格式错误');
@@ -37,7 +39,11 @@ function saveUser(req, res){
     if(err){
       return res.send(500, '格式错误');
     };
-    res.send(newUser);
+    authenticate.checkin(newUser._id, res)
+    .then(function(){
+      res.send(newUser);
+    });
+    
   });
 }
 

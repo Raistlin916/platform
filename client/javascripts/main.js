@@ -6,36 +6,37 @@ angular.module('platform', ['ngResource', 'ngRoute'])
     }
   })
 .factory('self', function(models, $http){
+  var state = {};
+  function valid(){
+    $http.get('/valid')
+    .then(function(v){
+      state.logging = true;
+    }, function(r){
+      state.logging = false;
+    });
+  }
+  valid();
   return {
     login: function(username, pw){
-      $http.post('/login', {username: username, pw: pw})
-      .then(function(v){
-        console.log(v);
+      var p = $http.post('/login', {username: username, pw: pw});
+      p.then(function(v){
+        state.logging = true;
       }, function(s){
         console.log(s);
       });
-    }
-  }
-})
-.factory('util', function(){
-  return {
-    remove: function(a, i){
-      a.splice( a.indexOf(i), 1);
-    }
-  }
-})
-.config(function($routeProvider, $locationProvider){
-  $routeProvider.
-      when('/', {
-        templateUrl: '/partials/login.html',
-        controller: 'Login'
-      }).
-      when('/main', {
-        templateUrl: '/partials/microposts.html',
-        controller: 'Micropost'
-      }).
-      when('/register', {
-        templateUrl: '/partials/register.html',
-        controller: 'Register'
+      return p;
+    },
+    logout: function(){
+      $http.post('/logout')
+      .then(function(){
+        state.logging = false;
+      }, function(s){
+        console.log(s);
       });
-})
+    },
+    getState: function(){
+      return state;
+    },
+    valid: valid
+  }
+});

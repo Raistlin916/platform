@@ -5,8 +5,13 @@ var mongoose = require('mongoose')
 mongoose.connect('localhost', 'platform_db');
 
 var micropostSchema = new Schema({
-  content:  String,
-  author: String,
+  content:  {
+      type: String,
+      require: true
+  },
+  author: {
+      type: ObjectId
+  },
   date:   Date
 });
 

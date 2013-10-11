@@ -9,23 +9,22 @@ html(ng-app="debug")
         min-width: 150px;
         word-wrap: break-word;
       }
+    script(src="/javascripts/lib/angular.js")
+    script(src="http://cdn.staticfile.org/underscore.js/1.5.2/underscore-min.js")
   body
-    div.container(ng-controller="Main")
-    
+    div.container(ng-controller="Main", ng-cloak)
       label.pull-right.checkbox
         input(type="checkbox", ng-model="showId")
         |show_id 
       div(ng-repeat="item in dbData") 
         h4 {{item.collection}}
-        table.table.table-bordered.table-striped.table-hover
+        table.table.table-bordered.table-striped.table-hover(ng-if="item.data")
           tr
             th(ng-repeat="th in item.data.keys") {{th}}
           tr(ng-repeat="row in item.data.items")
             td(ng-repeat="v in row track by $index") {{v}}
+        div(ng-if="!item.data") 空
 
-
-    script(src="/javascripts/lib/angular.js")
-    script(src="http://cdn.staticfile.org/underscore.js/1.5.2/underscore-min.js")
     script
       angular.module('debug', [])
         .filter('shield', function(){
@@ -61,12 +60,16 @@ html(ng-app="debug")
                 }
                 return {
                   collection: item.collection,
-                  data: {
-                    keys: _.keys(data[0]),
-                    items: data.map(function(i){
-                      return _.values(i);
-                    })
-                  }
+                  data: (function(){
+                    if(data.length){
+                      return {
+                        keys: _.keys(data[0]),
+                        items: data.map(function(i){
+                          return _.values(i);
+                        })
+                      }
+                    }
+                  })()
                 }
             });
           }

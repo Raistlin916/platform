@@ -1,17 +1,35 @@
 angular.module('platform')
-.controller('Login', function($scope, self){
-  $scope.login = function(){
-    self.login($scope.username, $scope.pw);
+.controller('Userprot', function($scope, models, self){
+  $scope.state = 'out';
+  $scope.errorMessage = null;
+  $scope.changeState = function(state){
+    $scope.state = state;
   }
-})
-.controller('Register', function($scope, models){
-  var User = models.User;
-  $scope.register = function(){
-    var user = new User({username: $scope.username, pw: $scope.pw});
-    user.$save();
+  $scope.login = function(username, pw){
+    self.login(username, pw)
+      .then(null, function(res){
+        $scope.errorMessage = res.data;
+      });
   }
+  $scope.logout = function(){
+    self.logout();
+  }
+  $scope.register = function(username, pw){
+    var user = new models.User({username: username, pw: pw});
+    user.$save(function(res){
+      self.valid();
+    });
+  }
+  
+  $scope.userState = self.getState();
+  $scope.$watch('userState.logging', function(n, o){
+    if(n){
+      $scope.state = 'in';
+    } else {
+      $scope.state = 'out';
+    }
+  });
 
-  $scope.users = User.query();
 })
 .controller('Micropost', function($scope, models){
   var Micropost = models.Micropost;
