@@ -1,0 +1,30 @@
+div(ng-switch="state")
+  div(ng-switch-when="out")
+    button(type="button", ng-click="changeState('login')") login
+    button(type="button", ng-click="changeState('register')") register
+  div(ng-switch-when="login")
+    h4 {{errorMessage}}
+    div
+      label username:
+      input(type="text", ng-model="username")
+    div
+      label password:
+      input(type="text", ng-model="pw")
+    button(type="button", ng-click="login(username, pw)") login
+  div(ng-switch-when="register")
+    div
+      label username:
+      input(type="text", ng-model="username")
+    div
+      label password:
+      input(type="text", ng-model="pw")
+    div
+      label password again:
+      input(type="text", ng-model="pwAgain")
+    div
+      button(type="button", ng-click="register(username, pw)") register
+  div(ng-switch-when="in")
+    button(type="button", ng-click="logout()") out
+
+
+  
