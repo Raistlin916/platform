@@ -7,7 +7,7 @@ mongoose.connect('localhost', 'platform_db');
 var micropostSchema = new Schema({
   content:  {
       type: String,
-      require: true
+      required: true
   },
   author: {
       type: ObjectId
@@ -16,17 +16,32 @@ var micropostSchema = new Schema({
 });
 
 var userSchema = new Schema({
-	username: String,
-	email: String,
-	pw: String,
+	username: {
+      type: String,
+      required: true,
+      unique: true
+  },
+  pw: {
+      type: String,
+      required: true
+  },
+	email: {
+      type: String,
+      required: true
+  },
 	joinDate: Date,
 });
+
+userSchema.path('email').validate(function (email) {
+   var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+   return emailRegex.test(email);
+}, 'email validate failed.')
 
 var onlineUser = new Schema({
   uid: {
       type: ObjectId,
       unique: true,
-      require: true
+      required: true
   },
   loginDate: Date
 });

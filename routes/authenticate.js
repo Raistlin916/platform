@@ -1,40 +1,39 @@
 var models = require('../model/schema')
-, Promise = require('mongoose').Promise;
+, Q = require('Q');
 
-function reject(reason){
-  var p = new Promise;
-  p.reject(reason);
-  return p;
-}
+var md5 = require('../util').md5;
+
+var ERROR_TIMEOUT = 1;
+
 
 function login(req, res){
-  var p = new Promise
-  , username = req.body.username
-  , pw = req.body.pw
-  , user;
+  var username = req.body.username
+  , pw = req.body.pw;
   
-  p.resolve();
-  p.then(function(){
+  Q.fcall(function(){
     if(username == undefined || pw == undefined){
-      return reject('缺少信息');
+      return Q.reject('缺少信息');
     }
-    return models.User.findOne({username: username, pw: pw}).exec();
-  }).then(function(u){
+    return models.User.findOne({username: username, pw: md5(pw)}).exec();
+  })
+  .then(function(u){
     if(u == null){
-      return reject('用户名或密码错误');
+      return Q.reject('用户名或密码错误');
     }
-    user = u;
 
-    return checkin(user._id, res)
+    return checkin(u._id, res)
       .then(function(){
         res.send('登录成功');
       });
   })
-  .then(null, function(error){
+  .fail(function(error){
     res.send(401, error);
   });
+
 }
 
+
+// uid加入在线列表
 function checkin(uid, res){
   return models.OnlineUser.findById(uid).exec()
     .then(function(onlineUser){
@@ -47,19 +46,25 @@ function checkin(uid, res){
     });
 }
 
-function valid(req, res){
+
+
+
+
+
+function verifyAndReturnInfo(req, res){
   var sid = req.cookies.sid;
-  console.log(sid);
-  models.OnlineUser.findById(sid, function(err, doc){
-    if(err){
-      res.send(500);
-      return;
-    }
+
+  models.OnlineUser.findById(sid).exec()
+  .then(function(doc){
     if(doc == null){
-      res.send(401);
-      return;
+      return Q.reject('登录超时');
     }
-    res.send('');
+    return models.User.findById(doc.uid).exec();
+  })
+  .then(function(user){
+    res.send({username: user.username, email: user.email, emailHash: md5(user.email)});
+  }, function(reason){
+    res.send(401, reason);
   });
 }
 
@@ -76,9 +81,42 @@ function logout(req, res){
 }
 
 exports.init = function(app){
+  bindVerify(app);
+
   app.post('/login', login);
   app.post('/logout', logout);
-  app.get('/valid', valid);
+  app.get('/verify', verifyAndReturnInfo);
 }
+
+function bindVerify(app){
+  for(var method in verifyList){
+    verifyList[method].forEach(function(url){
+      app[method](url, verify);
+    });
+  }
+}
+
+var verifyList = {get: ['/microposts'], post: ['/microposts']};
+
+function verify(req, res, next){
+  var sid = req.cookies.sid;
+  models.OnlineUser.findById(sid).exec()
+  .then(function(doc){
+    if(doc == null){
+      return Q.reject(ERROR_TIMEOUT);
+    }
+    next();
+  }).then(null, function(reason){
+    switch(reason){
+      case ERROR_TIMEOUT:
+        res.send(401, '登录超时');
+      break;
+      default:
+        res.send(500);
+      break;
+    }
+  });
+}
+
 
 exports.checkin = checkin;

@@ -1,5 +1,6 @@
 var models = require('../model/schema')
-, authenticate = require('./authenticate');
+, authenticate = require('./authenticate')
+, md5 = require('../util').md5;
 
 
 /*** handle micropost routes ***/
@@ -10,14 +11,18 @@ function savePost(req, res){
   newPost.date = new Date;
   newPost.save(function(err){
     if(err){
-      return res.send(500, '格式错误');
+      return res.send(403, '格式错误');
     };
     res.send(newPost);
   });
 }
 
 function listPosts(req, res){
-  Micropost.find().exec(function(err, posts){
+  Micropost.find(function(err, posts){
+    if(err){
+      res.send(500);
+      return;
+    }
     res.send(posts);
   });
 }
@@ -34,11 +39,18 @@ function deletePost(req, res){
 var User = models.User;
 
 function saveUser(req, res){
+  if(req.body.pw == null || req.body.username == null){
+    res.send(403, '缺少必要信息');
+    return;
+  }
   var newUser = new User(req.body);
+  newUser.pw = md5(newUser.pw);
   newUser.save(function(err){
     if(err){
-      return res.send(500, '格式错误');
+      return res.send(403, '注册失败');
     };
+
+    // 注册完后加入在线列表
     authenticate.checkin(newUser._id, res)
     .then(function(){
       res.send(newUser);
@@ -48,7 +60,7 @@ function saveUser(req, res){
 }
 
 function listUsers(req, res){
-  User.find().exec(function(err, users){
+  User.find(function(err, users){
     res.send(users);
   });
 }

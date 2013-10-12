@@ -5,25 +5,29 @@ angular.module('platform', ['ngResource', 'ngRoute'])
       User: $resource('/users/:id', {id: '@_id'})
     }
   })
-.factory('self', function(models, $http){
+.factory('self', function(models, $http, $rootScope, progressService){
   var state = {};
-  function valid(){
-    $http.get('/valid')
-    .then(function(v){
+  function verify(){
+    var p = $http.get('/verify')
+    p.then(function(res){
+      state.info = res.data;
       state.logging = true;
     }, function(r){
       state.logging = false;
     });
+    progressService.watch(p);
   }
-  valid();
+  verify();
+
   return {
     login: function(username, pw){
       var p = $http.post('/login', {username: username, pw: pw});
-      p.then(function(v){
-        state.logging = true;
+      p.then(function(){
+        verify();
       }, function(s){
         console.log(s);
       });
+      progressService.watch(p);
       return p;
     },
     logout: function(){
@@ -37,6 +41,19 @@ angular.module('platform', ['ngResource', 'ngRoute'])
     getState: function(){
       return state;
     },
-    valid: valid
+    verify: verify
+  }
+}).factory('progressService', function($q){
+  return {
+    watch: function(p){
+      NProgress.start();
+      $q.when(p, function(){
+        NProgress.done();
+      }, function(){
+        
+        NProgress.done();
+        NProgress.remove();
+      });
+    }
   }
 });

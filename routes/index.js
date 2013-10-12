@@ -16,10 +16,10 @@ function index(req, res){
 exports.setRoutes = function(app){
   
 
-  
+  require('./authenticate').init(app);
   require('./debug').init(app);
   require('./modelRoutes').init(app);
-  require('./authenticate').init(app);
+  
 
   app.get('/', index);
 }

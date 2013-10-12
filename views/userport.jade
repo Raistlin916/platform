@@ -1,16 +1,18 @@
 div(ng-switch="state")
+  h4(ng-if="errorMessage") {{errorMessage}}
   div(ng-switch-when="out")
     button(type="button", ng-click="changeState('login')") login
     button(type="button", ng-click="changeState('register')") register
   div(ng-switch-when="login")
-    h4 {{errorMessage}}
     div
       label username:
       input(type="text", ng-model="username")
     div
       label password:
       input(type="text", ng-model="pw")
-    button(type="button", ng-click="login(username, pw)") login
+    div
+      button(type="button", ng-click="login(username, pw)") login
+      a(href="javascript:;", ng-click="changeState('out')") cancel
   div(ng-switch-when="register")
     div
       label username:
@@ -22,8 +24,13 @@ div(ng-switch="state")
       label password again:
       input(type="text", ng-model="pwAgain")
     div
-      button(type="button", ng-click="register(username, pw)") register
+      label email:
+      input(type="text", ng-model="email")
+    div
+      button(type="button", ng-click="register(username, pw, email)") register
+      a(href="javascript:;", ng-click="changeState('out')") cancel
   div(ng-switch-when="in")
+    img.avatar(src="http://www.gravatar.com/avatar/{{userState.info.emailHash}}.jpg?s=80")
     button(type="button", ng-click="logout()") out
 
 
