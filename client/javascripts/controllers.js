@@ -6,8 +6,10 @@ angular.module('platform')
       return;
     }
     var newPost = new Micropost({content: micropostContent});
-    $scope.microposts.push(newPost);
-    newPost.$save();
+   
+    newPost.$save(function(newPost){
+      $scope.microposts.push(newPost);
+    });
     $scope.micropostContent = "";
   };
 

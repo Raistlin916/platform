@@ -26,7 +26,7 @@ function login(req, res){
         res.send('登录成功');
       });
   })
-  .fail(function(error){
+  .then(null, function(error){
     res.send(401, error);
   });
 
@@ -80,13 +80,9 @@ function logout(req, res){
   });
 }
 
-exports.init = function(app){
-  bindVerify(app);
 
-  app.post('/login', login);
-  app.post('/logout', logout);
-  app.get('/verify', verifyAndReturnInfo);
-}
+// verify routes
+var verifyList = {};
 
 function bindVerify(app){
   for(var method in verifyList){
@@ -96,8 +92,6 @@ function bindVerify(app){
   }
 }
 
-var verifyList = {get: ['/microposts'], post: ['/microposts']};
-
 function verify(req, res, next){
   var sid = req.cookies.sid;
   models.OnlineUser.findById(sid).exec()
@@ -105,11 +99,15 @@ function verify(req, res, next){
     if(doc == null){
       return Q.reject(ERROR_TIMEOUT);
     }
+    if(req.session == null){
+      req.session = {};
+    }
+    req.session.uid = doc.uid;
     next();
   }).then(null, function(reason){
     switch(reason){
       case ERROR_TIMEOUT:
-        res.send(401, '登录超时');
+        res.send(401, '验证失败');
       break;
       default:
         res.send(500);
@@ -118,5 +116,18 @@ function verify(req, res, next){
   });
 }
 
+function setVerifyRoutes(v){
+  verifyList = v;
+}
 
+
+exports.init = function(app){
+  bindVerify(app);
+
+  app.post('/login', login);
+  app.post('/logout', logout);
+  app.get('/verify', verifyAndReturnInfo);
+}
+
+exports.setVerifyRoutes = setVerifyRoutes;
 exports.checkin = checkin;

@@ -2,5 +2,9 @@ form
   input(type="text", name="content", ng-model="micropostContent")
   button(type="button", ng-click="addMicropost(micropostContent)") post
 ul
-  li(ng-repeat="mp in microposts") {{mp.content}}
-    a(ng-click="deleteMicropost($index)", href="javascript:;") [x]
+  li(ng-repeat="mp in microposts") 
+    div {{mp.content}}
+      a(ng-click="deleteMicropost($index)", href="javascript:;") [x]
+    div {{mp.author.username}}
+    div {{mp.date | date:'yyyy-MM-dd HH:mm:ss'}}
+    

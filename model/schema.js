@@ -4,18 +4,20 @@ var mongoose = require('mongoose')
 
 mongoose.connect('localhost', 'platform_db');
 
-var micropostSchema = new Schema({
+var MicropostSchema = new Schema({
   content:  {
       type: String,
       required: true
   },
   author: {
-      type: ObjectId
+      type: ObjectId,
+      required: true,
+      ref: 'User'
   },
-  date:   Date
+  date: Date
 });
 
-var userSchema = new Schema({
+var UserSchema = new Schema({
 	username: {
       type: String,
       required: true,
@@ -32,12 +34,12 @@ var userSchema = new Schema({
 	joinDate: Date,
 });
 
-userSchema.path('email').validate(function (email) {
+UserSchema.path('email').validate(function (email) {
    var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
    return emailRegex.test(email);
 }, 'email validate failed.')
 
-var onlineUser = new Schema({
+var OnlineUser = new Schema({
   uid: {
       type: ObjectId,
       unique: true,
@@ -48,7 +50,7 @@ var onlineUser = new Schema({
 
 
 module.exports = {
-  Micropost: mongoose.model('micropost', micropostSchema),
-  User: mongoose.model('user', userSchema),
-  OnlineUser: mongoose.model('onlineUser', onlineUser)
+  Micropost: mongoose.model('Micropost', MicropostSchema),
+  User: mongoose.model('User', UserSchema),
+  OnlineUser: mongoose.model('OnlineUser', OnlineUser)
 }

@@ -1,6 +1,7 @@
 var models = require('../model/schema')
 , authenticate = require('./authenticate')
-, md5 = require('../util').md5;
+, md5 = require('../util').md5
+, Q = require('Q');
 
 
 /*** handle micropost routes ***/
@@ -9,21 +10,28 @@ var Micropost = models.Micropost;
 function savePost(req, res){
   var newPost = new Micropost(req.body);
   newPost.date = new Date;
+  newPost.author = req.session.uid;
   newPost.save(function(err){
     if(err){
       return res.send(403, '格式错误');
     };
-    res.send(newPost);
+    newPost.populate('author', 'username', function(err, n){
+      if(err){
+        return res.send(500);
+      }
+      res.send(n);
+    });
   });
 }
 
 function listPosts(req, res){
-  Micropost.find(function(err, posts){
-    if(err){
-      res.send(500);
-      return;
-    }
+  Q.fcall(function(){
+    // populate 如何不返回_id?
+    return Micropost.find(null, {'__v': false}).populate('author', 'username').exec();
+  }).then(function(posts){
     res.send(posts);
+  }).fail(function(){
+    res.send(500);
   });
 }
 

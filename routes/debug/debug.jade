@@ -4,7 +4,7 @@ html(ng-app="debug")
     title debug
     meta(charset="utf-8")
     link(rel="stylesheet", href="http://cdn.staticfile.org/twitter-bootstrap/3.0.0-rc2/css/bootstrap.css")
-    style
+    style.
       table td, table th  {    
         min-width: 150px;
         word-wrap: break-word;
@@ -25,7 +25,7 @@ html(ng-app="debug")
             td(ng-repeat="v in row track by $index") {{v}}
         div(ng-if="!item.data") 空
 
-    script
+    script.
       angular.module('debug', [])
         .filter('shield', function(){
           return function(input){

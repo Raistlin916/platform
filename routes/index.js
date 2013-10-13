@@ -1,7 +1,8 @@
 var path = require('path');
 
 
-var autoCompiler = require('./helper').autoCompiler;
+var autoCompiler = require('./helper').autoCompiler
+, authenticate = require('./authenticate');
 
 autoCompiler.setPath(path.join(__dirname, '../views'), path.join(__dirname, '../client/partials'));
 autoCompiler.fix(['index', 'userport', 'microposts']);
@@ -15,8 +16,14 @@ function index(req, res){
 
 exports.setRoutes = function(app){
   
+  
+  authenticate.setVerifyRoutes({
+    get: [],
+    post: ['/microposts'],
+    delete: []
+  });
 
-  require('./authenticate').init(app);
+  authenticate.init(app);
   require('./debug').init(app);
   require('./modelRoutes').init(app);
   
