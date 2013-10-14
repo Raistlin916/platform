@@ -10,6 +10,13 @@
     "jade": "*",
     "mongoose": "*",
     "Q": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-jade": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-sass": "*",
+    "node-sass": "*"
   }
 }
