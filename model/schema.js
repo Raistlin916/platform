@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
-  , ObjectId = mongoose.Schema.Types.ObjectId;
+  , ObjectId = mongoose.Schema.Types.ObjectId
+  , md5 = require('../util').md5;
 
 mongoose.connect('localhost', 'platform_db');
 
@@ -15,6 +16,12 @@ var MicropostSchema = new Schema({
       ref: 'User'
   },
   date: Date
+},
+{
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true },
+  versionKey: false,
+  id: false 
 });
 
 var UserSchema = new Schema({
@@ -32,6 +39,13 @@ var UserSchema = new Schema({
       required: true
   },
 	joinDate: Date,
+}, {
+  versionKey: false,
+  id: false
+});
+
+UserSchema.virtual('emailHash').get(function () {
+  return md5(this.email);
 });
 
 UserSchema.path('email').validate(function (email) {
@@ -46,6 +60,8 @@ var OnlineUser = new Schema({
       required: true
   },
   loginDate: Date
+}, {
+  versionKey: false
 });
 
 

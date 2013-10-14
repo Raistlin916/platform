@@ -62,7 +62,7 @@ function verifyAndReturnInfo(req, res){
     return models.User.findById(doc.uid).exec();
   })
   .then(function(user){
-    res.send({username: user.username, email: user.email, emailHash: md5(user.email)});
+    res.send({username: user.username, email: user.email, emailHash: user.emailHash});
   }, function(reason){
     res.send(401, reason);
   });

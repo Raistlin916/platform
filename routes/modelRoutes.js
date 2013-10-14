@@ -15,7 +15,7 @@ function savePost(req, res){
     if(err){
       return res.send(403, '格式错误');
     };
-    newPost.populate('author', 'username', function(err, n){
+    newPost.populate('author', 'emailHash email username', function(err, n){
       if(err){
         return res.send(500);
       }
@@ -27,7 +27,7 @@ function savePost(req, res){
 function listPosts(req, res){
   Q.fcall(function(){
     // populate 如何不返回_id?
-    return Micropost.find(null, {'__v': false}).populate('author', 'username').exec();
+    return Micropost.find(null, {'__v': false}).populate('author', 'emailHash email username').exec();
   }).then(function(posts){
     res.send(posts);
   }).fail(function(){
@@ -36,9 +36,20 @@ function listPosts(req, res){
 }
 
 function deletePost(req, res){
-  Micropost.findOneAndRemove({ _id: req.params.id }, function (err) {
-    if (err) return res.send(500, '删除失败');
-    res.send('');
+  Micropost.findById(req.params.id).exec()
+  .then(function(doc){
+    if(!doc.author.equals(req.session.uid)){
+      return Q.reject(401);
+    }
+    doc.remove(function(err){
+      err? res.send(500, '删除失败') : res.send('');
+    });
+  }).then(null, function(r){
+    if(typeof r == 'number'){
+      res.send(r);
+    } else {
+      res.send(500, '删除失败');
+    }
   });
 }
 
