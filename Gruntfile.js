@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         debounceDelay: 250
       },
       css: {
-        files: '**/*.scss',
+        files: 'views/stylesheets/*.scss',
         tasks: ['sass']
       },
       jade: {
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
           style: 'expanded'
         },
         files: {
-          'client/stylesheets/style.css': 'client/stylesheets/style.scss'
+          'client/stylesheets/style.css': 'views/stylesheets/style.scss'
         }
       }
     },

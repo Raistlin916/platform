@@ -3,11 +3,13 @@ form.form-inline
     input.form-control(type="text", ng-model="micropostContent")
   |  
   button.btn.btn-default(type="button", ng-click="addMicropost(micropostContent)") post
-ul
-  li(ng-repeat="mp in microposts") 
-    div {{mp.content}}
-      a(ng-click="deleteMicropost($index)", href="javascript:;") [x]
-    div {{mp.author.username}}
-    img.avatar(src="http://www.gravatar.com/avatar/{{mp.author.emailHash}}.jpg?s=80")
-    div {{mp.date | date:'yyyy-MM-dd HH:mm:ss'}}
+ul.microposts.buffer-top2
+  li(ng-repeat="mp in microposts")
+    img.avatar-thumbnail.avatar(src="http://www.gravatar.com/avatar/{{mp.author.emailHash}}.jpg?s=80")
+    .micropost-main
+      div.date {{mp.date | date:'yyyy-MM-dd HH:mm:ss'}}
+      div {{mp.author.username}}
+      div {{mp.content}}
+        a(ng-click="deleteMicropost($index)", href="javascript:;") [x]
+      
     

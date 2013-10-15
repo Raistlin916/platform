@@ -4,7 +4,8 @@ html(ng-app="platform")
     title platform
     meta(charset="utf-8")
     link(rel="stylesheet", href="http://cdn.staticfile.org/twitter-bootstrap/3.0.0-rc2/css/bootstrap.css")
-    link(rel="stylesheet", href="/javascripts/lib/nprogress.css")
+    link(rel="stylesheet", href="/stylesheets/nprogress.css")
+    link(rel="stylesheet", href="/stylesheets/style.css")
     script(src="/javascripts/lib/angular.js")
     script(src="/javascripts/lib/angular-resource.js")
     script(src="/javascripts/lib/angular-route.js")
@@ -16,8 +17,7 @@ html(ng-app="platform")
     script(src="/javascripts/lib/nprogress.js")
   body
     .container
-      load-progress
       userport.pull-right
-      div(ng-include="'/partials/microposts.html'", ng-controller="Micropost")
+      div.col-lg-8(ng-include="'/partials/microposts.html'", ng-controller="Micropost")
 
 

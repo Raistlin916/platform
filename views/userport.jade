@@ -1,8 +1,9 @@
 div(ng-switch="state")
   h4(ng-if="errorMessage") {{errorMessage}}
   div(ng-switch-when="out")
-    button(type="button", ng-click="changeState('login')") login
-    button(type="button", ng-click="changeState('register')") register
+    button.btn.btn-primary(type="button", ng-click="changeState('login')") login
+    |  
+    button.btn.btn-success(type="button", ng-click="changeState('register')") sign up
   div(ng-switch-when="login")
     div
       label username:
@@ -11,7 +12,7 @@ div(ng-switch="state")
       label password:
       input(type="text", ng-model="pw")
     div
-      button(type="button", ng-click="login(username, pw)") login
+      button.btn.btn-primary(type="button", ng-click="login(username, pw)") login
       a(href="javascript:;", ng-click="changeState('out')") cancel
   div(ng-switch-when="register")
     div
@@ -27,7 +28,7 @@ div(ng-switch="state")
       label email:
       input(type="text", ng-model="email")
     div
-      button(type="button", ng-click="register(username, pw, email)") register
+      button.btn.btn-success(type="button", ng-click="register(username, pw, email)") register
       a(href="javascript:;", ng-click="changeState('out')") cancel
   div(ng-switch-when="in")
     img.avatar(src="http://www.gravatar.com/avatar/{{userState.info.emailHash}}.jpg?s=80")

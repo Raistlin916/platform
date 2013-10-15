@@ -1,6 +1,51 @@
-nav li {
-  display: inline-block; }
-nav a {
-  display: block;
-  padding: 6px 12px;
-  text-decoration: none; }
+/* http://ghost.org/dashboard */
+body {
+  color: #242628;
+  font-size: 14px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif; }
+
+.avatar {
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: white; }
+
+img.avatar-thumbnail {
+  height: 40px;
+  width: 40px;
+  border-radius: 3px;
+  box-shadow: 0; }
+
+ul.microposts {
+  list-style-type: none;
+  padding: 0; }
+  ul.microposts li {
+    padding: 10px; }
+    ul.microposts li img.avatar {
+      float: left; }
+    ul.microposts li .micropost-main {
+      margin-left: 50px; }
+    ul.microposts li .date {
+      color: #a4a0a7;
+      font-size: 10px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, Sans-serif;
+      float: right; }
+
+userport {
+  border: 1px solid grey;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.5); }
+
+.container {
+  padding-top: 20px; }
+
+.btn {
+  transition: 0.1s ease all;
+  font-weight: 200;
+  text-transform: uppercase; }
+
+.buffer-top1 {
+  margin-top: 10px; }
+
+.buffer-top2 {
+  margin-top: 20px; }
