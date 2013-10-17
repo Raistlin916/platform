@@ -1,10 +1,10 @@
 div(ng-switch="state")
   h4(ng-if="errorMessage") {{errorMessage}}
   div(ng-switch-when="out")
-    button.btn.btn-primary(type="button", ng-click="changeState('login')") login
+    button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  
-    button.btn.btn-success(type="button", ng-click="changeState('register')") sign up
-  div(ng-switch-when="login")
+    button.btn.btn-success(type="button", ng-click="changeState('register')") 注册
+  div.bounce-box(ng-switch-when="login")
     div
       label username:
       input(type="text", ng-model="username")
@@ -13,8 +13,9 @@ div(ng-switch="state")
       input(type="text", ng-model="pw")
     div
       button.btn.btn-primary(type="button", ng-click="login(username, pw)") login
+      |  
       a(href="javascript:;", ng-click="changeState('out')") cancel
-  div(ng-switch-when="register")
+  div.bounce-box(ng-switch-when="register")
     div
       label username:
       input(type="text", ng-model="username")
@@ -29,6 +30,7 @@ div(ng-switch="state")
       input(type="text", ng-model="email")
     div
       button.btn.btn-success(type="button", ng-click="register(username, pw, email)") register
+      |  
       a(href="javascript:;", ng-click="changeState('out')") cancel
   div(ng-switch-when="in")
     img.avatar(src="http://www.gravatar.com/avatar/{{userState.info.emailHash}}.jpg?s=80")

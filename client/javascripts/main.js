@@ -1,4 +1,4 @@
-angular.module('platform', ['ngResource', 'ngRoute'])
+angular.module('platform', ['ngResource', 'ngProgressLite'])
 .factory('models', function($resource){
     return {
       Micropost: $resource('/microposts/:id', {id:'@_id'}),
@@ -43,16 +43,16 @@ angular.module('platform', ['ngResource', 'ngRoute'])
     },
     verify: verify
   }
-}).factory('progressService', function($q){
+}).factory('progressService', function($q, ngProgressLite){
   return {
     watch: function(p){
-      NProgress.start();
+      ngProgressLite.start();
       $q.when(p, function(){
-        NProgress.done();
+        ngProgressLite.done();
       }, function(){
         
-        NProgress.done();
-        NProgress.remove();
+        ngProgressLite.done();
+        ngProgressLite.remove();
       });
     }
   }
