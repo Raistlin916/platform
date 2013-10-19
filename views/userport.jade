@@ -1,37 +1,29 @@
 div(ng-switch="state")
   h4(ng-if="errorMessage") {{errorMessage}}
-  div(ng-switch-when="out")
+  div(ng-switch-when="out").pull-right
     button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  
     button.btn.btn-success(type="button", ng-click="changeState('register')") 注册
-  div.bounce-box(ng-switch-when="login")
-    div
-      label username:
-      input(type="text", ng-model="username")
-    div
-      label password:
-      input(type="text", ng-model="pw")
-    div
-      button.btn.btn-primary(type="button", ng-click="login(username, pw)") 登录
-      |  
-      a(href="javascript:;", ng-click="changeState('out')") 取消
-  div.bounce-box(ng-switch-when="register")
-    div
-      label username:
-      input(type="text", ng-model="username")
-    div
-      label password:
-      input(type="text", ng-model="pw")
-    div
-      label password again:
-      input(type="text", ng-model="pwAgain")
-    div
-      label email:
-      input(type="text", ng-model="email")
-    div
-      button.btn.btn-success(type="button", ng-click="register(username, pw, email)") 注册
-      |  
-      a(href="javascript:;", ng-click="changeState('out')") 取消
+  .bounce-box(ng-switch-when="login")
+    .float-placeholder
+      input(type="text", ng-model="data.username", placeholder="用户名")
+    .float-placeholder.buffer-bottom2
+      input(type="password", ng-model="data.pw", placeholder="密码")
+    button.btn.btn-primary(type="button", ng-click="login()") 登录
+    |  
+    a(href="javascript:;", ng-click="changeState('out')") 取消
+  .bounce-box(ng-switch-when="register")
+    .float-placeholder
+      input(type="text", ng-model="data.username", placeholder="用户名")
+    .float-placeholder
+      input(type="text", ng-model="data.pw", placeholder="密码")
+    .float-placeholder
+      input(type="password", ng-model="pwAgain", placeholder="密码确认")
+    .float-placeholder.buffer-bottom2
+      input(type="text", ng-model="data.email", placeholder="邮箱")
+    button.btn.btn-success(type="button", ng-click="register()") 注册
+    |  
+    a(href="javascript:;", ng-click="changeState('out')") 取消
   div(ng-switch-when="in")
     img.avatar(src="http://www.gravatar.com/avatar/{{userState.info.emailHash}}.jpg?s=80")
     button(type="button", ng-click="logout()") out

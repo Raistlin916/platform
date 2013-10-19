@@ -2,18 +2,14 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    watch: {
-      options: {
-        debounceDelay: 250
+    concat: {
+       options: {
+        separator: '\n;'
       },
-      css: {
-        files: 'views/stylesheets/*.scss',
-        tasks: ['sass']
-      },
-      jade: {
-        files: 'views/*.jade',
-        tasks: ['jade'],
-      },
+      dist: {
+        src: ['views/javascripts/main.js', 'views/javascripts/*.js'],
+        dest: 'client/javascripts/<%= pkg.name %>_app.js'
+      }
     },
     sass: {                          
       dist: {
@@ -36,14 +32,32 @@ module.exports = function(grunt) {
             }]
         }
     },
+    watch: {
+      options: {
+        debounceDelay: 250
+      },
+      js: {
+        files: 'views/javascripts/*.js',
+        tasks: ['concat']
+      },
+      css: {
+        files: 'views/stylesheets/*.scss',
+        tasks: ['sass']
+      },
+      jade: {
+        files: 'views/*.jade',
+        tasks: ['jade'],
+      },
+    }
   });
 
 
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jade');
+  grunt.loadNpmTasks('grunt-contrib-concat');
 
 
-  grunt.registerTask('default', ['sass', 'jade', 'watch']);
+  grunt.registerTask('default', ['concat', 'sass', 'jade', 'watch']);
 
 };
