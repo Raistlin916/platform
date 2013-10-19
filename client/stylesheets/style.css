@@ -79,8 +79,9 @@ input[type="text"]:focus, input[type="password"]:focus {
 
 .float-placeholder label {
   font-size: 12px;
+  font-weight: 100;
+  margin: 2px 0 0 0;
   color: #66afe9;
-  margin: 0;
   animation: float 0.3s forwards ease;
   transition: 0.3s color ease; }
 .float-placeholder label.blur {

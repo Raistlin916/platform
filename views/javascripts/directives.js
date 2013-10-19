@@ -14,38 +14,87 @@ angular.module('platform')
     controller: 'Userport'
   }
 })
-.controller('Userport', function($scope, models, self){
+.controller('Userport', function($scope, models, self, $q){
   $scope.data = {};
   $scope.state = 'out';
   $scope.errorMessage = null;
+
+  function error(info){
+    $scope.errorMessage = info;
+  }
+  
+
   $scope.changeState = function(state){
     $scope.data = {};
     $scope.state = state;
+    error(null);
   }
   $scope.login = function(){
     var data = $scope.data;
     self.login(data.username, data.pw)
       .then(null, function(res){
-        $scope.errorMessage = res.data;
+        error(res.data);
       });
   }
   $scope.logout = function(){
     self.logout();
   }
+
+  function testField(data, key, test, msg){
+    var d = $q.defer(), root;
+    if(!angular.isArray(key)){
+      key = [key];
+    }
+    // 希望改成用正则
+    msg = msg.split(':');
+    root = msg.pop();
+    msg = msg.join().split('|');
+
+    key.some(function(k, i){
+      if(!test(data[k])){
+        var name = angular.isDefined(msg[i])? msg[i]: '';
+        d.reject({message: name + root});
+        return true;
+      }
+    });
+    d.resolve(data);
+    return d.promise;
+  }
+
+  function emptyString(v){
+    return angular.isDefined(v) && v.trim().length;
+  }
+
+  function longEnough(v){
+    return v.trim() >= 6;
+  }
+
+  function emailFormat(v){
+    return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(v);
+  }
+
   $scope.register = function(){
     var data = $scope.data;
-    var user = new models.User({username: data.username, pw: data.pw, email: data.email});
-    user.$save(function(res){
+
+    var d = $q.defer();
+    d.resolve();
+    d.promise.then(function(){
+      return testField(data, ['username', 'pw', 'email'], emptyString, '用户名|密码|邮箱:不能为空');
+    }).then(function(){
+      return testField(data, ['username', 'pw'], longEnough, '用户名|密码:不能少于6个字符');
+    }).then(function(){
+      return testField(data, ['email'], emailFormat, '邮箱格式不正确');
+    })/*.then(function(){
+      return testField(data, 'pw pwAgain', emailFormat, '两次输入的密码不相同');
+    })*/.then(function(){
+      var user = new models.User({username: data.username, pw: data.pw, email: data.email});
+      return user.$save();
+    }).then(function(){
       self.verify();
-    }, function(res){
-      $scope.errorMessage = res.data;
+    }, function(e){
+      error(e.message || e.data);
     });
   }
-  $scope.$watch('state', function(n){
-    if(n == 'in'){
-      $scope.errorMessage = null;
-    }
-  });
   
   $scope.userState = self.getState();
   $scope.$watch('userState.logging', function(n, o){

@@ -1,10 +1,10 @@
 div(ng-switch="state")
-  h4(ng-if="errorMessage") {{errorMessage}}
   div(ng-switch-when="out").pull-right
     button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  
     button.btn.btn-success(type="button", ng-click="changeState('register')") 注册
   .bounce-box(ng-switch-when="login")
+    h4.text-danger(ng-if="errorMessage") {{errorMessage}}
     .float-placeholder
       input(type="text", ng-model="data.username", placeholder="用户名")
     .float-placeholder.buffer-bottom2
@@ -13,12 +13,13 @@ div(ng-switch="state")
     |  
     a(href="javascript:;", ng-click="changeState('out')") 取消
   .bounce-box(ng-switch-when="register")
+    h4.text-danger(ng-if="errorMessage") {{errorMessage}}
     .float-placeholder
       input(type="text", ng-model="data.username", placeholder="用户名")
     .float-placeholder
       input(type="text", ng-model="data.pw", placeholder="密码")
     .float-placeholder
-      input(type="password", ng-model="pwAgain", placeholder="密码确认")
+      input(type="password", ng-model="data.pwAgain", placeholder="密码确认")
     .float-placeholder.buffer-bottom2
       input(type="text", ng-model="data.email", placeholder="邮箱")
     button.btn.btn-success(type="button", ng-click="register()") 注册
