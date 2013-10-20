@@ -95,6 +95,46 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
 }
 
 angular.module('platform')
+.factory('FieldTester', function($q){
+  function FieldTester(data){
+    this.field = data;
+  }
+  FieldTester.prototype = {
+    run: function(key, test, msg){
+      var d = $q.defer(), root, data = this.field;
+      if(angular.isUndefined(data)){
+        return;
+      } 
+      if(!angular.isArray(key)){
+        key = [key];
+      }
+      // 希望改成用正则
+
+      // 以|为标记拆成数组，与key值的数组对位
+      // 将:后的字符串提取为公用部分
+      msg = msg.split(':');
+      root = msg.pop();
+      msg = msg.join().split('|');
+
+      key.some(function(k, i){
+        // 将key值以空格为标记限拆成数组放入test的参数中
+        var values = k.split(' ').map(function(item){
+          return data[item];
+        });
+        if(!test.apply(null, values)){
+          var name = angular.isDefined(msg[i])? msg[i]: '';
+          d.reject({message: name + root});
+          return true;
+        }
+      });
+      d.resolve(data);
+      return d.promise;
+    }
+  }
+
+
+  return FieldTester;
+})
 .directive('userport', function(){
   return {
     restrict: 'E',
@@ -103,7 +143,8 @@ angular.module('platform')
     controller: 'Userport'
   }
 })
-.controller('Userport', function($scope, models, self, $q){
+.controller('Userport', function($scope, models, self, $q, FieldTester){
+  
   $scope.data = {};
   $scope.state = 'out';
   $scope.errorMessage = null;
@@ -111,7 +152,6 @@ angular.module('platform')
   function error(info){
     $scope.errorMessage = info;
   }
-  
 
   $scope.changeState = function(state){
     $scope.data = {};
@@ -119,35 +159,22 @@ angular.module('platform')
     error(null);
   }
   $scope.login = function(){
-    var data = $scope.data;
-    self.login(data.username, data.pw)
-      .then(null, function(res){
-        error(res.data);
-      });
+    var data = $scope.data
+    , tester = new FieldTester(data)
+    , d = $q.defer();
+    d.resolve();
+    d.promise.then(function(){
+      return tester.run(['username', 'pw'], emptyString, '用户名|密码:不能为空');
+    }).then(function(){
+      return tester.run(['username', 'pw'], longEnough, '用户名|密码:不能少于6个字符');
+    }).then(function(){
+      return self.login(data.username, data.pw);
+    }).then(null, function(e){
+      error(e.message || e.data);
+    });
   }
   $scope.logout = function(){
     self.logout();
-  }
-
-  function testField(data, key, test, msg){
-    var d = $q.defer(), root;
-    if(!angular.isArray(key)){
-      key = [key];
-    }
-    // 希望改成用正则
-    msg = msg.split(':');
-    root = msg.pop();
-    msg = msg.join().split('|');
-
-    key.some(function(k, i){
-      if(!test(data[k])){
-        var name = angular.isDefined(msg[i])? msg[i]: '';
-        d.reject({message: name + root});
-        return true;
-      }
-    });
-    d.resolve(data);
-    return d.promise;
   }
 
   function emptyString(v){
@@ -155,27 +182,31 @@ angular.module('platform')
   }
 
   function longEnough(v){
-    return v.trim() >= 6;
+    return v.trim().length >= 6;
   }
 
   function emailFormat(v){
     return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(v);
   }
 
-  $scope.register = function(){
-    var data = $scope.data;
+  function equal(v1, v2){
+    return v1 == v2;
+  }
 
-    var d = $q.defer();
+  $scope.register = function(){
+    var data = $scope.data
+    , tester = new FieldTester(data)
+    , d = $q.defer();
     d.resolve();
     d.promise.then(function(){
-      return testField(data, ['username', 'pw', 'email'], emptyString, '用户名|密码|邮箱:不能为空');
+      return tester.run(['username', 'pw', 'email'], emptyString, '用户名|密码|邮箱:不能为空');
     }).then(function(){
-      return testField(data, ['username', 'pw'], longEnough, '用户名|密码:不能少于6个字符');
+      return tester.run(['username', 'pw'], longEnough, '用户名|密码:不能少于6个字符');
     }).then(function(){
-      return testField(data, ['email'], emailFormat, '邮箱格式不正确');
-    })/*.then(function(){
-      return testField(data, 'pw pwAgain', emailFormat, '两次输入的密码不相同');
-    })*/.then(function(){
+      return tester.run(['email'], emailFormat, '邮箱格式不正确');
+    }).then(function(){
+      return tester.run('pw pwAgain', equal, '两次输入的密码不相同');
+    }).then(function(){
       var user = new models.User({username: data.username, pw: data.pw, email: data.email});
       return user.$save();
     }).then(function(){
