@@ -1,5 +1,8 @@
 angular.module('platform')
-.controller('Micropost', function($scope, models){
+.controller('Micropost', function($scope, $rootScope, models){
+  $scope.open = function(url){
+    $rootScope.$broadcast('addPort', url);
+  };
   var Micropost = models.Micropost;
   $scope.addMicropost = function(micropostContent){
     if(!micropostContent.trim().length){

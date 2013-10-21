@@ -6,6 +6,20 @@ angular.element.prototype.before = function(el) {
 }
 
 angular.module('platform')
+.directive('portList', function($rootScope, models){
+  return {
+    restrict: 'E',
+    scope: {},
+    link: function(scope){
+      scope.list = [];
+      $rootScope.$on('addPort', function(e, url){
+        var id = url.split('/').pop();
+        scope.list.push(models.User.get({id: id}));
+      });
+    },
+    template: '<ul><li ng-repeat="p in list" class="bounce-box"><div>username: {{p.username}}</div><div>email: {{p.email}}</div></li></ul>'
+  }
+})
 .factory('FieldTester', function($q){
   function FieldTester(data){
     this.field = data;
@@ -77,7 +91,7 @@ angular.module('platform')
     d.promise.then(function(){
       return tester.run(['username', 'pw'], emptyString, '用户名|密码:不能为空');
     }).then(function(){
-      return tester.run(['username', 'pw'], longEnough, '用户名|密码:不能少于6个字符');
+      return tester.run(['username', 'pw'], longEnough, '登录失败');
     }).then(function(){
       return self.login(data.username, data.pw);
     }).then(null, function(e){

@@ -91,14 +91,25 @@ function deleteUser(req, res){
   });
 }
 
+function getUser(req, res){
+  User.findOne({_id: req.params.id}, {pw: false}, function (err, doc) {
+    if (err) return res.send(500, '获取失败');
+    res.send(doc);
+  });
+}
+
 
 
 exports.init = function(app){
   app.post('/microposts', savePost);
   app.get('/microposts', listPosts);
   app.delete('/microposts/:id', deletePost);
+  app.get('/microposts/:id', function(req, res){
+    res.send('hi');
+  });
 
   app.post('/users', saveUser);
   app.get('/users', listUsers);
+  app.get('/users/:id', getUser);
   app.delete('/users/:id', deleteUser);
 }
