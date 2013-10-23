@@ -4,7 +4,7 @@ var path = require('path');
 var authenticate = require('./authenticate');
 
 function index(req, res){
-  res.render('index');
+  res.render('main');
 };
 
 

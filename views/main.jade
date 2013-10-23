@@ -4,14 +4,14 @@ html(ng-app="platform")
     title platform
     meta(charset="utf-8")
     link(rel="stylesheet", href="http://cdn.staticfile.org/twitter-bootstrap/3.0.0-rc2/css/bootstrap.css")
-    link(rel="stylesheet", href="/stylesheets/ngprogress.css")
-    link(rel="stylesheet", href="/stylesheets/style.css")
+    link(rel="stylesheet", href="/vendor/ngprogress.css")
+    link(rel="stylesheet", href="/style.css")
     script(src="http://cdn.staticfile.org/prefixfree/1.0.7/prefixfree.min.js")
-    script(src="/javascripts/lib/angular.js")
-    script(src="/javascripts/lib/angular-resource.js")
-    script(src="/javascripts/platform_app.js")
+    script(src="/vendor/angular.js")
+    script(src="/vendor/angular-resource.js")
+    script(src="/platform_app.js")
 
-    script(src="/javascripts/lib/ngprogress.js")
+    script(src="/vendor/ngprogress.js")
   body
     .container.row
       .col-lg-8(ng-include="'/partials/microposts.html'", ng-controller="Micropost")

@@ -58,38 +58,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   }
 });
 
-;angular.module('platform')
-.controller('Micropost', function($scope, $rootScope, models){
-  $scope.open = function(url){
-    $rootScope.$broadcast('addPort', url);
-  };
-  var Micropost = models.Micropost;
-  $scope.addMicropost = function(micropostContent){
-    if(!micropostContent.trim().length){
-      return;
-    }
-    var newPost = new Micropost({content: micropostContent});
-   
-    newPost.$save(function(newPost){
-      $scope.microposts.push(newPost);
-    });
-    $scope.micropostContent = "";
-  };
-
-  $scope.showMicropost = function(){
-    Micropost.query(function(posts){
-      $scope.microposts = posts;
-    });
-  }
-  $scope.showMicropost();
-
-  $scope.deleteMicropost = function(index){      
-    $scope.microposts[index].$remove(function(){
-      $scope.microposts.splice(index, 1);
-    });
-  }
-
-});
 ;angular.element.prototype.before = function(el) {
   if (typeof el === 'string') el = angular.element(el);
   if (this.length > 0) {
@@ -98,20 +66,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
 }
 
 angular.module('platform')
-.directive('portList', function($rootScope, models){
-  return {
-    restrict: 'E',
-    scope: {},
-    link: function(scope){
-      scope.list = [];
-      $rootScope.$on('addPort', function(e, url){
-        var id = url.split('/').pop();
-        scope.list.push(models.User.get({id: id}));
-      });
-    },
-    template: '<ul><li ng-repeat="p in list" class="bounce-box"><div>username: {{p.username}}</div><div>email: {{p.email}}</div></li></ul>'
-  }
-})
 .factory('FieldTester', function($q){
   function FieldTester(data){
     this.field = data;
@@ -151,7 +105,95 @@ angular.module('platform')
 
 
   return FieldTester;
+});
+;angular.module('platform').directive('floatPlaceholder', function(){
+  return {
+    restrict: 'C',
+    scope: {},
+    transclude: true,
+    replace: true,
+    compile: function compile(tElement, tAttrs, transclude) {
+      return {
+        pre: function(scope, elems) {
+          transclude(scope, function(clone) {
+            angular.forEach(clone, function(item){
+              if(item.placeholder){
+                scope.placeholder = item.placeholder;
+              }
+            });
+          });
+        },
+        post: function(scope, elems) {
+          scope.showPh = false;
+          scope.blur = false;
+          var input = elems[0].querySelector('input');
+          if(angular.isUndefined(input)) return;
+          function checkContent(){
+            scope.showPh = input.value.length > 0;
+            scope.$digest();
+          }
+          angular.element(input).on('focus blur keyup', checkContent)
+            .on('blur', function(){
+              scope.blur = true;
+              scope.$digest();
+            }).on('focus', function(){
+              scope.blur = false;
+              scope.$digest();
+            });
+        }
+      }
+    },
+    templateUrl: '/partials/floatPlaceholder.html'
+  }
 })
+;angular.module('platform')
+.controller('Micropost', function($scope, $rootScope, models){
+  $scope.open = function(url){
+    $rootScope.$broadcast('addPort', url);
+  };
+  var Micropost = models.Micropost;
+  $scope.addMicropost = function(micropostContent){
+    if(!micropostContent.trim().length){
+      return;
+    }
+    var newPost = new Micropost({content: micropostContent});
+   
+    newPost.$save(function(newPost){
+      $scope.microposts.push(newPost);
+    });
+    $scope.micropostContent = "";
+  };
+
+  $scope.showMicropost = function(){
+    Micropost.query(function(posts){
+      $scope.microposts = posts;
+    });
+  }
+  $scope.showMicropost();
+
+  $scope.deleteMicropost = function(index){      
+    $scope.microposts[index].$remove(function(){
+      $scope.microposts.splice(index, 1);
+    });
+  }
+
+});
+;angular.module('platform')
+.directive('portList', function($rootScope, models){
+  return {
+    restrict: 'E',
+    scope: {},
+    link: function(scope){
+      scope.list = [];
+      $rootScope.$on('addPort', function(e, url){
+        var id = url.split('/').pop();
+        scope.list.push(models.User.get({id: id}));
+      });
+    },
+    templateUrl: '/partials/portList.html'
+  }
+});
+;angular.module('platform')
 .directive('userport', function(){
   return {
     restrict: 'E',
@@ -239,39 +281,3 @@ angular.module('platform')
   });
 
 })
-.directive('floatPlaceholder', function(){
-  return {
-    restrict: 'C',
-    scope: {},
-    transclude: true,
-    replace: true,
-    compile: function compile(tElement, tAttrs, transclude) {
-      return {
-        pre: function(scope, elems) {
-          transclude(scope, function(clone) {
-            scope.placeholder = clone[0] && clone[0].placeholder;
-          });
-        },
-        post: function(scope, elems) {
-          scope.showPh = false;
-          scope.blur = false;
-          var input = elems[0].querySelector('input');
-          if(angular.isUndefined(input)) return;
-          function checkContent(){
-            scope.showPh = input.value.length > 0;
-            scope.$digest();
-          }
-          angular.element(input).on('focus blur keyup', checkContent)
-            .on('blur', function(){
-              scope.blur = true;
-              scope.$digest();
-            }).on('focus', function(){
-              scope.blur = false;
-              scope.$digest();
-            });
-        }
-      }
-    },
-    template: '<div><label ng-if="showPh" ng-class="{blur: blur}">{{placeholder}}</label><label ng-if="!showPh">&nbsp</label><div ng-transclude></div></div>',
-  }
-});

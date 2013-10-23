@@ -7,8 +7,8 @@ module.exports = function(grunt) {
         separator: '\n;'
       },
       dist: {
-        src: ['views/javascripts/main.js', 'views/javascripts/*.js'],
-        dest: 'client/javascripts/<%= pkg.name %>_app.js'
+        src: ['views/main.js', 'views/**/*.js'],
+        dest: 'client/<%= pkg.name %>_app.js'
       }
     },
     sass: {                          
@@ -17,27 +17,30 @@ module.exports = function(grunt) {
           style: 'expanded'
         },
         files: {
-          'client/stylesheets/style.css': 'views/stylesheets/style.scss'
+          'client/style.css': 'views/main.scss'
         }
       }
     },
     jade: {
-        compile: {
-            files: [ { 
-              expand: true, 
-              src: "*.jade", 
-              dest: "client/partials",
-              cwd: 'views',
-              ext: '.html'
-            }]
-        }
+      compile: {
+        options: {
+          pretty: true
+        },
+        files: grunt.file.expandMapping(['**/*.jade'], 'client/partials/', {
+            cwd: 'views',
+            rename: function(destBase, destPath) {
+              return destBase + destPath.split('/').pop();
+            },
+            ext: '.html'
+        })
+      }
     },
     watch: {
       options: {
         debounceDelay: 250
       },
       js: {
-        files: 'views/javascripts/*.js',
+        files: 'views/**/*.js',
         tasks: ['concat']
       },
       css: {
@@ -45,7 +48,7 @@ module.exports = function(grunt) {
         tasks: ['sass']
       },
       jade: {
-        files: 'views/*.jade',
+        files: 'views/**/*.jade',
         tasks: ['jade'],
       },
     }
