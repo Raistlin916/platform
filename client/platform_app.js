@@ -17,7 +17,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     });
     progressService.watch(p);
   }
-  verify();
+  
 
   return {
     login: function(username, pw){
@@ -37,6 +37,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       }, function(s){
         console.log(s);
       });
+    },
+    getInfo: function(){
+      return state.info;
     },
     getState: function(){
       return state;
@@ -58,14 +61,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   }
 });
 
-;angular.element.prototype.before = function(el) {
-  if (typeof el === 'string') el = angular.element(el);
-  if (this.length > 0) {
-    this[0].parentNode.insertBefore(el[0], this[0]);
-  }
-}
-
-angular.module('platform')
+;angular.module('platform')
 .factory('FieldTester', function($q){
   function FieldTester(data){
     this.field = data;
@@ -152,16 +148,16 @@ angular.module('platform')
     $rootScope.$broadcast('addPort', url);
   };
   var Micropost = models.Micropost;
-  $scope.addMicropost = function(micropostContent){
-    if(!micropostContent.trim().length){
+  $scope.addMicropost = function(content){
+    if(!content.trim().length){
       return;
     }
-    var newPost = new Micropost({content: micropostContent});
+    var newPost = new Micropost({content: content});
    
     newPost.$save(function(newPost){
       $scope.microposts.push(newPost);
     });
-    $scope.micropostContent = "";
+    $scope.content = "";
   };
 
   $scope.showMicropost = function(){
@@ -180,19 +176,36 @@ angular.module('platform')
 });
 ;angular.module('platform')
 .directive('portList', function($rootScope, models){
+  function getDoc(url){
+    var temp = url.split('/')
+    , id = temp.pop()
+    , modelName = temp.pop()
+    , model, key, orgKey;
+    for(orgKey in models){
+      key = orgKey.toLowerCase();
+      if(key == modelName || key+'s' == modelName){
+        model = models[orgKey];
+      }
+    }
+
+    return model.get({id: id});
+  }
   return {
     restrict: 'E',
     scope: {},
     link: function(scope){
       scope.list = [];
       $rootScope.$on('addPort', function(e, url){
-        var id = url.split('/').pop();
-        scope.list.push(models.User.get({id: id}));
+        scope.list.push(getDoc(url));
       });
     },
     templateUrl: '/partials/portList.html'
   }
 });
+;angular.module('platform')
+.directive('test', function(){
+
+})
 ;angular.module('platform')
 .directive('userport', function(){
   return {
@@ -205,11 +218,15 @@ angular.module('platform')
 .controller('Userport', function($scope, models, self, $q, FieldTester){
   
   $scope.data = {};
-  $scope.state = 'out';
+  $scope.state = null;
   $scope.errorMessage = null;
 
   function error(info){
     $scope.errorMessage = info;
+  }
+
+  $scope.openSetting = function(){
+   
   }
 
   $scope.changeState = function(state){
@@ -277,7 +294,10 @@ angular.module('platform')
   
   $scope.userState = self.getState();
   $scope.$watch('userState.logging', function(n, o){
-    $scope.state = n? 'in' : 'out';
+    if(n != undefined){
+      $scope.state = n? 'in' : 'out';
+    }
   });
 
-})
+  self.verify();
+});

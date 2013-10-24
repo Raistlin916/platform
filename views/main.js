@@ -17,7 +17,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     });
     progressService.watch(p);
   }
-  verify();
+  
 
   return {
     login: function(username, pw){
@@ -37,6 +37,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       }, function(s){
         console.log(s);
       });
+    },
+    getInfo: function(){
+      return state.info;
     },
     getState: function(){
       return state;

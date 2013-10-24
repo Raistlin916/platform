@@ -1,10 +1,3 @@
-angular.element.prototype.before = function(el) {
-  if (typeof el === 'string') el = angular.element(el);
-  if (this.length > 0) {
-    this[0].parentNode.insertBefore(el[0], this[0]);
-  }
-}
-
 angular.module('platform')
 .factory('FieldTester', function($q){
   function FieldTester(data){

@@ -1,8 +1,8 @@
 form.form-inline
   .form-group
-    input.form-control(type="text", ng-model="micropostContent")
+    input.form-control(type="text", ng-model="content")
   |  
-  button.btn.btn-default(type="button", ng-click="addMicropost(micropostContent)") post
+  button.btn.btn-default(type="button", ng-click="addMicropost(content)") post
 ul.microposts
   li(ng-repeat="mp in microposts")
     a(href="javascript:;", ng-click="open('/users/{{mp.author._id}}')")

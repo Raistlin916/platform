@@ -10,11 +10,15 @@ angular.module('platform')
 .controller('Userport', function($scope, models, self, $q, FieldTester){
   
   $scope.data = {};
-  $scope.state = 'out';
+  $scope.state = null;
   $scope.errorMessage = null;
 
   function error(info){
     $scope.errorMessage = info;
+  }
+
+  $scope.openSetting = function(){
+   
   }
 
   $scope.changeState = function(state){
@@ -82,7 +86,10 @@ angular.module('platform')
   
   $scope.userState = self.getState();
   $scope.$watch('userState.logging', function(n, o){
-    $scope.state = n? 'in' : 'out';
+    if(n != undefined){
+      $scope.state = n? 'in' : 'out';
+    }
   });
 
-})
+  self.verify();
+});

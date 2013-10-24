@@ -4,16 +4,16 @@ angular.module('platform')
     $rootScope.$broadcast('addPort', url);
   };
   var Micropost = models.Micropost;
-  $scope.addMicropost = function(micropostContent){
-    if(!micropostContent.trim().length){
+  $scope.addMicropost = function(content){
+    if(!content.trim().length){
       return;
     }
-    var newPost = new Micropost({content: micropostContent});
+    var newPost = new Micropost({content: content});
    
     newPost.$save(function(newPost){
       $scope.microposts.push(newPost);
     });
-    $scope.micropostContent = "";
+    $scope.content = "";
   };
 
   $scope.showMicropost = function(){
