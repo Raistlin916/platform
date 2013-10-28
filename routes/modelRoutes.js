@@ -15,7 +15,7 @@ function savePost(req, res){
     if(err){
       return res.send(403, '格式错误');
     };
-    newPost.populate('author', 'emailHash email username', function(err, n){
+    newPost.populate('author', 'email username', function(err, n){
       if(err){
         return res.send(500);
       }
@@ -27,7 +27,7 @@ function savePost(req, res){
 function listPosts(req, res){
   Q.fcall(function(){
     // populate 如何不返回_id?
-    return Micropost.find(null, {'__v': false}).populate('author', 'emailHash email username').exec();
+    return Micropost.find(null, {'__v': false}).populate('author', 'email username').exec();
   }).then(function(posts){
     res.send(posts);
   }).fail(function(){
@@ -98,6 +98,29 @@ function getUser(req, res){
   });
 }
 
+function updateUser(req, res){
+  if(req.session.uid != req.params.id){
+    res.send(401);
+    return;
+  }
+  var p = User.findOne({_id: req.params.id}).exec();
+  p.then(function(doc){
+    doc.email = req.body.email;
+
+    doc.save(function(err){
+      if(err){
+        Q.reject(403);
+      } else {
+        Q.resolve(200);
+      }
+    });
+  }).then(function(){
+    res.send(200);
+  },function(){
+    res.send(500);
+  });
+  
+}
 
 
 exports.init = function(app){
@@ -111,5 +134,6 @@ exports.init = function(app){
   app.post('/users', saveUser);
   app.get('/users', listUsers);
   app.get('/users/:id', getUser);
+  app.post('/users/:id', updateUser);
   app.delete('/users/:id', deleteUser);
 }

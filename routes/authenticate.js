@@ -59,10 +59,10 @@ function verifyAndReturnInfo(req, res){
     if(doc == null){
       return Q.reject('登录超时');
     }
-    return models.User.findById(doc.uid).exec();
+    return models.User.findById(doc.uid, {pw: false}).exec();
   })
   .then(function(user){
-    res.send({username: user.username, email: user.email, emailHash: user.emailHash});
+    res.send(user);
   }, function(reason){
     res.send(401, reason);
   });

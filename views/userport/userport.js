@@ -18,7 +18,19 @@ angular.module('platform')
   }
 
   $scope.openSetting = function(){
-   
+    var info = self.getInfo();
+    info.onok = function(s){
+      var user = models.User.get({id: info._id}, function() {
+        angular.extend(user, s);
+        user.$save().then(function(){
+          self.verify();
+        }, function(){
+          
+        });
+      });
+      $scope.$broadcast('closeDialog');
+    };
+    $scope.$broadcast('openDialog', info);
   }
 
   $scope.changeState = function(state){

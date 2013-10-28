@@ -1,7 +1,35 @@
+(function(){
+  // hack from here
+  var _md5 = md5, cache = {};
+  function md5Cache(k){
+    if(cache[k]){
+      return cache[k];
+    } else {
+      if(Object.keys(cache).length > 40){
+        cache = {};
+      }
+      return cache[k] = _md5(k);
+    }
+  }
+  window.md5 = md5Cache;
+})();
+
 angular.module('platform', ['ngResource', 'ngProgressLite'])
 .factory('models', function($resource){
+    var Micropost = $resource('/microposts/:id', {id:'@_id'}, {
+      query: {
+        method: 'get',
+        isArray: true,
+        transformResponse: function(data){
+          return JSON.parse(data).map(function(item){
+            item.author.emailHash = md5(item.author.email);
+            return item;
+          });
+        }
+      }
+    });
     return {
-      Micropost: $resource('/microposts/:id', {id:'@_id'}),
+      Micropost: Micropost,
       User: $resource('/users/:id', {id: '@_id'})
     }
   })
@@ -11,6 +39,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     var p = $http.get('/verify')
     p.then(function(res){
       state.info = res.data;
+      state.info.emailHash = md5(res.data.email);
       state.logging = true;
     }, function(r){
       state.logging = false;
@@ -61,6 +90,46 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   }
 });
 
+;angular.module('platform')
+.directive('avatar', function(){
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {emailHash: '=hash'},
+      templateUrl : '/partials/avatar.html'
+    }
+});
+;angular.module('platform')
+.directive('dialog', function($rootScope){
+    return {
+      restrict: 'E',
+      templateUrl: '/partials/dialog.html',
+      scope: {},
+      transclude: true,
+      link: function(scope, elem, attr){
+        scope.opened = false;
+        scope.$on('openDialog', function(e, data){
+          scope.global = attr.ngGlobal == 'true';
+          scope.opened = true;
+          angular.extend(scope, data);
+        });
+        scope.$on('closeDialog', function(e, data){
+          scope.opened = false;
+        });
+      }
+    }
+});
+;angular.module('platform')
+.directive('errorPanel', function($rootScope){
+    return {
+        restrict: 'E',
+        scope: {},
+        link: function(scope, elem, attr){
+          $rootScope
+        },
+        templateUrl : '/partials/errorPanel.html'
+    }
+});
 ;angular.module('platform')
 .factory('FieldTester', function($q){
   function FieldTester(data){
@@ -203,10 +272,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   }
 });
 ;angular.module('platform')
-.directive('test', function(){
-
-})
-;angular.module('platform')
 .directive('userport', function(){
   return {
     restrict: 'E',
@@ -226,7 +291,19 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   }
 
   $scope.openSetting = function(){
-   
+    var info = self.getInfo();
+    info.onok = function(s){
+      var user = models.User.get({id: info._id}, function() {
+        angular.extend(user, s);
+        user.$save().then(function(){
+          self.verify();
+        }, function(){
+          
+        });
+      });
+      $scope.$broadcast('closeDialog');
+    };
+    $scope.$broadcast('openDialog', info);
   }
 
   $scope.changeState = function(state){

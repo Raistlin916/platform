@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     sass: {                          
       dist: {
         options: {
-          style: 'expanded'
+          outputStyle: 'compressed'
         },
         files: {
           'client/style.css': 'views/main.scss'
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         tasks: ['concat']
       },
       css: {
-        files: 'views/stylesheets/*.scss',
+        files: 'views/**/*.scss',
         tasks: ['sass']
       },
       jade: {

@@ -6,7 +6,8 @@
   <button type="button" ng-click="addMicropost(content)" class="btn btn-default">post</button>
 </form>
 <ul class="microposts">
-  <li ng-repeat="mp in microposts"><a href="javascript:;" ng-click="open('/users/{{mp.author._id}}')"><img src="http://www.gravatar.com/avatar/{{mp.author.emailHash}}.jpg?s=80" class="avatar-thumbnail avatar"/></a>
+  <li ng-repeat="mp in microposts"><a href="javascript:;" ng-click="open('/users/{{mp.author._id}}')">
+      <avatar hash="mp.author.emailHash" class="avatar-thumbnail"></avatar></a>
     <div class="micropost-main">
       <div class="date">{{mp.date | date:'yyyy-MM-dd HH:mm:ss'}}</div>
       <div>{{mp.author.username}}</div>

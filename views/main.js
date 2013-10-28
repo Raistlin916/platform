@@ -1,7 +1,35 @@
+(function(){
+  // hack from here
+  var _md5 = md5, cache = {};
+  function md5Cache(k){
+    if(cache[k]){
+      return cache[k];
+    } else {
+      if(Object.keys(cache).length > 40){
+        cache = {};
+      }
+      return cache[k] = _md5(k);
+    }
+  }
+  window.md5 = md5Cache;
+})();
+
 angular.module('platform', ['ngResource', 'ngProgressLite'])
 .factory('models', function($resource){
+    var Micropost = $resource('/microposts/:id', {id:'@_id'}, {
+      query: {
+        method: 'get',
+        isArray: true,
+        transformResponse: function(data){
+          return JSON.parse(data).map(function(item){
+            item.author.emailHash = md5(item.author.email);
+            return item;
+          });
+        }
+      }
+    });
     return {
-      Micropost: $resource('/microposts/:id', {id:'@_id'}),
+      Micropost: Micropost,
       User: $resource('/users/:id', {id: '@_id'})
     }
   })
@@ -11,6 +39,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     var p = $http.get('/verify')
     p.then(function(res){
       state.info = res.data;
+      state.info.emailHash = md5(res.data.email);
       state.logging = true;
     }, function(r){
       state.logging = false;

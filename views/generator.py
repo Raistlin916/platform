@@ -9,8 +9,15 @@ def create_directive(name):
         js_file.write(
 '''angular.module('platform')
 .directive('%s', function(){
-    
-});''' % name)
+    return {
+        restrict: 'E',
+        scope: {},
+        link: function(scope, elem, attr){
+            
+        },
+        templateUrl : '/partials/%s.html'
+    }
+});''' % (name, name) )
         js_file.close()
         jade_file = open(os.path.join(name, name+'.jade'), 'w')
         jade_file.close();

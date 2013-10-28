@@ -1,0 +1,5 @@
+div(ng-if="opened")
+  .dialog-wrapper(ng-if="global")
+    .dialog-content
+      .bounce-box(ng-transclude)
+  .bounce-box(ng-if="!global", ng-transclude)

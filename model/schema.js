@@ -44,10 +44,6 @@ var UserSchema = new Schema({
   id: false
 });
 
-UserSchema.virtual('emailHash').get(function () {
-  return md5(this.email);
-});
-
 UserSchema.path('email').validate(function (email) {
    var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
    return emailRegex.test(email);
