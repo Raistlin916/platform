@@ -33,7 +33,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       User: $resource('/users/:id', {id: '@_id'})
     }
   })
-.factory('self', function(models, $http, $rootScope, progressService){
+.factory('self', function(models, $http, progressService){
   var state = {};
   function verify(){
     var p = $http.get('/verify')

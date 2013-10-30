@@ -189,3 +189,25 @@ dialog {
     padding-bottom: 30px;
   }
 }
+
+error-panel {
+  position: fixed;
+  .error-message {
+    color: white;
+    padding: 5px 20px;
+    margin-bottom: 2px;
+    background: rgba(230, 126, 34, .5);
+    opacity: .7;
+    animation: slide .4s forwards ease;
+    z-index: 1000;
+  }
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

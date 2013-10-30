@@ -33,7 +33,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       User: $resource('/users/:id', {id: '@_id'})
     }
   })
-.factory('self', function(models, $http, $rootScope, progressService){
+.factory('self', function(models, $http, progressService){
   var state = {};
   function verify(){
     var p = $http.get('/verify')
@@ -120,12 +120,20 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     }
 });
 ;angular.module('platform')
-.directive('errorPanel', function($rootScope){
+.directive('errorPanel', function($rootScope, $timeout){
     return {
         restrict: 'E',
         scope: {},
         link: function(scope, elem, attr){
-          $rootScope
+          scope.errorList = [];
+          $rootScope.$on('error', function(e, data){
+            if(angular.isDefined(data.message)){
+              scope.errorList.push({message: data.message});
+              $timeout(function(){
+                scope.errorList.shift();
+              }, 2000);
+            }
+          });
         },
         templateUrl : '/partials/errorPanel.html'
     }
@@ -212,9 +220,11 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   }
 })
 ;angular.module('platform')
-.controller('Micropost', function($scope, $rootScope, models){
+.controller('Micropost', function($scope, models){
+  var n = 0;
   $scope.open = function(url){
-    $rootScope.$broadcast('addPort', url);
+    $scope.$emit('error', {message: 'test' + n++});
+    $scope.$emit('addPort', url);
   };
   var Micropost = models.Micropost;
   $scope.addMicropost = function(content){

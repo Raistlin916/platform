@@ -1,7 +1,9 @@
 angular.module('platform')
-.controller('Micropost', function($scope, $rootScope, models){
+.controller('Micropost', function($scope, models){
+  var n = 0;
   $scope.open = function(url){
-    $rootScope.$broadcast('addPort', url);
+    $scope.$emit('error', {message: 'test' + n++});
+    $scope.$emit('addPort', url);
   };
   var Micropost = models.Micropost;
   $scope.addMicropost = function(content){
