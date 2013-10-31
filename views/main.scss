@@ -76,7 +76,6 @@ ul.microposts {
   transition: .1s ease all;
   font-weight: 200;
   min-width: 80px;
-  text-transform: uppercase;
 }
 
 .btn:focus {
@@ -192,14 +191,15 @@ dialog {
 
 error-panel {
   position: fixed;
+  z-index: 2000;
   .error-message {
     color: white;
     padding: 5px 20px;
     margin-bottom: 2px;
     background: rgba(230, 126, 34, .5);
     opacity: .7;
-    animation: slide .4s forwards ease;
-    z-index: 1000;
+    animation: slide .4s forwards ease, fadeout .5s forwards ease 1s;
+    float: left; 
   }
 }
 
@@ -209,5 +209,14 @@ error-panel {
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: .7;
+  }
+  100% {
+    opacity: 0;
   }
 }

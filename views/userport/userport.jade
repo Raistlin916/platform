@@ -3,7 +3,8 @@ div(ng-switch="state")
     h3 修改资料
     avatar(hash="emailHash")
     input(type="email", ng-model="email")
-    input(type="button", value="ok", ng-click="onok(this)")
+    button.btn.btn-primary(ng-click="ok(this)") 保存
+    button.btn.btn-default(ng-click="cancel()") 取消
   div(ng-switch-when="out")
     button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  

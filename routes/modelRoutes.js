@@ -103,20 +103,24 @@ function updateUser(req, res){
     res.send(401);
     return;
   }
-  var p = User.findOne({_id: req.params.id}).exec();
-  p.then(function(doc){
+
+  Q.fcall(function(){
+    return User.findOne({_id: req.params.id}).exec();
+  }).then(function(doc){
+    var d = Q.defer();
     doc.email = req.body.email;
 
     doc.save(function(err){
       if(err){
-        Q.reject(403);
+        return d.reject(403);
       } else {
-        Q.resolve(200);
+        return d.resolve(200);
       }
     });
+    return d.promise;
   }).then(function(){
     res.send(200);
-  },function(){
+  }, function(){
     res.send(500);
   });
   

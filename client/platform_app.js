@@ -221,9 +221,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
 })
 ;angular.module('platform')
 .controller('Micropost', function($scope, models){
-  var n = 0;
   $scope.open = function(url){
-    $scope.$emit('error', {message: 'test' + n++});
     $scope.$emit('addPort', url);
   };
   var Micropost = models.Micropost;
@@ -302,17 +300,24 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
 
   $scope.openSetting = function(){
     var info = self.getInfo();
-    info.onok = function(s){
-      var user = models.User.get({id: info._id}, function() {
-        angular.extend(user, s);
+    info.ok = function(s){
+      models.User.get({id: info._id}, function(user) {
+        if(user.email == s.email){
+          $scope.$broadcast('closeDialog');
+          return;
+        }
+        user.email = s.email;
         user.$save().then(function(){
           self.verify();
+          $scope.$broadcast('closeDialog');
         }, function(){
-          
+          $scope.$emit('error', {message: '修改失败'});
         });
       });
-      $scope.$broadcast('closeDialog');
     };
+    info.cancel = function(){
+      $scope.$broadcast('closeDialog');
+    }
     $scope.$broadcast('openDialog', info);
   }
 
