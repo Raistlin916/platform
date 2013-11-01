@@ -16,7 +16,9 @@ html(ng-app="platform")
   body
     error-panel
     .container.row
-      .col-lg-8(ng-include="'/partials/microposts.html'", ng-controller="Micropost")
+      .col-lg-8
+        group
+        microposts
       .col-lg-4
         userport
         port-list

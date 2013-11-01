@@ -1,10 +1,10 @@
 div(ng-switch="state")
-  dialog(ng-global="true")
+  dialog(name="user-setting", controller="changeUserInfo", global="true")
     h3 修改资料
     avatar(hash="emailHash")
     input(type="email", ng-model="email")
-    button.btn.btn-primary(ng-click="ok(this)") 保存
-    button.btn.btn-default(ng-click="cancel()") 取消
+    button.btn.btn-primary(ng-click="ok()") 保存
+    button.btn.btn-default(ng-click="close()") 取消
   div(ng-switch-when="out")
     button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  
@@ -36,7 +36,7 @@ div(ng-switch="state")
   div(ng-switch-when="in")
     avatar(hash="userState.info.emailHash")
     div
-      a(href="javascript:;", ng-click="openSetting()") 修改
+      a(href="javascript:;", call-dialog="user-setting") 修改
     div
       a(href="javascript:;", ng-click="logout()") 退出
 

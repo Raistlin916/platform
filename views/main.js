@@ -26,6 +26,20 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
             return item;
           });
         }
+      },
+      save: {
+        method: 'post',
+        transformResponse: function(data, resGetrer){
+          var item;
+          try {
+            item = JSON.parse(data);
+          } catch(e){
+            return data;
+          }
+
+          item.author.emailHash = md5(item.author.email);
+          return item;
+        }
       }
     });
     return {

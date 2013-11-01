@@ -1,0 +1,12 @@
+dialog(name="add-group", controller="addGroup")
+  .form-inline
+    .form-group
+      input.form-control(type="text", ng-model="data.content")
+    |  
+    button.btn.btn-default(type="button", ng-click="ok()") 提交
+    button.btn.btn-default(type="button", ng-click="close()") 取消
+button.btn.btn-default(call-dialog="add-group") 添加
+.clearfix
+  .group-item(ng-repeat="group in groups")
+    div {{group.name}}
+    div {{group.desc}}

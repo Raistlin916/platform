@@ -26,6 +26,20 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
             return item;
           });
         }
+      },
+      save: {
+        method: 'post',
+        transformResponse: function(data, resGetrer){
+          var item;
+          try {
+            item = JSON.parse(data);
+          } catch(e){
+            return data;
+          }
+
+          item.author.emailHash = md5(item.author.email);
+          return item;
+        }
       }
     });
     return {
@@ -100,37 +114,69 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     }
 });
 ;angular.module('platform')
-.directive('dialog', function($rootScope){
+.directive('dialog', function(){
+    var reservedField = ['opened', 'close', 'global'];
+    function verify(target){
+      if(reservedField.some(function(k){
+        return angular.isDefined(target[k]);
+      })){
+        throw new Error('used reserved field in dialog controller');
+      }
+    }
     return {
       restrict: 'E',
       templateUrl: '/partials/dialog.html',
-      scope: {},
+      scope: {controller: "="},
       transclude: true,
       link: function(scope, elem, attr){
         scope.opened = false;
+        scope.close = function(){
+          scope.opened = false;
+        }
         scope.$on('openDialog', function(e, data){
-          scope.global = attr.ngGlobal == 'true';
-          scope.opened = true;
-          angular.extend(scope, data);
+          if(data.name == attr.name){
+            if(scope.controller){
+              verify(scope.controller);
+              scope.controller.init && scope.controller.init.call(scope);
+            }
+            scope.global = attr.global == 'true';
+            scope.opened = true;
+            angular.extend(scope, scope.controller);
+            scope.$digest();
+          }
         });
         scope.$on('closeDialog', function(e, data){
-          scope.opened = false;
+          scope.close();
         });
       }
     }
+})
+.directive('callDialog', function($rootScope){
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attr){
+      angular.element(elem).bind('click', function(){
+        $rootScope.$broadcast('openDialog', {name: attr.callDialog});
+      });
+    }
+  }
 });
 ;angular.module('platform')
-.directive('errorPanel', function($rootScope, $timeout){
+.directive('errorPanel', function($rootScope){
     return {
         restrict: 'E',
         scope: {},
         link: function(scope, elem, attr){
           scope.errorList = [];
+          var tid;
           $rootScope.$on('error', function(e, data){
             if(angular.isDefined(data.message)){
-              scope.errorList.push({message: data.message});
-              $timeout(function(){
-                scope.errorList.shift();
+              var el = scope.errorList;
+              el.push({message: data.message});
+              clearTimeout(tid);
+              tid = setTimeout(function(){
+                el.length = 0;
+                scope.$digest();
               }, 2000);
             }
           });
@@ -220,21 +266,49 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   }
 })
 ;angular.module('platform')
+.directive('group', function(){
+  return {
+    restrict: 'E',
+    scope: {},
+    controller: 'Group',
+    templateUrl : '/partials/group.html'
+  }
+})
+.controller('Group', function($scope){
+  $scope.groups = [{name: 'name1', desc: 'desc1'},{name: 'name2', desc: 'desc2'},{name: 'name3', desc: 'desc3'}];
+  $scope.addGroup = {
+    ok: function(){
+        this.close();
+      }
+    };
+});
+;angular.module('platform')
+.directive('microposts', function(){
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl : '/partials/microposts.html',
+        controller: 'Micropost'
+    }
+})
 .controller('Micropost', function($scope, models){
   $scope.open = function(url){
     $scope.$emit('addPort', url);
   };
   var Micropost = models.Micropost;
+  $scope.data = {content: ""};
   $scope.addMicropost = function(content){
     if(!content.trim().length){
       return;
     }
     var newPost = new Micropost({content: content});
    
-    newPost.$save(function(newPost){
+    newPost.$save(null, function(newPost){
       $scope.microposts.push(newPost);
+    }, function(){
+      $scope.$emit('error', {message: '没权限'});
     });
-    $scope.content = "";
+    $scope.data.content = "";
   };
 
   $scope.showMicropost = function(){
@@ -245,8 +319,10 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   $scope.showMicropost();
 
   $scope.deleteMicropost = function(index){      
-    $scope.microposts[index].$remove(function(){
+    $scope.microposts[index].$remove(null, function(){
       $scope.microposts.splice(index, 1);
+    }, function(){
+      $scope.$emit('error', {message: '删除失败，没有权限'});
     });
   }
 
@@ -298,28 +374,30 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     $scope.errorMessage = info;
   }
 
-  $scope.openSetting = function(){
-    var info = self.getInfo();
-    info.ok = function(s){
-      models.User.get({id: info._id}, function(user) {
-        if(user.email == s.email){
-          $scope.$broadcast('closeDialog');
+  $scope.changeUserInfo = {
+    init: function(){
+      angular.extend(this, self.getInfo());
+    },
+    ok: function(){
+      var that = this;
+      models.User.get({id: that._id}, function(user) {
+        if(user.email == that.email){
+          that.close();
           return;
         }
-        user.email = s.email;
+        user.email = that.email;
         user.$save().then(function(){
           self.verify();
-          $scope.$broadcast('closeDialog');
+          that.close();
         }, function(){
           $scope.$emit('error', {message: '修改失败'});
         });
       });
-    };
-    info.cancel = function(){
-      $scope.$broadcast('closeDialog');
     }
-    $scope.$broadcast('openDialog', info);
-  }
+  };
+
+
+  
 
   $scope.changeState = function(state){
     $scope.data = {};

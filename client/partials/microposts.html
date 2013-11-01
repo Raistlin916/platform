@@ -1,11 +1,11 @@
 
-<form class="form-inline">
+<div class="form-inline">
   <div class="form-group">
-    <input type="text" ng-model="content" class="form-control"/>
+    <input type="text" ng-model="data.content" class="form-control"/>
   </div> 
-  <button type="button" ng-click="addMicropost(content)" class="btn btn-default">post</button>
-</form>
-<ul class="microposts">
+  <button type="button" ng-click="addMicropost(data.content)" class="btn btn-default">提交</button>
+</div>
+<ul>
   <li ng-repeat="mp in microposts"><a href="javascript:;" ng-click="open('/users/{{mp.author._id}}')">
       <avatar hash="mp.author.emailHash" class="avatar-thumbnail"></avatar></a>
     <div class="micropost-main">

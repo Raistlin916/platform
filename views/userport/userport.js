@@ -17,28 +17,30 @@ angular.module('platform')
     $scope.errorMessage = info;
   }
 
-  $scope.openSetting = function(){
-    var info = self.getInfo();
-    info.ok = function(s){
-      models.User.get({id: info._id}, function(user) {
-        if(user.email == s.email){
-          $scope.$broadcast('closeDialog');
+  $scope.changeUserInfo = {
+    init: function(){
+      angular.extend(this, self.getInfo());
+    },
+    ok: function(){
+      var that = this;
+      models.User.get({id: that._id}, function(user) {
+        if(user.email == that.email){
+          that.close();
           return;
         }
-        user.email = s.email;
+        user.email = that.email;
         user.$save().then(function(){
           self.verify();
-          $scope.$broadcast('closeDialog');
+          that.close();
         }, function(){
           $scope.$emit('error', {message: '修改失败'});
         });
       });
-    };
-    info.cancel = function(){
-      $scope.$broadcast('closeDialog');
     }
-    $scope.$broadcast('openDialog', info);
-  }
+  };
+
+
+  
 
   $scope.changeState = function(state){
     $scope.data = {};

@@ -1,11 +1,11 @@
 
 <div ng-switch="state">
-  <dialog ng-global="true">
+  <dialog name="user-setting" controller="changeUserInfo" global="true">
     <h3>修改资料</h3>
     <avatar hash="emailHash"></avatar>
     <input type="email" ng-model="email"/>
-    <button ng-click="ok(this)" class="btn btn-primary">保存</button>
-    <button ng-click="cancel()" class="btn btn-default">取消</button>
+    <button ng-click="ok()" class="btn btn-primary">保存</button>
+    <button ng-click="close()" class="btn btn-default">取消</button>
   </dialog>
   <div ng-switch-when="out">
     <button type="button" ng-click="changeState('login')" class="btn btn-primary">登录</button> 
@@ -41,7 +41,7 @@
   </div>
   <div ng-switch-when="in">
     <avatar hash="userState.info.emailHash"></avatar>
-    <div><a href="javascript:;" ng-click="openSetting()">修改</a></div>
+    <div><a href="javascript:;" call-dialog="user-setting">修改</a></div>
     <div><a href="javascript:;" ng-click="logout()">退出</a></div>
   </div>
 </div>
