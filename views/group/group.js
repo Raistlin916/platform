@@ -8,9 +8,10 @@ angular.module('platform')
   }
 })
 .controller('Group', function($scope){
-  $scope.groups = [{name: 'name1', desc: 'desc1'},{name: 'name2', desc: 'desc2'},{name: 'name3', desc: 'desc3'}];
+  $scope.groups = [];
   $scope.addGroup = {
     ok: function(){
+        $scope.groups.push({name: '123', desc: 'bbb'});
         this.close();
       }
     };

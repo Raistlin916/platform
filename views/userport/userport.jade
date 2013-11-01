@@ -4,7 +4,7 @@ div(ng-switch="state")
     avatar(hash="emailHash")
     input(type="email", ng-model="email")
     button.btn.btn-primary(ng-click="ok()") 保存
-    button.btn.btn-default(ng-click="close()") 取消
+    button.btn(ng-click="close()") 取消
   div(ng-switch-when="out")
     button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  

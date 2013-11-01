@@ -2,7 +2,7 @@
   .form-group
     input.form-control(type="text", ng-model="data.content")
   |  
-  button.btn.btn-default(type="button", ng-click="addMicropost(data.content)") 提交
+  button.btn(type="button", ng-click="addMicropost(data.content)") 提交
 ul
   li(ng-repeat="mp in microposts")
     a(href="javascript:;", ng-click="open('/users/{{mp.author._id}}')")

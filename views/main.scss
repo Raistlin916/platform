@@ -5,10 +5,6 @@ $light-border: 1px solid rgba(0,0,0,.2);
 $font-stack: Helvetica, sans-serif;
 $hint-font-color: #66afe9;
 
-@mixin light-box() {
-  box-shadow: $light-box-shadow;
-  border: $light-border;
-}
 
 @mixin primary-font() {
 	color: #242628;
@@ -25,17 +21,29 @@ $hint-font-color: #66afe9;
 
 body {
 	@include primary-font;
-  background: #edece4;
+  background: #395976;
+}
+
+.clearfix {
+  zoom:1;
+  &:before, &:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+  }
+  &:after {
+    clear: both;
+  }
 }
 
 
 .avatar {
   border-radius: 5px;
-  @include light-box;
   background: white;
 }
 
-img.avatar-thumbnail {
+.avatar-thumbnail {
   height: 40px;
   width: 40px;
   border-radius: 3px;
@@ -65,6 +73,7 @@ microposts {
 
 .container {
 	padding-top: 20px;
+  margin: 0 auto;
 }
 
 .buffer-bottom, .buffer-bottom1 {
@@ -76,13 +85,52 @@ microposts {
 }
 
 .btn {
-  transition: .1s ease all;
+  display: inline-block;
   font-weight: 200;
   min-width: 80px;
+  font-size: 100%;
+  padding: .5em 1.5em;
+  color: rgba(0,0,0,.8);
+  border: 0 rgba(0,0,0,0);
+  border-radius: 2px;
+  background-color: #E6E6E6;
+  zoom: 1;
+  line-height: normal;
+  transition: .1s linear box-shadow;
+  white-space: nowrap;
+  vertical-align: baseline;
+  text-align: center;
+  cursor: pointer;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
-.btn:focus {
+.btn:active {
+  box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset, 0 0 6px rgba(0,0,0,.2) inset;
+}
+
+.btn:active, .btn:focus {
   outline: none;
+}
+
+.btn-primary {
+  background-color: #0078e7;
+  color: #fff;
+}
+
+.btn-success {
+  background: rgb(28, 184, 65);
+  color: #fff;
+}
+
+.btn-error {
+  background: rgb(202, 60, 60);
+  color: #fff;
+}
+
+.btn-warning {
+  background: rgb(223, 117, 20);
+  color: #fff;
 }
 
 input[type="text"], input[type="password"], input[type="email"] {
@@ -112,9 +160,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 }
 
 .bounce-box {
-	border: 1px solid rgba(0,0,0,.2);
-	border-radius: 3px;
-	box-shadow: 0 0 10px rgba(0,0,0,.15);
+	border-radius: 4px;
   background: white;
 	animation: pulse .2s forwards ease-in-out;
   padding: 20px 40px;
@@ -183,7 +229,6 @@ dialog {
     padding: 10px;
     margin-right: auto;
     margin-left: auto;
-
     right: auto;
     left: 50%;
     width: 600px;
