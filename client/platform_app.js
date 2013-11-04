@@ -44,7 +44,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     });
     return {
       Micropost: Micropost,
-      User: $resource('/users/:id', {id: '@_id'})
+      User: $resource('/users/:id', {id: '@_id'}),
+      Group: $resource('/groups/:id', {id: '@_id'}),
+      GroupUsers: $resource('/groups/:gid/users/:uid', {gid: '@gid', uid: '@uid'})
     }
   })
 .factory('self', function(models, $http, progressService){
@@ -115,7 +117,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
 });
 ;angular.module('platform')
 .directive('dialog', function(){
-    var reservedField = ['opened', 'close', 'global'];
+    var reservedField = ['opened', 'close', 'global', 'data'];
     function verify(target){
       if(reservedField.some(function(k){
         return angular.isDefined(target[k]);
@@ -130,8 +132,12 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       transclude: true,
       link: function(scope, elem, attr){
         scope.opened = false;
+        scope.data = {};
         scope.close = function(){
           scope.opened = false;
+        }
+        scope.reset = function(){
+          scope.data = {};
         }
         scope.$on('openDialog', function(e, data){
           if(data.name == attr.name){
@@ -274,14 +280,52 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     templateUrl : '/partials/group.html'
   }
 })
-.controller('Group', function($scope){
-  $scope.groups = [];
+.controller('Group', function($scope, models, self){
+  $scope.selfState = self.getState();
+  $scope.$watch('selfState.logging', function(n){
+    if(n!= undefined){
+      $scope.groups = models.Group.query();
+    }
+  });  
+
   $scope.addGroup = {
     ok: function(){
-        $scope.groups.push({name: '123', desc: 'bbb'});
-        this.close();
-      }
-    };
+      var newGroup = new models.Group(this.data)
+      , that = this;
+      newGroup.$save(null, function(){
+        $scope.groups.push(newGroup);
+        that.reset();
+        that.close();
+      }, function(){
+        $scope.$emit('error', {message: '提交失败'});
+      });
+    }
+  };
+  $scope.deleteGroup = function(i){
+    $scope.groups[i].$remove(null
+      , function(){
+      $scope.groups.splice(i, 1);
+    }, function(){
+      $scope.$emit('error', {message: '删除失败'});
+    });
+  };
+  $scope.joinGroup = function(group){
+    new models.GroupUsers({gid: group._id}).$save(null
+      , function(){
+        group.joined = true;
+    }, function(reason){
+      $scope.$emit('error', {message: reason.data});
+    });
+  }
+  $scope.leaveGroup = function(group){
+    new models.GroupUsers({gid: group._id, uid: self.getInfo()._id}).$remove(null
+      , function(){
+        group.joined = false;
+    }, function(reason){
+      $scope.$emit('error', {message: reason.data});
+    });
+  }
+
 });
 ;angular.module('platform')
 .directive('microposts', function(){

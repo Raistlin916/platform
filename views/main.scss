@@ -37,6 +37,14 @@ body {
   }
 }
 
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
 
 .avatar {
   border-radius: 5px;
@@ -87,7 +95,6 @@ microposts {
 .btn {
   display: inline-block;
   font-weight: 200;
-  min-width: 80px;
   font-size: 100%;
   padding: .5em 1.5em;
   color: rgba(0,0,0,.8);
@@ -113,8 +120,17 @@ microposts {
   outline: none;
 }
 
+.btn-sm {
+  font-size: 12px;
+}
+
 .btn-primary {
   background-color: #0078e7;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #529ECC;
   color: #fff;
 }
 
@@ -146,7 +162,7 @@ input[type="text"], input[type="password"], input[type="email"] {
   border-radius: 2px;
   box-shadow: none;
   outline: none;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.1s, box-shadow ease-in-out 0.1s;
 }
 
 input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
@@ -159,16 +175,32 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
   border-color: #b94a48;
 }
 
-.bounce-box {
-	border-radius: 4px;
-  background: white;
-	animation: pulse .2s forwards ease-in-out;
-  padding: 20px 40px;
-  margin-bottom: 1px;
-
+.box, .bounce-box {
+  border-radius: 4px;
+  background: white no-repeat;
   input {
     height: 40px;
   }
+  .box-head {
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    padding: 10px;
+    .box-control {
+      float: right;
+      padding: 10px;
+    }
+  }
+  .box-body {
+    background: #F5F5F5;
+    border-radius: 0 0 4px 4px;
+    padding: 10px;
+  }
+  .box-foot {
+    padding: 10px;
+  }
+}
+
+.bounce-box {
+	animation: pulse .15s forwards ease-in-out;
 }
 
 @keyframes pulse {
@@ -270,8 +302,18 @@ error-panel {
 }
 
 group {
-  .group-item {
-    border: 1px solid grey;
-    float: left;
+  .group-list {
+    padding: 10px 0;
+    .group-item {
+      margin: 0 10px 10px 0;
+      float: left;
+      width: 240px;
+      .group-name {
+        display: inline-block;
+      }
+      .group-desc {
+        height: 80px;
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 angular.module('platform')
 .directive('dialog', function(){
-    var reservedField = ['opened', 'close', 'global'];
+    var reservedField = ['opened', 'close', 'global', 'data'];
     function verify(target){
       if(reservedField.some(function(k){
         return angular.isDefined(target[k]);
@@ -15,8 +15,12 @@ angular.module('platform')
       transclude: true,
       link: function(scope, elem, attr){
         scope.opened = false;
+        scope.data = {};
         scope.close = function(){
           scope.opened = false;
+        }
+        scope.reset = function(){
+          scope.data = {};
         }
         scope.$on('openDialog', function(e, data){
           if(data.name == attr.name){

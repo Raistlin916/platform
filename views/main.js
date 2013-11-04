@@ -44,7 +44,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     });
     return {
       Micropost: Micropost,
-      User: $resource('/users/:id', {id: '@_id'})
+      User: $resource('/users/:id', {id: '@_id'}),
+      Group: $resource('/groups/:id', {id: '@_id'}),
+      GroupUsers: $resource('/groups/:gid/users/:uid', {gid: '@gid', uid: '@uid'})
     }
   })
 .factory('self', function(models, $http, progressService){

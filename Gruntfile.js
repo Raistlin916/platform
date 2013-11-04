@@ -36,9 +36,6 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      options: {
-        debounceDelay: 250
-      },
       js: {
         files: 'views/**/*.js',
         tasks: ['concat']

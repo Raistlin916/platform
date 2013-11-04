@@ -86,25 +86,44 @@ var verifyList = {};
 
 function bindVerify(app){
   for(var method in verifyList){
-    verifyList[method].forEach(function(url){
-      app[method](url, verify);
+    verifyList[method].forEach(function(arg){
+      if(typeof arg == 'string'){
+        arg = {url: arg, deliver: true};
+      }
+
+      app[method](arg.url, arg.deliver? verifyAndDeliver: verify);
     });
   }
 }
 
 function verify(req, res, next){
   var sid = req.cookies.sid;
+  models.OnlineUser.findById(sid, function(err, doc){
+    if(req.session == null){
+      req.session = {};
+    }
+    if(doc){
+      req.session.uid = doc.uid;
+    }
+    next();
+  });
+}
+
+function verifyAndDeliver(req, res, next){
+  var sid = req.cookies.sid;
   models.OnlineUser.findById(sid).exec()
   .then(function(doc){
     if(doc == null){
       return Q.reject(ERROR_TIMEOUT);
     }
+    return Q.resolve(doc);
+  }).then(function(doc){
     if(req.session == null){
       req.session = {};
     }
     req.session.uid = doc.uid;
     next();
-  }).then(null, function(reason){
+  }, function(reason){
     switch(reason){
       case ERROR_TIMEOUT:
         res.send(401, '验证失败');

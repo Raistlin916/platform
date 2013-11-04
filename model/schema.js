@@ -60,9 +60,34 @@ var OnlineUser = new Schema({
   versionKey: false
 });
 
+var Group = new Schema({
+  chomd: {
+    type: String
+  },
+  pw: {
+    type: String,
+  },
+  desc: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  createDate: Date,
+  users: [{
+        type: ObjectId,
+        ref: "User"
+      }]
+}, {
+  versionKey: false
+});
+
 
 module.exports = {
   Micropost: mongoose.model('Micropost', MicropostSchema),
   User: mongoose.model('User', UserSchema),
-  OnlineUser: mongoose.model('OnlineUser', OnlineUser)
+  OnlineUser: mongoose.model('OnlineUser', OnlineUser),
+  Group: mongoose.model('Group', Group)
 }
