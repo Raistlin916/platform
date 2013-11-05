@@ -75,19 +75,31 @@ var Group = new Schema({
     type: String,
     required: true
   },
-  createDate: Date,
-  users: [{
-        type: ObjectId,
-        ref: "User"
-      }]
+  createDate: Date
 }, {
   versionKey: false
 });
+
+var UserGroup = new Schema({
+  uid: {
+    type: ObjectId,
+    required: true
+  },
+  gid: {
+    type: ObjectId,
+    required: true
+  },
+  joinDate: Date,
+}, {
+  versionKey: false
+});
+
 
 
 module.exports = {
   Micropost: mongoose.model('Micropost', MicropostSchema),
   User: mongoose.model('User', UserSchema),
   OnlineUser: mongoose.model('OnlineUser', OnlineUser),
-  Group: mongoose.model('Group', Group)
+  Group: mongoose.model('Group', Group),
+  UserGroup: mongoose.model('UserGroup', UserGroup)
 }

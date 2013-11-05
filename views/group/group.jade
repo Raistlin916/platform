@@ -13,7 +13,7 @@ button.btn(call-dialog="add-group") 添加
   .group-item.box(ng-repeat="group in groups")
     .box-head.clearfix
       h3.group-name {{group.name}}
-      .box-control
+      .box-control(ng-if="group.joined != undefined")
         button.btn.btn-secondary.btn-sm(ng-click="joinGroup(group)", ng-if="!group.joined") 加入
         button.btn.btn-default.btn-sm(ng-click="leaveGroup(group)", ng-if="group.joined") 退出
     .box-body

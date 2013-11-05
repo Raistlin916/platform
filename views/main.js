@@ -42,11 +42,18 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
         }
       }
     });
+    var GroupUser = $resource('/groups/:gid/users/:uid', {gid: '@gid', uid: '@uid'}, {
+      query: {
+        method: 'get',
+        isArray: true,
+        url: '/userGroups/:uid'
+      }
+    });
     return {
       Micropost: Micropost,
       User: $resource('/users/:id', {id: '@_id'}),
       Group: $resource('/groups/:id', {id: '@_id'}),
-      GroupUsers: $resource('/groups/:gid/users/:uid', {gid: '@gid', uid: '@uid'})
+      GroupUser: GroupUser
     }
   })
 .factory('self', function(models, $http, progressService){

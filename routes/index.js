@@ -12,7 +12,7 @@ exports.setRoutes = function(app){
   
   
   authenticate.setVerifyRoutes({
-    get: [{url: '/groups', deliver: false}],
+    get: ['/userGroups/:uid'],
     post: ['/microposts', '/users/:id', '/groups/:gid/users'],
     delete: ['/microposts/:id', '/groups/:gid/users/:uid']
   });

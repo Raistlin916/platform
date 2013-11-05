@@ -16,10 +16,7 @@ function savePost(req, res){
       return res.send(403, '格式错误');
     };
     newPost.populate('author', 'email username', function(err, n){
-      if(err){
-        return res.send(500);
-      }
-      res.send(n);
+      err ? res.send(500) : res.send(n);
     });
   });
 }
@@ -96,8 +93,7 @@ function deleteUser(req, res){
 
 function getUser(req, res){
   User.findOne({_id: req.params.id}, {pw: false}, function (err, doc) {
-    if (err) return res.send(500, '获取失败');
-    res.send(doc);
+    err ? res.send(500, '获取失败') : res.send(doc);
   });
 }
 
@@ -114,11 +110,7 @@ function updateUser(req, res){
     doc.email = req.body.email;
 
     doc.save(function(err){
-      if(err){
-        return d.reject(403);
-      } else {
-        return d.resolve(200);
-      }
+      err ? d.reject(403) : d.resolve(200);
     });
     return d.promise;
   }).then(function(){
@@ -130,7 +122,8 @@ function updateUser(req, res){
 
 
 /*** handle group routes ***/
-var Group = models.Group;
+var Group = models.Group
+, UserGroup = models.UserGroup;
 function saveGroup(req, res){
   if(req.body.name == null || req.body.desc == null){
     res.send(403, '缺少必要信息');
@@ -138,39 +131,22 @@ function saveGroup(req, res){
   }
   var newGroup = new Group(req.body);
   newGroup.save(function(err, n){
-    console.log(err);
-    if(err){
-      return res.send(403, '注册失败');
-    };
-    res.send(newGroup);
+    err ? res.send(403, '注册失败') : res.send(newGroup);
   });
 }
 
 function listGroup(req, res){
-  var uid = req.session.uid;
   Group.find(function(err, groups){
-    if(err){
-      return res.send(500);
-    }
-
-    groups = groups.map(function(item){
-      item = item.toObject();
-      if(uid != undefined){
-        item.joined = item.users.some(function(i){
-          return i.toString() == uid;
-        });
-      }
-      delete item.users;
-      return item;
-    });
-    res.send(groups);
+    err ? res.send(500) : res.send(groups);
   });
 }
 
 function deleteGroup(req, res){
   Group.findOneAndRemove({ _id: req.params.id }, function (err) {
-    if (err) return res.send(500, '删除失败');
-    res.send(200);
+    err ? res.send(500, '删除失败') : res.send(200);
+  });
+  UserGroup.remove({gid: req.params.id}, function (err){
+    if(err){ console.log(err)};
   });
 }
 
@@ -178,19 +154,20 @@ function joinGroup(req, res){
   var gid = req.params.gid
   , uid = req.session.uid;
 
-  Group.findById(gid, function (err, doc) {
-    if (err) return res.send(500, '服务器未知错误');
-    if(~~doc.users.indexOf(uid)){
-      doc.users.push(uid);
-      doc.save(function(err){
-        if(err) {
-          return res.send(500, '服务器未知错误');
-        }
-        res.send(200);
-      });
-    } else {
-      res.send(400, '不能两次跨入同一条河');
+  UserGroup.findOne({uid: uid, gid: gid}).exec()
+  .then(function(doc){
+    var d = Q.defer();
+    if(doc){
+      return d.reject('不能两次跨入同一条河');
     }
+    new UserGroup({uid: uid, gid: gid, joinDate: new Date}).save(function(err){
+      err ? d.reject('服务器错误') : d.resolve();
+    });
+    return d.promise;
+  }).then(function(){
+    res.send(200);
+  }, function(reason){
+    res.send(400, reason);
   });
 }
 
@@ -201,20 +178,18 @@ function leaveGroup(req, res){
     return res.send(401);
   }
 
-  Group.findById(gid, function (err, doc) {
-    if (err) return res.send(500, '服务器未知错误');
-    var index = doc.users.indexOf(uid);
-    if(~index){
-      doc.users.splice(index, 1);
-      doc.save(function(err){
-        if(err) {
-          return res.send(500, '服务器未知错误');
-        }
-        res.send(200);
-      });
-    } else {
-      res.send(400, '你不在该组中');
-    }
+  UserGroup.remove({gid: gid, uid: uid}, function(err){
+    res.send(err? 500 : 200);
+  });
+}
+
+function listUserGroups(req, res){
+  var uid = req.session.uid;
+  if(uid != req.params.uid){
+    return res.send(401);
+  }
+  UserGroup.find({uid: uid}, {_id: false, uid: false, joinDate: false}, function(err, doc){
+    err ? res.send(500) : res.send(doc);
   });
 }
 
@@ -232,6 +207,7 @@ exports.init = function(app){
 
   app.post('/groups', saveGroup);
   app.get('/groups', listGroup);
+  app.get('/userGroups/:uid', listUserGroups);
   app.delete('/groups/:id', deleteGroup);
   app.post('/groups/:gid/users', joinGroup);
   app.delete('/groups/:gid/users/:uid', leaveGroup);

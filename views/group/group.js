@@ -9,9 +9,21 @@ angular.module('platform')
 })
 .controller('Group', function($scope, models, self){
   $scope.selfState = self.getState();
+  $scope.groups = models.Group.query();
   $scope.$watch('selfState.logging', function(n){
-    if(n!= undefined){
-      $scope.groups = models.Group.query();
+    if(n === true){
+      var d = models.GroupUser.query({uid: self.getInfo()._id}, function(){
+        $scope.groups.forEach(function(item){
+          item.joined = d.some(function(data){
+            return item._id == data.gid;
+          });
+        });
+      });
+    }
+    if(n === false){
+      $scope.groups.forEach(function(item){
+        item.joined = null;
+      });
     }
   });  
 
@@ -20,6 +32,7 @@ angular.module('platform')
       var newGroup = new models.Group(this.data)
       , that = this;
       newGroup.$save(null, function(){
+        newGroup.joined = false;
         $scope.groups.push(newGroup);
         that.reset();
         that.close();
@@ -37,7 +50,7 @@ angular.module('platform')
     });
   };
   $scope.joinGroup = function(group){
-    new models.GroupUsers({gid: group._id}).$save(null
+    new models.GroupUser({gid: group._id}).$save(null
       , function(){
         group.joined = true;
     }, function(reason){
@@ -45,7 +58,7 @@ angular.module('platform')
     });
   }
   $scope.leaveGroup = function(group){
-    new models.GroupUsers({gid: group._id, uid: self.getInfo()._id}).$remove(null
+    new models.GroupUser({gid: group._id, uid: self.getInfo()._id}).$remove(null
       , function(){
         group.joined = false;
     }, function(reason){
