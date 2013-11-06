@@ -8,37 +8,49 @@ angular.module('platform')
     }
 })
 .controller('Micropost', function($scope, models){
+  var Micropost = models.Micropost, group;
+  $scope.$on('load', function(e, data){
+    load(data.group);
+  });
+
   $scope.open = function(url){
     $scope.$emit('addPort', url);
   };
-  var Micropost = models.Micropost;
+
+  $scope.quit = function(){
+    $scope.$emit('quitGroup');
+  }
+  
   $scope.data = {content: ""};
+
   $scope.addMicropost = function(content){
     if(!content.trim().length){
       return;
     }
-    var newPost = new Micropost({content: content});
+    var newPost = new Micropost({content: content, gid: $scope.group._id});
    
     newPost.$save(null, function(newPost){
       $scope.microposts.push(newPost);
-    }, function(){
-      $scope.$emit('error', {message: '没权限'});
+    }, function(reason){
+      $scope.$emit('error', {message: reason.data});
     });
     $scope.data.content = "";
   };
 
-  $scope.showMicropost = function(){
-    Micropost.query(function(posts){
+  function load(group){
+    $scope.group = group;
+    Micropost.query({gid: $scope.group._id}, function(posts){
       $scope.microposts = posts;
     });
   }
-  $scope.showMicropost();
+  
 
-  $scope.deleteMicropost = function(index){      
-    $scope.microposts[index].$remove(null, function(){
+  $scope.deleteMicropost = function(index){
+    var post = $scope.microposts[index];
+    post.$remove({gid: $scope.group._id, pid: post._id}, function(){
       $scope.microposts.splice(index, 1);
-    }, function(){
-      $scope.$emit('error', {message: '删除失败，没有权限'});
+    }, function(reason){
+      $scope.$emit('error', {message: reason.data});
     });
   }
 

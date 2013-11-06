@@ -13,8 +13,8 @@ exports.setRoutes = function(app){
   
   authenticate.setVerifyRoutes({
     get: ['/userGroups/:uid'],
-    post: ['/microposts', '/users/:id', '/groups/:gid/users'],
-    delete: ['/microposts/:id', '/groups/:gid/users/:uid']
+    post: ['/groups/:gid/posts', '/users/:id', '/groups/:gid/users'],
+    delete: ['/groups/:gid/posts/:pid', '/groups/:gid/users/:uid']
   });
 
   authenticate.init(app);

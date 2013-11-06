@@ -4,50 +4,67 @@ var models = require('../model/schema')
 , Q = require('Q');
 
 
-/*** handle micropost routes ***/
-var Micropost = models.Micropost;
+/*** handle post routes ***/
 
 function savePost(req, res){
-  var newPost = new Micropost(req.body);
-  newPost.date = new Date;
-  newPost.author = req.session.uid;
-  newPost.save(function(err){
-    if(err){
-      return res.send(403, '格式错误');
-    };
-    newPost.populate('author', 'email username', function(err, n){
-      err ? res.send(500) : res.send(n);
+  var gid = req.params.gid, uid = req.session.uid;
+
+  var newPost = new models.Post({
+        author: uid,
+        date: new Date,
+        content: req.body.content
+      });
+
+  Group.update({ _id: gid }, { $push: { posts: newPost } }).exec()
+    .then(function(){
+      var d = Q.defer();
+      newPost.populate('author', 'email username -_id', function(err, doc){
+        err ? d.reject(err) : d.resolve(doc);
+      });
+      return d.promise;
+    })
+    .then(function(doc){
+      res.send(200, doc);
+    }, function(reason){
+      console.log(reason);
+      res.send(500);
     });
-  });
 }
 
 function listPosts(req, res){
-  Q.fcall(function(){
-    // populate 如何不返回_id?
-    return Micropost.find(null, {'__v': false}).populate('author', 'email username').exec();
-  }).then(function(posts){
-    res.send(posts);
-  }).fail(function(){
-    res.send(500);
-  });
+  Group.findById(req.params.gid).exec()
+    .then(function(doc){
+      var d = Q.defer();
+      doc.populate('posts.author', 'email username -_id', function(err, doc){
+        err ? d.reject(err) : d.resolve(doc);
+      });
+      return d.promise;
+    })
+    .then(function(doc){
+      res.send(doc.posts);
+    }, function(reason){
+      console.log(reason);
+      res.send(500);
+    });
 }
 
 function deletePost(req, res){
-  Micropost.findById(req.params.id).exec()
-  .then(function(doc){
-    if(!doc.author.equals(req.session.uid)){
+  var gid = req.params.gid, uid = req.session.uid, pid = req.params.pid;
+
+  Group.find({ _id: gid, 'posts._id': pid, 'posts.author': uid }, {'posts.$': 1}).exec()
+  .then(function(docs){
+    // 这个地方怎么写效率高？
+    if(docs.length == 0){
       return Q.reject(401);
     }
-    doc.remove(function(err){
-      err? res.send(500, '删除失败') : res.send(200);
-    });
-  }).then(null, function(r){
-    if(typeof r == 'number'){
-      res.send(r);
-    } else {
-      res.send(500, '删除失败');
-    }
+    // 下面总是返回作用次数1，即使author不对
+    return Group.update({ _id: gid }, {$pull: {posts: { _id: pid, author: uid }}}).exec();
+  }).then(function(){
+    res.send(200);
+  }, function(reason){
+    res.send(500, reason);
   });
+
 }
 
 
@@ -131,7 +148,7 @@ function saveGroup(req, res){
   }
   var newGroup = new Group(req.body);
   newGroup.save(function(err, n){
-    err ? res.send(403, '注册失败') : res.send(newGroup);
+    err ? res.send(403, '创建失败') : res.send(newGroup);
   });
 }
 
@@ -160,10 +177,6 @@ function joinGroup(req, res){
     if(doc){
       return d.reject('不能两次跨入同一条河');
     }
-    new UserGroup({uid: uid, gid: gid, joinDate: new Date}).save(function(err){
-      err ? d.reject('服务器错误') : d.resolve();
-    });
-    return d.promise;
   }).then(function(){
     res.send(200);
   }, function(reason){
@@ -183,21 +196,13 @@ function leaveGroup(req, res){
   });
 }
 
-function listUserGroups(req, res){
-  var uid = req.session.uid;
-  if(uid != req.params.uid){
-    return res.send(401);
-  }
-  UserGroup.find({uid: uid}, {_id: false, uid: false, joinDate: false}, function(err, doc){
-    err ? res.send(500) : res.send(doc);
-  });
-}
+
 
 
 exports.init = function(app){
-  app.post('/microposts', savePost);
-  app.get('/microposts', listPosts);
-  app.delete('/microposts/:id', deletePost);
+  
+  
+  
 
   app.post('/users', saveUser);
   app.get('/users', listUsers);
@@ -207,7 +212,10 @@ exports.init = function(app){
 
   app.post('/groups', saveGroup);
   app.get('/groups', listGroup);
-  app.get('/userGroups/:uid', listUserGroups);
+  app.post('/groups/:gid/posts', savePost);
+  app.get('/groups/:gid/posts', listPosts);
+  app.delete('/groups/:gid/posts/:pid', deletePost);
+  
   app.delete('/groups/:id', deleteGroup);
   app.post('/groups/:gid/users', joinGroup);
   app.delete('/groups/:gid/users/:uid', leaveGroup);

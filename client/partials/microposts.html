@@ -1,17 +1,27 @@
 
-<div class="form-inline">
-  <div class="form-group">
-    <input type="text" ng-model="data.content" class="form-control"/>
-  </div> 
-  <button type="button" ng-click="addMicropost(data.content)" class="btn">提交</button>
-</div>
-<ul>
-  <li ng-repeat="mp in microposts"><a href="javascript:;" ng-click="open('/users/{{mp.author._id}}')">
-      <avatar hash="mp.author.emailHash" class="avatar-thumbnail"></avatar></a>
-    <div class="micropost-main">
-      <div class="date">{{mp.date | date:'yyyy-MM-dd HH:mm:ss'}}</div>
-      <div>{{mp.author.username}}</div>
-      <div>{{mp.content}}<a ng-click="deleteMicropost($index)" href="javascript:;">[x]</a></div>
+<div class="box">
+  <div class="box-head">
+    <div class="box-control">
+      <button ng-click="quit()" class="btn btn-default">退出</button>
     </div>
-  </li>
-</ul>
+    <h3>{{group.name}}</h3>
+  </div>
+  <div class="box-body">
+    <div class="form-inline">
+      <div class="form-group">
+        <input type="text" ng-model="data.content" class="form-control"/>
+      </div> 
+      <button type="button" ng-click="addMicropost(data.content)" class="btn">提交</button>
+    </div>
+    <ul>
+      <li ng-repeat="mp in microposts"><a href="javascript:;" ng-click="open('/users/{{mp.author._id}}')">
+          <avatar hash="mp.author.emailHash" class="avatar-thumbnail"></avatar></a>
+        <div class="micropost-main">
+          <div class="date">{{mp.date | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+          <div>{{mp.author.username}}</div>
+          <div>{{mp.content}}<a ng-click="deleteMicropost($index)" href="javascript:;">[x]</a></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

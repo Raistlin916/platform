@@ -7,24 +7,12 @@ angular.module('platform')
     templateUrl : '/partials/group.html'
   }
 })
-.controller('Group', function($scope, models, self){
+.controller('Group', function($scope, models, self, $timeout){
+  $scope.state = 'choose-group';
   $scope.selfState = self.getState();
   $scope.groups = models.Group.query();
   $scope.$watch('selfState.logging', function(n){
-    if(n === true){
-      var d = models.GroupUser.query({uid: self.getInfo()._id}, function(){
-        $scope.groups.forEach(function(item){
-          item.joined = d.some(function(data){
-            return item._id == data.gid;
-          });
-        });
-      });
-    }
-    if(n === false){
-      $scope.groups.forEach(function(item){
-        item.joined = null;
-      });
-    }
+
   });  
 
   $scope.addGroup = {
@@ -52,15 +40,21 @@ angular.module('platform')
   $scope.joinGroup = function(group){
     new models.GroupUser({gid: group._id}).$save(null
       , function(){
-        group.joined = true;
+      $scope.state = 'in-group';
+      $timeout(function(){
+        $scope.$broadcast('load', {group: group});
+      });
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
   }
+  $scope.$on('quitGroup', function(){
+    $scope.state = 'choose-group';
+  });
   $scope.leaveGroup = function(group){
     new models.GroupUser({gid: group._id, uid: self.getInfo()._id}).$remove(null
       , function(){
-        group.joined = false;
+      
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });

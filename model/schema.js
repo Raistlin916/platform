@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
 
 mongoose.connect('localhost', 'platform_db');
 
-var MicropostSchema = new Schema({
+var PostSchema = new Schema({
   content:  {
       type: String,
       required: true
@@ -75,7 +75,8 @@ var Group = new Schema({
     type: String,
     required: true
   },
-  createDate: Date
+  createDate: Date,
+  posts: [PostSchema]
 }, {
   versionKey: false
 });
@@ -83,7 +84,8 @@ var Group = new Schema({
 var UserGroup = new Schema({
   uid: {
     type: ObjectId,
-    required: true
+    required: true,
+    unique: true
   },
   gid: {
     type: ObjectId,
@@ -97,7 +99,7 @@ var UserGroup = new Schema({
 
 
 module.exports = {
-  Micropost: mongoose.model('Micropost', MicropostSchema),
+  Post: mongoose.model('Post', PostSchema),
   User: mongoose.model('User', UserSchema),
   OnlineUser: mongoose.model('OnlineUser', OnlineUser),
   Group: mongoose.model('Group', Group),

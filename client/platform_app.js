@@ -16,7 +16,7 @@
 
 angular.module('platform', ['ngResource', 'ngProgressLite'])
 .factory('models', function($resource){
-    var Micropost = $resource('/microposts/:id', {id:'@_id'}, {
+    var Micropost = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {
         method: 'get',
         isArray: true,
@@ -55,63 +55,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       Group: $resource('/groups/:id', {id: '@_id'}),
       GroupUser: GroupUser
     }
-  })
-.factory('self', function(models, $http, progressService){
-  var state = {};
-  function verify(){
-    var p = $http.get('/verify')
-    p.then(function(res){
-      state.info = res.data;
-      state.info.emailHash = md5(res.data.email);
-      state.logging = true;
-    }, function(r){
-      state.logging = false;
-    });
-    progressService.watch(p);
-  }
-  
-
-  return {
-    login: function(username, pw){
-      var p = $http.post('/login', {username: username, pw: pw});
-      p.then(function(){
-        verify();
-      }, function(s){
-        console.log(s);
-      });
-      progressService.watch(p);
-      return p;
-    },
-    logout: function(){
-      $http.post('/logout')
-      .then(function(){
-        state.logging = false;
-      }, function(s){
-        console.log(s);
-      });
-    },
-    getInfo: function(){
-      return state.info;
-    },
-    getState: function(){
-      return state;
-    },
-    verify: verify
-  }
-}).factory('progressService', function($q, ngProgressLite){
-  return {
-    watch: function(p){
-      ngProgressLite.start();
-      $q.when(p, function(){
-        ngProgressLite.done();
-      }, function(){
-        
-        ngProgressLite.done();
-        ngProgressLite.remove();
-      });
-    }
-  }
-});
+  });
 
 ;angular.module('platform')
 .directive('avatar', function(){
@@ -237,6 +181,61 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
 
 
   return FieldTester;
+}).factory('self', function(models, $http, progressService){
+  var state = {};
+  function verify(){
+    var p = $http.get('/verify')
+    p.then(function(res){
+      state.info = res.data;
+      state.info.emailHash = md5(res.data.email);
+      state.logging = true;
+    }, function(r){
+      state.logging = false;
+    });
+    progressService.watch(p);
+  }
+  
+
+  return {
+    login: function(username, pw){
+      var p = $http.post('/login', {username: username, pw: pw});
+      p.then(function(){
+        verify();
+      }, function(s){
+        console.log(s);
+      });
+      progressService.watch(p);
+      return p;
+    },
+    logout: function(){
+      $http.post('/logout')
+      .then(function(){
+        state.logging = false;
+      }, function(s){
+        console.log(s);
+      });
+    },
+    getInfo: function(){
+      return state.info;
+    },
+    getState: function(){
+      return state;
+    },
+    verify: verify
+  }
+}).factory('progressService', function($q, ngProgressLite){
+  return {
+    watch: function(p){
+      ngProgressLite.start();
+      $q.when(p, function(){
+        ngProgressLite.done();
+      }, function(){
+        
+        ngProgressLite.done();
+        ngProgressLite.remove();
+      });
+    }
+  }
 });
 ;angular.module('platform').directive('floatPlaceholder', function(){
   return {
@@ -287,24 +286,12 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     templateUrl : '/partials/group.html'
   }
 })
-.controller('Group', function($scope, models, self){
+.controller('Group', function($scope, models, self, $timeout){
+  $scope.state = 'choose-group';
   $scope.selfState = self.getState();
   $scope.groups = models.Group.query();
   $scope.$watch('selfState.logging', function(n){
-    if(n === true){
-      var d = models.GroupUser.query({uid: self.getInfo()._id}, function(){
-        $scope.groups.forEach(function(item){
-          item.joined = d.some(function(data){
-            return item._id == data.gid;
-          });
-        });
-      });
-    }
-    if(n === false){
-      $scope.groups.forEach(function(item){
-        item.joined = null;
-      });
-    }
+
   });  
 
   $scope.addGroup = {
@@ -332,15 +319,21 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   $scope.joinGroup = function(group){
     new models.GroupUser({gid: group._id}).$save(null
       , function(){
-        group.joined = true;
+      $scope.state = 'in-group';
+      $timeout(function(){
+        $scope.$broadcast('load', {group: group});
+      });
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
   }
+  $scope.$on('quitGroup', function(){
+    $scope.state = 'choose-group';
+  });
   $scope.leaveGroup = function(group){
     new models.GroupUser({gid: group._id, uid: self.getInfo()._id}).$remove(null
       , function(){
-        group.joined = false;
+      
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
@@ -357,37 +350,49 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     }
 })
 .controller('Micropost', function($scope, models){
+  var Micropost = models.Micropost, group;
+  $scope.$on('load', function(e, data){
+    load(data.group);
+  });
+
   $scope.open = function(url){
     $scope.$emit('addPort', url);
   };
-  var Micropost = models.Micropost;
+
+  $scope.quit = function(){
+    $scope.$emit('quitGroup');
+  }
+  
   $scope.data = {content: ""};
+
   $scope.addMicropost = function(content){
     if(!content.trim().length){
       return;
     }
-    var newPost = new Micropost({content: content});
+    var newPost = new Micropost({content: content, gid: $scope.group._id});
    
     newPost.$save(null, function(newPost){
       $scope.microposts.push(newPost);
-    }, function(){
-      $scope.$emit('error', {message: '没权限'});
+    }, function(reason){
+      $scope.$emit('error', {message: reason.data});
     });
     $scope.data.content = "";
   };
 
-  $scope.showMicropost = function(){
-    Micropost.query(function(posts){
+  function load(group){
+    $scope.group = group;
+    Micropost.query({gid: $scope.group._id}, function(posts){
       $scope.microposts = posts;
     });
   }
-  $scope.showMicropost();
+  
 
-  $scope.deleteMicropost = function(index){      
-    $scope.microposts[index].$remove(null, function(){
+  $scope.deleteMicropost = function(index){
+    var post = $scope.microposts[index];
+    post.$remove({gid: $scope.group._id, pid: post._id}, function(){
       $scope.microposts.splice(index, 1);
-    }, function(){
-      $scope.$emit('error', {message: '删除失败，没有权限'});
+    }, function(reason){
+      $scope.$emit('error', {message: reason.data});
     });
   }
 
