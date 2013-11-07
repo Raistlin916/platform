@@ -93,4 +93,44 @@ angular.module('platform')
       });
     }
   }
+}).directive('ngEnter', function(){
+  return {
+    restict: 'A',
+    link: function(scope, elem, attr){
+      elem.bind('keypress', function(e){
+        if(e.keyCode == 13){
+          scope.$apply(function() {
+            scope.$eval(attr.ngEnter);
+          });
+          e.preventDefault();
+        }
+      });
+    }
+  }
+}).filter('ago', function($filter){
+  return function(input){
+    var distance = Date.now() - new Date(input)
+    , result = '', dih, diy
+    , dim = ~~(distance/60000); // distance in minutes
+    if(dim < 0){
+      result = 'Invalid Date';
+    } else if(dim < 1){
+      result = '刚刚';
+    } else if(dim < 60){
+      result = dim + '分钟前';
+    } else {
+      dih = ~~(dim/60);
+      if(dih < 24){
+        result = dih + '小时前';
+      } else {
+        diy = ~~(dim/8760);
+        if(diy < 1){
+          result = $filter('date')(input, 'MM月dd日 HH:mm');
+        } else {
+          result = diy + '年前';
+        }
+      }
+    }
+    return result;
+  }
 });

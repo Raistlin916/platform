@@ -20,6 +20,10 @@ angular.module('platform')
   $scope.quit = function(){
     $scope.$emit('quitGroup');
   }
+
+  $scope.test = function(){
+    console.log(arguments);
+  }
   
   $scope.data = {content: ""};
 

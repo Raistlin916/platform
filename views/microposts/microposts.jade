@@ -7,7 +7,7 @@
   .box-body
     .form-inline
       .form-group
-        input.form-control(type="text", ng-model="data.content")
+        input.form-control(type="text", ng-model="data.content", ng-enter="addMicropost(data.content)")
       |  
       button.btn(type="button", ng-click="addMicropost(data.content)") 提交
     ul
@@ -15,7 +15,7 @@
         a(href="javascript:;", ng-click="open('/users/{{mp.author._id}}')")
           avatar.avatar-thumbnail(hash="mp.author.emailHash")
         .micropost-main
-          div.date {{mp.date | date:'yyyy-MM-dd HH:mm:ss'}}
+          div.date {{mp.date | ago}}
           div {{mp.author.username}}
           div {{mp.content}}
             a(ng-click="deleteMicropost(mp)", href="javascript:;") [x]
