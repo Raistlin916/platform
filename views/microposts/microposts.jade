@@ -18,6 +18,6 @@
           div.date {{mp.date | date:'yyyy-MM-dd HH:mm:ss'}}
           div {{mp.author.username}}
           div {{mp.content}}
-            a(ng-click="deleteMicropost($index)", href="javascript:;") [x]
+            a(ng-click="deleteMicropost(mp)", href="javascript:;") [x]
       
     

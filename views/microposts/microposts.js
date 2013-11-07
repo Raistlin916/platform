@@ -45,10 +45,9 @@ angular.module('platform')
   }
   
 
-  $scope.deleteMicropost = function(index){
-    var post = $scope.microposts[index];
+  $scope.deleteMicropost = function(post){
     post.$remove({gid: $scope.group._id, pid: post._id}, function(){
-      $scope.microposts.splice(index, 1);
+      $scope.microposts.splice($scope.microposts.indexOf(post), 1);
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
