@@ -51,19 +51,23 @@ function listPosts(req, res){
 function deletePost(req, res){
   var gid = req.params.gid, uid = req.session.uid, pid = req.params.pid;
 
-  Group.find({ _id: gid, 'posts._id': pid, 'posts.author': uid }, {'posts.$': 1}).exec()
-  .then(function(docs){
-    // 这个地方怎么写效率高？
-    if(docs.length == 0){
-      return Q.reject(401);
-    }
-    // 下面总是返回作用次数1，即使author不对
-    return Group.update({ _id: gid }, {$pull: {posts: { _id: pid, author: uid }}}).exec();
-  }).then(function(){
-    res.send(200);
-  }, function(reason){
-    res.send(500, reason);
-  });
+  // 怎么合并查询和删除
+  Group.find({ _id: gid })
+    .where('posts').elemMatch({ _id: pid, author: uid })
+    .exec()
+    .then(function(docs){
+      if(docs.length == 0){
+        return Q.reject(401);
+      }
+      // 下面总是返回1，即使author不对
+      return Group.update({ _id: gid }, {$pull: {posts: { _id: pid, author: uid }}}).exec();
+    }).then(function(){
+      console.log(arguments);
+      res.send(200);
+    }, function(reason){
+      res.send(500, reason);
+    });
+
 
 }
 
