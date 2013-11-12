@@ -5,19 +5,27 @@
     h3 {{group.name}}
 
   .box-body
-    .form-inline
-      .form-group
+    .row
+      .form-group.col-lg-8
         input.form-control(type="text", ng-model="data.content", ng-enter="addMicropost(data.content)")
       |  
-      button.btn(type="button", ng-click="addMicropost(data.content)") 提交
+      button.btn.btn-default(type="button", ng-click="addMicropost(data.content)") 提交
+    .row
+      .col-lg-12
+        file-upload
     ul
-      li(ng-repeat="mp in microposts")
+      li(ng-repeat="mp in microposts | orderBy:'-date' ")
         a(href="javascript:;", ng-click="open('/users/{{mp.author._id}}')")
           avatar.avatar-thumbnail(hash="mp.author.emailHash")
         .micropost-main
-          div.date {{mp.date | ago}}
-          div {{mp.author.username}}
-          div {{mp.content}}
-            a(ng-click="deleteMicropost(mp)", href="javascript:;") [x]
+          .micropost-head
+            .date {{mp.date | ago}}
+              a(ng-click="deleteMicropost(mp)", href="javascript:;") [x]
+            div {{mp.author.username}}
+          .micropost-content {{mp.content}}
+          .micropost-img
+            img(src="/images/bg.jpg")
+
+            
       
     

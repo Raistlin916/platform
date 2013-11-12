@@ -4,7 +4,8 @@ $light-box-shadow: 1px 1px 1px rgba(0,0,0,.2);
 $light-border: 1px solid rgba(0,0,0,.2);
 $font-stack: Helvetica, sans-serif;
 $hint-font-color: #66afe9;
-
+$box-bg-color: rgba(255,255,255,.9);
+$box-body-bg-color: rgba(255,255,255,.85);
 
 @mixin primary-font() {
 	color: #242628;
@@ -21,7 +22,11 @@ $hint-font-color: #66afe9;
 
 body {
 	@include primary-font;
-  background: #395976;
+  background: #395976 /* url(images/bg.jpg) */;
+  background-position: center 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .clearfix {
@@ -56,6 +61,7 @@ body {
   width: 40px;
   border-radius: 3px;
   box-shadow: none;
+  border: 1px solid rgba(0,0,0,.1);
 }
 microposts {
   ul {
@@ -63,16 +69,38 @@ microposts {
     padding: 0;
     li {
       padding: 10px;
+      margin-bottom: 4px;
       img.avatar {
         float: left;
       }
       .micropost-main {
-        margin-left: 50px;
+        position: relative;
+        background: #fff;
+        margin: 3px 0 0 50px;
+        border-radius: 3px;
+        padding: 10px;
+        .micropost-head {
+          .date {
+            @include secondary-font;
+            float: right;
+          }
+        }
+        .micropost-content {
+          word-break: break-all;
+        }
+        .micropost-img img{
+          max-height: 300px;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          top: 6px;
+          left: -12px;
+          border: 6px solid transparent;
+          border-right-color: #fff;
+        }
       }
-      .date {
-        @include secondary-font;
-        float: right;
-      }
+      
     }
   }
 }
@@ -177,11 +205,15 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 
 .box, .bounce-box {
   border-radius: 4px;
-  background: white no-repeat;
-  input {
+  overflow: hidden;
+  input[type="text"], input[type="password"] {
     height: 40px;
   }
+  .btn-default {
+    border: 1px solid rgba(0,0,0,.2)
+  }
   .box-head {
+    background: $box-bg-color;
     border-bottom: 1px solid rgba(0,0,0,0.08);
     padding: 10px;
     .box-control {
@@ -190,11 +222,11 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
     }
   }
   .box-body {
-    background: #F5F5F5;
-    border-radius: 0 0 4px 4px;
+    background: $box-body-bg-color;
     padding: 10px;
   }
   .box-foot {
+    background: $box-bg-color;
     padding: 10px;
   }
 }
@@ -247,12 +279,11 @@ dialog {
   .dialog-wrapper{
     position: fixed;
     top: 0;
-    right: 0;
-    bottom: 0;
     left: 0;
+    height: 100%;
+    width: 100%;
     z-index: 1040;
-    overflow: auto;
-    overflow-y: scroll;
+    overflow-y: auto;
     background: rgba(0,0,0,.3);
   }
   .dialog-content {
@@ -313,6 +344,33 @@ group {
       .group-desc {
         height: 80px;
       }
+    }
+  }
+}
+
+
+.flip-back {
+/*   backface-visibility: hidden; */
+  animation: flipToRightBack 1000ms forwards ease;
+}
+
+@-webkit-keyframes flipToRightBack {
+  from {
+    -webkit-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+  }
+}
+
+file-upload {
+  input[type="file"] {
+    display: none;
+  }
+  .showcase {
+    transition: .3s height ease-in-out;
+    height: 0;
+    overflow: hidden;
+    img {
+      max-height: 300px;
     }
   }
 }

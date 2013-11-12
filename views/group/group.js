@@ -12,7 +12,7 @@ angular.module('platform')
   $scope.selfState = self.getState();
   $scope.groups = models.Group.query();
   $scope.$watch('selfState.logging', function(n){
-
+    
   });  
 
   $scope.addGroup = {
