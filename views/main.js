@@ -16,7 +16,7 @@
 
 angular.module('platform', ['ngResource', 'ngProgressLite'])
 .factory('models', function($resource){
-    var Micropost = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
+    var Post = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {
         method: 'get',
         isArray: true,
@@ -50,7 +50,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       }
     });
     return {
-      Micropost: Micropost,
+      Post: Post,
       User: $resource('/users/:id', {id: '@_id'}),
       Group: $resource('/groups/:id', {id: '@_id'}),
       GroupUser: GroupUser

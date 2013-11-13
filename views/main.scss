@@ -66,7 +66,7 @@ body {
   border: 1px solid rgba(0,0,0,.1);
 }
 
-microposts {
+post {
   ul {
     overflow: hidden;
     list-style-type: none;
@@ -77,22 +77,22 @@ microposts {
       img.avatar {
         float: left;
       }
-      .micropost-main {
+      .post-main {
         position: relative;
         background: #fff;
         margin: 3px 0 0 50px;
         border-radius: 3px;
         padding: 10px;
-        .micropost-head {
+        .post-head {
           .date {
             @include secondary-font;
             float: right;
           }
         }
-        .micropost-content {
+        .post-content {
           word-break: break-all;
         }
-        .micropost-img img{
+        .post-img img{
           max-height: 300px;
           max-width: 800px;
         }

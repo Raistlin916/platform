@@ -9,31 +9,31 @@
       li
         a(href="javascript:;")
           avatar.avatar-thumbnail(hash="userState.info.emailHash")
-        .micropost-main
+        .post-main
           .row
             .form-group.col-lg-8
-              input.form-control(type="text", ng-model="data.content", ng-enter="addMicropost()")
+              input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")
             |  
-            button.btn.btn-default(type="button", ng-click="addMicropost()") 提交
+            button.btn.btn-default(type="button", ng-click="addPost()") 提交
           .row
             .col-lg-12
               file-upload(model="data")
     ul
-      li(ng-repeat="mp in microposts | orderBy:'-date' ")
+      li(ng-repeat="mp in posts | orderBy:'-date' ")
         a(href="javascript:;", ng-click="open('/users/{{mp.author._id}}')")
           avatar.avatar-thumbnail(hash="mp.author.emailHash")
-        .micropost-main
-          .micropost-head
+        .post-main
+          .post-head
             .date {{mp.date | ago}}
-              a(ng-click="deleteMicropost(mp)", href="javascript:;") [x]
+              a(ng-click="deletePost(mp)", href="javascript:;") [x]
             div {{mp.author.username}}
-          .micropost-content {{mp.content}}
-          .micropost-img(ng-if="mp.img")
+          .post-content {{mp.content}}
+          .post-img(ng-if="mp.img")
             img(ng-src="/upload/{{mp.img}}")
-          .micropost-opt 
-            a.micopost-praise(href="javascript:;") 赞
+          .post-opt 
+            a.post-praise(href="javascript:;") 赞
             | 
-            ul.micopost-praise-list
+            ul.post-praise-list
               li name1
               li name2
               li name3
