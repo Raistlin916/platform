@@ -23,6 +23,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
         transformResponse: function(data){
           return JSON.parse(data).map(function(item){
             item.author.emailHash = md5(item.author.email);
+            item.praisedUserList.forEach(function(pu){
+              pu.emailHash = md5(pu.email);
+            });
             return item;
           });
         }
@@ -53,7 +56,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       Post: Post,
       User: $resource('/users/:id', {id: '@_id'}),
       Group: $resource('/groups/:id', {id: '@_id'}),
-      GroupUser: GroupUser
+      GroupUser: GroupUser,
+      Praise: $resource('/groups/:gid/posts/:pid/praises/:prid', {pid:'@pid', gid: '@gid', prid: '@prid'})
     }
   });
 
@@ -62,7 +66,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     return {
       restrict: 'E',
       replace: true,
-      scope: {emailHash: '=hash'},
+      scope: {emailHash: '@hash', title: '@'},
       templateUrl : '/partials/avatar.html'
     }
 });
@@ -266,7 +270,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       if(dih < 24){
         result = dih + '小时前';
       } else {
-        diy = ~~(dim/8760);
+        diy = ~~(dih/8760);
         if(diy < 1){
           result = $filter('date')(input, 'MM月dd日 HH:mm');
         } else {
@@ -459,9 +463,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     load(data.group);
   });
 
-  $scope.open = function(url){
-    $scope.$emit('addPort', url);
-  };
 
   $scope.quit = function(){
     $scope.$emit('quitGroup');
@@ -483,7 +484,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       $scope.$emit('error', {message: reason.data});
     });
 
-
     $scope.data.content = "";
     $scope.data.imageData = null;
   };
@@ -502,6 +502,22 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
+  }
+
+  $scope.togglePraise = function(post){
+    var data = {
+      gid: $scope.group._id,
+      pid: post._id
+    }
+
+    var praise = new models.Praise(data);
+    
+    praise.$save(null, function(){
+      console.log('praise success');
+    }, function(reason){
+      $scope.$emit('error', {message: reason.data});
+    });
+
   }
 
 });

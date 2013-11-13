@@ -3,7 +3,7 @@ angular.module('platform')
     return {
       restrict: 'E',
       replace: true,
-      scope: {emailHash: '=hash'},
+      scope: {emailHash: '@hash', title: '@'},
       templateUrl : '/partials/avatar.html'
     }
 });

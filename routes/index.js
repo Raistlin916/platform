@@ -13,7 +13,7 @@ exports.setRoutes = function(app){
   
   authenticate.setVerifyRoutes({
     get: ['/userGroups/:uid'],
-    post: ['/groups/:gid/posts', '/users/:id', '/groups/:gid/users'],
+    post: ['/groups/:gid/posts', '/users/:id', '/groups/:gid/users', '/groups/:gid/posts/:pid/praises'],
     delete: ['/groups/:gid/posts/:pid', '/groups/:gid/users/:uid']
   });
 

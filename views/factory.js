@@ -123,7 +123,7 @@ angular.module('platform')
       if(dih < 24){
         result = dih + '小时前';
       } else {
-        diy = ~~(dim/8760);
+        diy = ~~(dih/8760);
         if(diy < 1){
           result = $filter('date')(input, 'MM月dd日 HH:mm');
         } else {

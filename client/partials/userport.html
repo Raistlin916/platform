@@ -5,7 +5,7 @@
       <h3>修改资料</h3>
     </div>
     <div class="box-body">
-      <avatar hash="emailHash"></avatar>
+      <avatar hash="{{emailHash}}"></avatar>
       <input type="email" ng-model="email"/>
     </div>
     <div class="box-foot">
@@ -58,7 +58,7 @@
     </div>
   </div>
   <div ng-switch-when="in">
-    <avatar hash="userState.info.emailHash"></avatar>
+    <avatar hash="{{userState.info.emailHash}}"></avatar>
     <div><a href="javascript:;" call-dialog="user-setting">修改</a></div>
     <div><a href="javascript:;" ng-click="logout()">退出</a></div>
   </div>

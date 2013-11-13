@@ -14,9 +14,6 @@ angular.module('platform')
     load(data.group);
   });
 
-  $scope.open = function(url){
-    $scope.$emit('addPort', url);
-  };
 
   $scope.quit = function(){
     $scope.$emit('quitGroup');
@@ -38,7 +35,6 @@ angular.module('platform')
       $scope.$emit('error', {message: reason.data});
     });
 
-
     $scope.data.content = "";
     $scope.data.imageData = null;
   };
@@ -57,6 +53,22 @@ angular.module('platform')
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
+  }
+
+  $scope.togglePraise = function(post){
+    var data = {
+      gid: $scope.group._id,
+      pid: post._id
+    }
+
+    var praise = new models.Praise(data);
+    
+    praise.$save(null, function(){
+      console.log('praise success');
+    }, function(reason){
+      $scope.$emit('error', {message: reason.data});
+    });
+
   }
 
 });

@@ -15,6 +15,11 @@ var PostSchema = new Schema({
     required: true,
     ref: 'User'
   },
+  praisedUserList: [{
+    type: ObjectId,
+    unique: true,
+    ref: 'User'
+  }],
   img: String,
   date: Date
 },

@@ -1,6 +1,7 @@
 var models = require('../model/schema')
 , authenticate = require('./authenticate')
-, md5 = require('../util').md5
+, util = require('../util')
+, md5 = util.md5
 , path = require('path')
 , Q = require('Q');
 
@@ -40,16 +41,31 @@ function savePost(req, res){
 }
 
 function listPosts(req, res){
-  Group.findById(req.params.gid).exec()
-    .then(function(doc){
+  var gid = req.params.gid
+  , uid = req.session.uid;
+
+  // 下面这个迁移之前赋值无效，迁移之后无法查询，
+  // 赋值要toObject，这样就无法赋值，不知道怎么弄
+  var aid = {};
+  Group.findById(gid).exec()
+    .then(function(group){
+      group.posts.map(function(post, i){
+        aid[i] = { hasPraised: !!~post.praisedUserList.indexOf(uid) };
+      });
+      return group;
+    })
+    .then(function(group){
       var d = Q.defer();
-      doc.populate('posts.author', 'email username -_id', function(err, doc){
-        err ? d.reject(err) : d.resolve(doc);
+      group.populate('posts.author posts.praisedUserList', 'email username -_id', function(err, doc){
+        err ? d.reject(err) : d.resolve(doc.posts);
       });
       return d.promise;
     })
-    .then(function(doc){
-      res.send(doc.posts);
+    .then(function(posts){
+      posts = posts.toObject().map(function(p, i){
+        return util.extend(p, aid[i]);
+      });
+      res.send(posts);
     }, function(reason){
       console.log(reason);
       res.send(500);
@@ -70,7 +86,6 @@ function deletePost(req, res){
       // 下面总是返回1，即使author不对
       return Group.update({ _id: gid }, {$pull: {posts: { _id: pid, author: uid }}}).exec();
     }).then(function(){
-      console.log(arguments);
       res.send(200);
     }, function(reason){
       res.send(500, reason);
@@ -208,13 +223,27 @@ function leaveGroup(req, res){
   });
 }
 
+function savePraise(req, res){
+  var uid = req.session.uid
+  , pid = req.params.pid
+  , gid = req.params.gid;
+  // http://stackoverflow.com/questions/15921700/mongoose-unique-values-in-nested-array-of-objects
+  // 但是用$addToSet无法得到重复添加的警告
+  Group.update({ _id: gid, 'posts._id': pid }, {$addToSet: {'posts.$.praisedUserList': uid}})
+  .exec().then(function(){
+    res.send(200);
+  }, function(reason){
+    console.log(reason);
+    res.send(500, reason);
+  });
+}
 
+function deletePraise(req, res){
+
+}
 
 
 exports.init = function(app){
-  
-  
-  
 
   app.post('/users', saveUser);
   app.get('/users', listUsers);
@@ -231,4 +260,7 @@ exports.init = function(app){
   app.delete('/groups/:id', deleteGroup);
   app.post('/groups/:gid/users', joinGroup);
   app.delete('/groups/:gid/users/:uid', leaveGroup);
+
+  app.post('/groups/:gid/posts/:pid/praises', savePraise);
+  app.delete('/groups/:gid/posts/:pid/praises/:prid', deletePraise);
 }

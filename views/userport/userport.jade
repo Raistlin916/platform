@@ -3,7 +3,7 @@ div(ng-switch="state")
     .box-head
       h3 修改资料
     .box-body
-      avatar(hash="emailHash")
+      avatar(hash="{{emailHash}}")
       input(type="email", ng-model="email")
     .box-foot
       button.btn.btn-primary(ng-click="ok()") 保存
@@ -43,7 +43,7 @@ div(ng-switch="state")
       |  
       a(href="javascript:;", ng-click="changeState('out')") 取消
   div(ng-switch-when="in")
-    avatar(hash="userState.info.emailHash")
+    avatar(hash="{{userState.info.emailHash}}")
     div
       a(href="javascript:;", call-dialog="user-setting") 修改
     div

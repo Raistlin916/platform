@@ -56,31 +56,39 @@ body {
 .avatar {
   border-radius: 5px;
   background: white;
+  cursor: pointer;
 }
 
 .avatar-thumbnail {
-  height: 40px;
-  width: 40px;
+  height: 50px;
+  width: 50px;
   border-radius: 3px;
   box-shadow: none;
   border: 1px solid rgba(0,0,0,.1);
 }
 
+.avatar-half-thumbnail {
+  @extend .avatar-thumbnail;
+  height: 30px;
+  width: 30px;
+  border-radius: 2px;
+}
+
 post {
-  ul {
+  .post-bubble {
     overflow: hidden;
     list-style-type: none;
     padding: 0;
-    li {
+    .post-bubble-content {
       padding: 10px;
       margin-bottom: 4px;
-      img.avatar {
+      img.avatar-thumbnail {
         float: left;
       }
       .post-main {
         position: relative;
         background: #fff;
-        margin: 3px 0 0 50px;
+        margin: 3px 0 0 60px;
         border-radius: 3px;
         padding: 10px;
         .post-head {
@@ -105,7 +113,16 @@ post {
           border-right-color: #fff;
         }
       }
-      
+      ul.post-praise-list {
+        list-style-type: none;
+        li {
+          float: left;
+          margin-right: 5px;
+        }
+        li:last-child {
+          margin-right: 0;
+        }
+      }
     }
   }
 }

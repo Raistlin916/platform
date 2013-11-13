@@ -23,6 +23,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
         transformResponse: function(data){
           return JSON.parse(data).map(function(item){
             item.author.emailHash = md5(item.author.email);
+            item.praisedUserList.forEach(function(pu){
+              pu.emailHash = md5(pu.email);
+            });
             return item;
           });
         }
@@ -53,6 +56,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       Post: Post,
       User: $resource('/users/:id', {id: '@_id'}),
       Group: $resource('/groups/:id', {id: '@_id'}),
-      GroupUser: GroupUser
+      GroupUser: GroupUser,
+      Praise: $resource('/groups/:gid/posts/:pid/praises/:prid', {pid:'@pid', gid: '@gid', prid: '@prid'})
     }
   });

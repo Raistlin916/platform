@@ -3,9 +3,6 @@ var models = require('../model/schema')
 
 var md5 = require('../util').md5;
 
-var ERROR_TIMEOUT = 1;
-
-
 function login(req, res){
   var username = req.body.username
   , pw = req.body.pw;
@@ -86,12 +83,8 @@ var verifyList = {};
 
 function bindVerify(app){
   for(var method in verifyList){
-    verifyList[method].forEach(function(arg){
-      if(typeof arg == 'string'){
-        arg = {url: arg, deliver: true};
-      }
-
-      app[method](arg.url, arg.deliver? verifyAndDeliver: verify);
+    verifyList[method].forEach(function(url){
+      app[method](url, deliver);
     });
   }
 }
@@ -109,30 +102,13 @@ function verify(req, res, next){
   });
 }
 
-function verifyAndDeliver(req, res, next){
-  var sid = req.cookies.sid;
-  models.OnlineUser.findById(sid).exec()
-  .then(function(doc){
-    if(doc == null){
-      return Q.reject(ERROR_TIMEOUT);
-    }
-    return Q.resolve(doc);
-  }).then(function(doc){
-    if(req.session == null){
-      req.session = {};
-    }
-    req.session.uid = doc.uid;
+function deliver(req, res, next){
+  var uid = req.session.uid;
+  if(uid == null){
+    res.send(401, '验证失败');
+  } else {
     next();
-  }, function(reason){
-    switch(reason){
-      case ERROR_TIMEOUT:
-        res.send(401, '验证失败');
-      break;
-      default:
-        res.send(500);
-      break;
-    }
-  });
+  }
 }
 
 function setVerifyRoutes(v){
@@ -141,8 +117,9 @@ function setVerifyRoutes(v){
 
 
 exports.init = function(app){
-  bindVerify(app);
+  app.all('/*', verify);
 
+  bindVerify(app);
   app.post('/login', login);
   app.post('/logout', logout);
   app.get('/verify', verifyAndReturnInfo);
