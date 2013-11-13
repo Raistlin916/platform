@@ -27,6 +27,8 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
+
+  padding-bottom: 40px;
 }
 
 .clearfix {
@@ -63,8 +65,10 @@ body {
   box-shadow: none;
   border: 1px solid rgba(0,0,0,.1);
 }
+
 microposts {
   ul {
+    overflow: hidden;
     list-style-type: none;
     padding: 0;
     li {
@@ -90,6 +94,7 @@ microposts {
         }
         .micropost-img img{
           max-height: 300px;
+          max-width: 800px;
         }
         &:after {
           content: "";

@@ -21,10 +21,6 @@ angular.module('platform')
   $scope.quit = function(){
     $scope.$emit('quitGroup');
   }
-
-  $scope.test = function(){
-    console.log(arguments);
-  }
   
   $scope.data = {content: ""};
 
@@ -44,6 +40,7 @@ angular.module('platform')
 
 
     $scope.data.content = "";
+    $scope.data.imageData = null;
   };
 
   function load(group){

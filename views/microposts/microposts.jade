@@ -30,7 +30,12 @@
           .micropost-content {{mp.content}}
           .micropost-img(ng-if="mp.img")
             img(ng-src="/upload/{{mp.img}}")
-
-            
+          .micropost-opt 
+            a.micopost-praise(href="javascript:;") 赞
+            | 
+            ul.micopost-praise-list
+              li name1
+              li name2
+              li name3
       
     
