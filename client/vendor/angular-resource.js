@@ -417,6 +417,13 @@ angular.module('ngResource', ['ng']).
 
       function Resource(value){
         copy(value || {}, this);
+        "以下处理文件";
+        var self = this;
+        forEach(value, function(v, k){
+          if(v instanceof File){
+            self[k] = v;
+          }
+        });
       }
 
       forEach(actions, function(action, name) {
@@ -472,7 +479,29 @@ angular.module('ngResource', ['ng']).
           });
 
           httpConfig.data = data;
+          
           route.setUrlParams(httpConfig, extend({}, extractParams(data, action.params || {}), params), action.url);
+
+          "以下添加一段，处理文件";
+          var hasFile = false;
+          forEach(data, function(v, k){
+            if(v instanceof File){
+              hasFile = true;
+            }
+          });
+          
+          if(hasFile){
+            // http://jsfiddle.net/winduptoy/QhA3q/
+            var formData = new FormData;
+            forEach(data, function(v, k){
+              formData.append(k, v);
+            });
+            httpConfig.headers = {'Content-Type': undefined};
+            httpConfig.transformRequest = angular.identity;
+            httpConfig.data = formData;
+          }
+
+          "以上";
 
           var promise = $http(httpConfig).then(function(response) {
             var data = response.data,

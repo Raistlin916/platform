@@ -1,6 +1,7 @@
 var models = require('../model/schema')
 , authenticate = require('./authenticate')
 , md5 = require('../util').md5
+, path = require('path')
 , Q = require('Q');
 
 
@@ -12,7 +13,14 @@ function savePost(req, res){
   var newPost = new models.Post({
         author: uid,
         date: new Date,
-        content: req.body.content
+        content: req.body.content,
+        img: (function(){
+          var imagePath = ((req.files || {}).imageData || {}).path;
+          if(imagePath == undefined){
+            return undefined;
+          }
+          return path.basename(imagePath);
+        })()
       });
 
   Group.update({ _id: gid }, { $push: { posts: newPost } }).exec()

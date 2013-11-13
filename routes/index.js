@@ -23,7 +23,6 @@ exports.setRoutes = function(app){
   require('./debug').init(app);
   require('./modelRoutes').init(app);
   
-
   app.get('/', index);
 }
 

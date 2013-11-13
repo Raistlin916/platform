@@ -17,11 +17,12 @@ app.configure(function(){
   app.use(express.compress());
   app.use(express.favicon());
   app.use(express.logger('dev'));
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({ keepExtensions: true, uploadDir: path.join(__dirname, 'upload') }));
   app.use(express.cookieParser('love'));
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'client')));
+  app.use('/upload/', express.static(path.join(__dirname, 'upload')));
 });
 
 app.configure('development', function(){

@@ -7,14 +7,15 @@ mongoose.connect('localhost', 'platform_db');
 
 var PostSchema = new Schema({
   content:  {
-      type: String,
-      required: true
+    type: String,
+    required: true
   },
   author: {
-      type: ObjectId,
-      required: true,
-      ref: 'User'
+    type: ObjectId,
+    required: true,
+    ref: 'User'
   },
+  img: String,
   date: Date
 },
 {

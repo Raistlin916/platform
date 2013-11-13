@@ -1,8 +1,8 @@
 angular.module('platform')
-.directive('fileUpload', function(){
+.directive('fileUpload', function($http, models){
   return {
     restrict: 'E',
-    scope: {},
+    scope: {model: "="},
     link: function(scope, elem, attr){
       elem = elem[0];
       var fileInput = elem.querySelector('input[type=file]')
@@ -14,9 +14,15 @@ angular.module('platform')
         fileInput.click();
       }
       fileInput.onchange = function(e){
-        var url = URL.createObjectURL(e.target.files[0]);
+        if(e.target.files[0] == undefined){
+          return;
+        }
+        var fileData = e.target.files[0]
+        , url = URL.createObjectURL(fileData);
         showcaseImg.onload = function(){
           showcase.style.height = this.height + 'px';
+
+          scope.model.imageData = fileData;
         }
         showcaseImg.src = url;
 

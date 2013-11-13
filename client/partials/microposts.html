@@ -7,17 +7,24 @@
     <h3>{{group.name}}</h3>
   </div>
   <div class="box-body">
-    <div class="row">
-      <div class="form-group col-lg-8">
-        <input type="text" ng-model="data.content" ng-enter="addMicropost(data.content)" class="form-control"/>
-      </div> 
-      <button type="button" ng-click="addMicropost(data.content)" class="btn btn-default">提交</button>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <file-upload></file-upload>
-      </div>
-    </div>
+    <ul>
+      <li><a href="javascript:;">
+          <avatar hash="userState.info.emailHash" class="avatar-thumbnail"></avatar></a>
+        <div class="micropost-main">
+          <div class="row">
+            <div class="form-group col-lg-8">
+              <input type="text" ng-model="data.content" ng-enter="addMicropost()" class="form-control"/>
+            </div> 
+            <button type="button" ng-click="addMicropost()" class="btn btn-default">提交</button>
+          </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <file-upload model="data"></file-upload>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
     <ul>
       <li ng-repeat="mp in microposts | orderBy:'-date' "><a href="javascript:;" ng-click="open('/users/{{mp.author._id}}')">
           <avatar hash="mp.author.emailHash" class="avatar-thumbnail"></avatar></a>
@@ -27,7 +34,7 @@
             <div>{{mp.author.username}}</div>
           </div>
           <div class="micropost-content">{{mp.content}}</div>
-          <div class="micropost-img"><img src="/images/bg.jpg"/></div>
+          <div ng-if="mp.img" class="micropost-img"><img ng-src="/upload/{{mp.img}}"/></div>
         </div>
       </li>
     </ul>
