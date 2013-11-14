@@ -56,7 +56,7 @@ function listPosts(req, res){
     })
     .then(function(group){
       var d = Q.defer();
-      group.populate('posts.author posts.praisedUserList', 'email username -_id', function(err, doc){
+      group.populate('posts.author posts.praisedUserList', 'email username', function(err, doc){
         err ? d.reject(err) : d.resolve(doc.posts);
       });
       return d.promise;
@@ -239,7 +239,16 @@ function savePraise(req, res){
 }
 
 function deletePraise(req, res){
-
+  var uid = req.session.uid
+  , pid = req.params.pid
+  , gid = req.params.gid;
+  Group.update({ _id: gid, 'posts._id': pid }, {$pull: {'posts.$.praisedUserList': uid}})
+  .exec().then(function(){
+    res.send(200);
+  }, function(reason){
+    console.log(reason);
+    res.send(500, reason);
+  });
 }
 
 
@@ -262,5 +271,5 @@ exports.init = function(app){
   app.delete('/groups/:gid/users/:uid', leaveGroup);
 
   app.post('/groups/:gid/posts/:pid/praises', savePraise);
-  app.delete('/groups/:gid/posts/:pid/praises/:prid', deletePraise);
+  app.delete('/groups/:gid/posts/:pid/praises', deletePraise);
 }

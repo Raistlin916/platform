@@ -57,6 +57,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       User: $resource('/users/:id', {id: '@_id'}),
       Group: $resource('/groups/:id', {id: '@_id'}),
       GroupUser: GroupUser,
-      Praise: $resource('/groups/:gid/posts/:pid/praises/:prid', {pid:'@pid', gid: '@gid', prid: '@prid'})
+      Praise: $resource('/groups/:gid/posts/:pid/praises', {pid:'@pid', gid: '@gid'})
     }
   });

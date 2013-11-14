@@ -80,6 +80,16 @@ angular.module('platform')
     },
     verify: verify
   }
+}).factory('util', function(){
+  function arrayRemove(array, value) {
+    var index = indexOf(array, value);
+    if (index >=0)
+      array.splice(index, 1);
+    return value;
+  }
+  return {
+    arrayRemove: arrayRemove
+  }
 }).factory('progressService', function($q, ngProgressLite){
   return {
     watch: function(p){

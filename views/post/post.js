@@ -7,7 +7,7 @@ angular.module('platform')
         controller: 'Post'
     }
 })
-.controller('Post', function($scope, models, self){
+.controller('Post', function($scope, models, self, util){
   var Post = models.Post, group;
   $scope.userState = self.getState();
   $scope.$on('load', function(e, data){
@@ -49,7 +49,7 @@ angular.module('platform')
 
   $scope.deletePost = function(post){
     post.$remove({gid: $scope.group._id, pid: post._id}, function(){
-      $scope.posts.splice($scope.posts.indexOf(post), 1);
+      util.arrayRemove($scope.posts, post);
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
@@ -61,14 +61,22 @@ angular.module('platform')
       pid: post._id
     }
 
-    var praise = new models.Praise(data);
-    
-    praise.$save(null, function(){
-      console.log('praise success');
+    new models.Praise(data)[post.hasPraised? '$remove': '$save'](null, function(){
+      post.hasPraised = !post.hasPraised;
+      var selfInfo = self.getInfo();
+      if(post.hasPraised) {
+        post.praisedUserList.push(selfInfo);
+      } else {
+        post.praisedUserList.forEach(function(item, i, array){
+          if(item._id == selfInfo._id){
+            array.splice(i, 1);
+          }
+        });
+      }
+      
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
-
   }
 
 });

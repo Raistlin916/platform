@@ -57,7 +57,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       User: $resource('/users/:id', {id: '@_id'}),
       Group: $resource('/groups/:id', {id: '@_id'}),
       GroupUser: GroupUser,
-      Praise: $resource('/groups/:gid/posts/:pid/praises/:prid', {pid:'@pid', gid: '@gid', prid: '@prid'})
+      Praise: $resource('/groups/:gid/posts/:pid/praises', {pid:'@pid', gid: '@gid'})
     }
   });
 
@@ -226,6 +226,16 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       return state;
     },
     verify: verify
+  }
+}).factory('util', function(){
+  function arrayRemove(array, value) {
+    var index = indexOf(array, value);
+    if (index >=0)
+      array.splice(index, 1);
+    return value;
+  }
+  return {
+    arrayRemove: arrayRemove
   }
 }).factory('progressService', function($q, ngProgressLite){
   return {
@@ -456,7 +466,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
         controller: 'Post'
     }
 })
-.controller('Post', function($scope, models, self){
+.controller('Post', function($scope, models, self, util){
   var Post = models.Post, group;
   $scope.userState = self.getState();
   $scope.$on('load', function(e, data){
@@ -498,7 +508,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
 
   $scope.deletePost = function(post){
     post.$remove({gid: $scope.group._id, pid: post._id}, function(){
-      $scope.posts.splice($scope.posts.indexOf(post), 1);
+      util.arrayRemove($scope.posts, post);
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
@@ -510,14 +520,22 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       pid: post._id
     }
 
-    var praise = new models.Praise(data);
-    
-    praise.$save(null, function(){
-      console.log('praise success');
+    new models.Praise(data)[post.hasPraised? '$remove': '$save'](null, function(){
+      post.hasPraised = !post.hasPraised;
+      var selfInfo = self.getInfo();
+      if(post.hasPraised) {
+        post.praisedUserList.push(selfInfo);
+      } else {
+        post.praisedUserList.forEach(function(item, i, array){
+          if(item._id == selfInfo._id){
+            array.splice(i, 1);
+          }
+        });
+      }
+      
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
     });
-
   }
 
 });
