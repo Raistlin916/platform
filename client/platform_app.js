@@ -229,7 +229,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
   }
 }).factory('util', function(){
   function arrayRemove(array, value) {
-    var index = indexOf(array, value);
+    var index = array.indexOf(value);
     if (index >=0)
       array.splice(index, 1);
     return value;
@@ -524,7 +524,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
       post.hasPraised = !post.hasPraised;
       var selfInfo = self.getInfo();
       if(post.hasPraised) {
-        post.praisedUserList.push(selfInfo);
+        post.praisedUserList.unshift(selfInfo);
       } else {
         post.praisedUserList.forEach(function(item, i, array){
           if(item._id == selfInfo._id){

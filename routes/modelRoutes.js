@@ -63,6 +63,7 @@ function listPosts(req, res){
     })
     .then(function(posts){
       posts = posts.toObject().map(function(p, i){
+        p.praisedUserList.reverse();
         return util.extend(p, aid[i]);
       });
       res.send(posts);

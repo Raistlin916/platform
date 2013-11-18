@@ -4,12 +4,15 @@
       button.btn.btn-default(ng-click="quit()") 退出
     h3 {{group.name}}
 
+
+  .mask(ng-if="coverOther")
   .box-body
-    .post-bubble
+    .post-bubble.top-input
       .post-bubble-content
-        a(href="javascript:;")
-          avatar.avatar-thumbnail(hash="{{userState.info.emailHash}}")
-        .post-main
+        avatar.avatar-thumbnail(hash="{{userState.info.emailHash}}")
+        .post-main.curl-up
+          .icon-lightbulb.big-lightbulb(ng-click="coverOther = true")
+              
           .row
             .form-group.col-lg-8
               input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")
@@ -18,6 +21,7 @@
           .row
             .col-lg-12
               file-upload(model="data")
+              button.btn.btn-default(type="button", ng-click="coverOther = false") 返回
     ul.post-bubble
       li.post-bubble-content(ng-repeat="mp in posts | orderBy:'-date' ")
         avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}")
@@ -29,8 +33,8 @@
           .post-content {{mp.content}}
           .post-img(ng-if="mp.img")
             img(ng-src="/upload/{{mp.img}}")
-          .post-opt 
-            a.post-praise(href="javascript:;", ng-click="togglePraise(mp)") {{mp.hasPraised ? '取消赞':'赞'}}
+          .post-opt.clearfix
+            .pink-heart(ng-click="togglePraise(mp)", title="{{mp.hasPraised ? '取消赞':'赞'}}", ng-class="{'icon-heart': !mp.hasPraised, 'icon-heart-outline': mp.hasPraised}")
             | 
             ul.post-praise-list.clearfix
               li(ng-repeat="praisedUser in mp.praisedUserList") 

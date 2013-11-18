@@ -69,14 +69,30 @@ body {
 
 .avatar-half-thumbnail {
   @extend .avatar-thumbnail;
-  height: 30px;
-  width: 30px;
+  height: 15px;
+  width: 15px;
   border-radius: 2px;
 }
 
+
+
 post {
+  .top-input {
+    position: relative;
+    z-index: 1100;
+    .big-lightbulb {
+      display: inline-block;
+      font-size: 50px;
+      color: #F19F35;
+      cursor: pointer;
+      transition: .5s all ease;
+    }
+    .big-lightbulb:hover {
+      transform: translateY(-5px);
+    }
+  }
+
   .post-bubble {
-    overflow: hidden;
     list-style-type: none;
     padding: 0;
     .post-bubble-content {
@@ -91,6 +107,7 @@ post {
         margin: 3px 0 0 60px;
         border-radius: 3px;
         padding: 10px;
+        transition: .8s all ease;
         .post-head {
           .date {
             @include secondary-font;
@@ -113,11 +130,24 @@ post {
           border-right-color: #fff;
         }
       }
+      .post-main.curl-up {
+        display: inline-block;
+        margin-left: 10px;
+      }
+      .pink-heart {
+        font-size: 24px;
+        color: pink;
+        cursor: pointer;
+        float: left;
+      }
       ul.post-praise-list {
+        margin-left: 26px;
         list-style-type: none;
+        overflow: hidden;
+        padding: 0;
         li {
           float: left;
-          margin-right: 5px;
+          margin-right: 3px;
         }
         li:last-child {
           margin-right: 0;
@@ -296,18 +326,20 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
   }
 }
 
+.mask{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1040;
+  overflow-y: auto;
+  background: rgba(0,0,0,.3);
+  animation: fadein .8s forwards ease;
+}
  
 dialog {
-  .dialog-wrapper{
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 1040;
-    overflow-y: auto;
-    background: rgba(0,0,0,.3);
-  }
+  
   .dialog-content {
     z-index: 1050;
     width: auto;
@@ -354,6 +386,15 @@ error-panel {
   }
 }
 
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 group {
   .group-list {
     .group-item {
@@ -370,18 +411,6 @@ group {
   }
 }
 
-
-.flip-back {
-/*   backface-visibility: hidden; */
-  animation: flipToRightBack 1000ms forwards ease;
-}
-
-@-webkit-keyframes flipToRightBack {
-  from {
-    -webkit-transform: rotateY(-180deg);
-    transform: rotateY(-180deg);
-  }
-}
 
 file-upload {
   input[type="file"] {

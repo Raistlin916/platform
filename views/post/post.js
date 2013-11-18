@@ -65,7 +65,7 @@ angular.module('platform')
       post.hasPraised = !post.hasPraised;
       var selfInfo = self.getInfo();
       if(post.hasPraised) {
-        post.praisedUserList.push(selfInfo);
+        post.praisedUserList.unshift(selfInfo);
       } else {
         post.praisedUserList.forEach(function(item, i, array){
           if(item._id == selfInfo._id){
