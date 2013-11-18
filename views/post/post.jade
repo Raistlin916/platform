@@ -5,27 +5,33 @@
     h3 {{group.name}}
 
 
-  .mask(ng-if="coverOther")
+  .mask.fade-in(ng-if="coverOther")
   .box-body
-    .post-bubble.top-input
+    .post-bubble.top-input(ng-class="{editing: coverOther}")
       .post-bubble-content
         avatar.avatar-thumbnail(hash="{{userState.info.emailHash}}")
-        .post-main.curl-up
+        .post-main.clearfix
+          .arrow
           .icon-lightbulb.big-lightbulb(ng-click="coverOther = true")
+          .top-input-body
+            .row
+              .col-lg-10
+                input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")
+              .col-lg-2  
+                button.btn.btn-default(type="button", ng-click="addPost()") 提交
+            .row
+              .col-lg-10
+                file-upload(model="data")
+              .col-lg-2
+                button.btn.btn-default(type="button", ng-click="coverOther = false") 返回
               
-          .row
-            .form-group.col-lg-8
-              input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")
-            |  
-            button.btn.btn-default(type="button", ng-click="addPost()") 提交
-          .row
-            .col-lg-12
-              file-upload(model="data")
-              button.btn.btn-default(type="button", ng-click="coverOther = false") 返回
+                
+          
     ul.post-bubble
       li.post-bubble-content(ng-repeat="mp in posts | orderBy:'-date' ")
         avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}")
         .post-main
+          .arrow
           .post-head
             .date {{mp.date | ago}}
               a(ng-click="deletePost(mp)", href="javascript:;") [x]
