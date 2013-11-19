@@ -35,9 +35,22 @@ angular.module('platform')
       $scope.$emit('error', {message: reason.data});
     });
 
+    $scope.closeInput();
+  };
+
+  $scope.clearInputData = function(){
     $scope.data.content = "";
     $scope.data.imageData = null;
-  };
+  }
+
+  $scope.openInput = function(){
+    $scope.coverOther = true;
+  }
+
+  $scope.closeInput = function(){
+    $scope.clearInputData();
+    $scope.coverOther = false;
+  }
 
   function load(group){
     $scope.group = group;

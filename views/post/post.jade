@@ -10,11 +10,11 @@
     .post-bubble.top-input(ng-class="{editing: coverOther}")
       .post-bubble-content
         avatar.avatar-thumbnail(hash="{{userState.info.emailHash}}")
-        .post-main.clearfix
-          .arrow
-          .icon-lightbulb.big-lightbulb(ng-click="coverOther = true")
-          .top-input-body
-            .row
+        input-body.post-main
+          .input-body-nav
+            .icon-lightbulb.big-lightbulb(ng-click="openInput()")
+          .input-body-content
+            .row.buffer-bottom
               .col-lg-10
                 input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")
               .col-lg-2  
@@ -23,7 +23,7 @@
               .col-lg-10
                 file-upload(model="data")
               .col-lg-2
-                button.btn.btn-default(type="button", ng-click="coverOther = false") 返回
+                button.btn.btn-default.close-input(type="button", ng-click="closeInput()") 返回
               
                 
           
@@ -31,7 +31,6 @@
       li.post-bubble-content(ng-repeat="mp in posts | orderBy:'-date' ")
         avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}")
         .post-main
-          .arrow
           .post-head
             .date {{mp.date | ago}}
               a(ng-click="deletePost(mp)", href="javascript:;") [x]

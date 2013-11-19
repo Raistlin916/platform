@@ -83,36 +83,22 @@ post {
       font-size: 50px;
       color: #F19F35;
       cursor: pointer;
-      transition: .8s all ease;
+      transition: .8s transform ease;
     }
     .big-lightbulb:hover {
       transform: translateY(-5px);
     }
-    .top-input-body {
-      padding-top: 10px;
-      transform: translateY(100px);
-      max-height: 0;
-      opacity: 1;
-      transition: .8s all ease;
-    }
     .post-main {
-      max-width: 70px;
-      max-height: 70px;
-      transition: .8s all linear;
-      overflow: hidden;
+      width: 70px;
+      transition: .8s height linear;
     }
+    .input-body-content {
+      display: none;
+    }
+
   }
   .top-input.editing {
     z-index: 1100;
-    .post-main {
-      max-height: 500px;
-      max-width: 100%;
-    }
-    .top-input-body {
-      transform: translateY(0);
-      max-height: 500px;
-      opacity: 1;
-    }
   }
 
   .post-bubble {
@@ -130,7 +116,7 @@ post {
         margin: 3px 0 0 60px;
         border-radius: 3px;
         padding: 10px;
-        transition: .8s all ease;
+        transition: .8s height ease;
         .post-head {
           .date {
             @include secondary-font;
@@ -144,7 +130,7 @@ post {
           max-height: 300px;
           max-width: 800px;
         }
-        .arrow {
+        &:after {
           content: "";
           position: absolute;
           top: 6px;
@@ -440,6 +426,7 @@ file-upload {
     display: none;
   }
   .showcase {
+    margin-top: 10px;
     transition: .3s height ease-in-out;
     height: 0;
     overflow: hidden;
