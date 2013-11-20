@@ -52,16 +52,25 @@ angular.module('platform')
     $scope.coverOther = false;
   }
 
+  $scope.loadNextPage = function(group){
+    Post.query({gid: group._id, p: ~~$scope.p+1}, function(res){
+      $scope.p++;
+      $scope.posts.push.apply($scope.posts, res.data);
+    });
+  }
+
   function load(group){
     $scope.group = group;
-    Post.query({gid: $scope.group._id}, function(posts){
-      $scope.posts = posts;
+    Post.query({gid: $scope.group._id}, function(res){
+      $scope.posts = res.data;
+      delete res.data;
+      angular.extend($scope, res);
     });
   }
   
 
   $scope.deletePost = function(post){
-    post.$remove({gid: $scope.group._id, pid: post._id}, function(){
+    new models.Post(post).$remove({gid: $scope.group._id, pid: post._id}, function(){
       util.arrayRemove($scope.posts, post);
     }, function(reason){
       $scope.$emit('error', {message: reason.data});

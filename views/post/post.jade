@@ -18,7 +18,7 @@
               .col-lg-10
                 input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")
               .col-lg-2  
-                button.btn.btn-default(type="button", ng-click="addPost()") 提交
+                button.btn.btn-default.submit-input(type="button", ng-click="addPost()") 提交
             .row
               .col-lg-10
                 file-upload(model="data")
@@ -44,5 +44,7 @@
             ul.post-praise-list.clearfix
               li(ng-repeat="praisedUser in mp.praisedUserList") 
                 avatar.avatar-half-thumbnail(hash="{{praisedUser.emailHash}}", title="{{praisedUser.username}}")
+
+    div(ng-click="loadNextPage(group)") 加载下一页
 
     

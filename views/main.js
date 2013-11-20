@@ -19,15 +19,16 @@ angular.module('platform', ['ngResource', 'ngProgressLite'])
     var Post = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {
         method: 'get',
-        isArray: true,
-        transformResponse: function(data){
-          return JSON.parse(data).map(function(item){
+        transformResponse: function(res){
+          res = JSON.parse(res);
+          res.data.forEach(function(item){
             item.author.emailHash = md5(item.author.email);
             item.praisedUserList.forEach(function(pu){
               pu.emailHash = md5(pu.email);
             });
             return item;
           });
+          return res;
         }
       },
       save: {

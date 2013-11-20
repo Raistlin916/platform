@@ -1,9 +1,14 @@
 angular.module('platform')
 .directive('inputBody', function($document){
+  // 我尝试了angular-animation, 单纯的css3动画，经过三天努力，都失败了
+  // 最后决定还是用jq做动画，我有罪。
   return {
     restrict: 'E',
     link: function(scope, elem, attr){
+      var opened = false;
       $document.delegate('.big-lightbulb', 'click', function(){
+        if(opened) return;
+        opened = true;
         var $content = $('.input-body-content')
         , $nav = $('.input-body-nav')
         , $main = $('.top-input .post-main');
@@ -36,10 +41,15 @@ angular.module('platform')
             });
           });
         }).css('overflow', 'visible');
-        
-
       })
-      .delegate('.close-input', 'click', function(){
+      .delegate('.close-input', 'click', closeInputAnimation)
+      .delegate('.submit-input', 'click', closeInputAnimation);
+
+      function closeInputAnimation(){
+        if(!opened){
+          return;
+        }
+        opened = false;
         var $content = $('.input-body-content')
         , $nav = $('.input-body-nav')
         , $main = $('.top-input .post-main');
@@ -62,8 +72,7 @@ angular.module('platform')
               }, 500).css('overflow', 'visible');
             });
           });
-
-      });
+      }
     },
     transclude: true,
     replace: true,

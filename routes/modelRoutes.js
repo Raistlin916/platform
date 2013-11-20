@@ -42,31 +42,37 @@ function savePost(req, res){
 
 function listPosts(req, res){
   var gid = req.params.gid
-  , uid = req.session.uid;
+  , uid = req.session.uid
+  , p = ~~(req.query.p) || 0
+  , step = ~~(req.query.step) || 10
+  , offset = p * step;
 
   // 下面这个迁移之前赋值无效，迁移之后无法查询，
   // 赋值要toObject，这样就无法赋值，不知道怎么弄
   var aid = {};
   Group.findById(gid).exec()
     .then(function(group){
-      group.posts.map(function(post, i){
+      var total = group.posts.length;
+      // 没有用sort，用resverse效率如何，且是否会存在顺序错误？
+      group.posts = group.posts.reverse().splice(offset, step).map(function(post, i){
         aid[i] = { hasPraised: !!~post.praisedUserList.indexOf(uid) };
+        return post;
       });
-      return group;
+      return {group: group, total: total};
     })
-    .then(function(group){
+    .then(function(data){
       var d = Q.defer();
-      group.populate('posts.author posts.praisedUserList', 'email username', function(err, doc){
-        err ? d.reject(err) : d.resolve(doc.posts);
+      data.group.populate('posts.author posts.praisedUserList', 'email username', function(err, doc){
+        err ? d.reject(err) : d.resolve(util.extend(data, {posts: doc.posts}));
       });
       return d.promise;
     })
-    .then(function(posts){
-      posts = posts.toObject().map(function(p, i){
+    .then(function(data){
+      data.posts = data.posts.toObject().map(function(p, i){
         p.praisedUserList.reverse();
         return util.extend(p, aid[i]);
       });
-      res.send(posts);
+      res.send({data: data.posts, total: data.total, p: p, step: step});
     }, function(reason){
       console.log(reason);
       res.send(500);
