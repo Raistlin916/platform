@@ -14,7 +14,7 @@
   window.md5 = md5Cache;
 })();
 
-angular.module('platform', ['ngResource', 'ngProgressLite'])
+angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .factory('models', function($resource){
     var Post = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {

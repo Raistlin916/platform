@@ -8,10 +8,11 @@ angular.module('platform')
     }
 })
 .controller('Post', function($scope, models, self, util){
+  
   var Post = models.Post, group;
   $scope.userState = self.getState();
   $scope.$on('load', function(e, data){
-    load(data.group);
+    $scope.group = data.group;
   });
 
 
@@ -52,18 +53,21 @@ angular.module('platform')
     $scope.coverOther = false;
   }
 
-  $scope.loadNextPage = function(group){
-    Post.query({gid: group._id, p: ~~$scope.p+1}, function(res){
-      $scope.p++;
-      $scope.posts.push.apply($scope.posts, res.data);
-    });
-  }
 
-  function load(group){
-    $scope.group = group;
-    Post.query({gid: $scope.group._id}, function(res){
-      $scope.posts = res.data;
+  $scope.posts = [];
+  $scope.p = -1;
+  $scope.loading = false;
+  $scope.loadPage = function(){
+    if($scope.p+1== $scope.totalPage){
+      return;
+    }
+    $scope.loading = true;
+    $scope.p++;
+    Post.query({gid: $scope.group._id, p: $scope.p}, function(res){
+      $scope.loading = false;
+      $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;
+      $scope.totalPage = Math.ceil(res.total/res.step);
       angular.extend($scope, res);
     });
   }

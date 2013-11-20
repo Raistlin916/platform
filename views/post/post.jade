@@ -27,7 +27,7 @@
               
                 
           
-    ul.post-bubble
+    ul.post-bubble(infinite-scroll="loadPage()", infinite-scroll-disabled="loading")
       li.post-bubble-content(ng-repeat="mp in posts | orderBy:'-date' ")
         avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}")
         .post-main
@@ -44,7 +44,7 @@
             ul.post-praise-list.clearfix
               li(ng-repeat="praisedUser in mp.praisedUserList") 
                 avatar.avatar-half-thumbnail(hash="{{praisedUser.emailHash}}", title="{{praisedUser.username}}")
+    div(ng-if="loading") 加载中..
 
-    div(ng-click="loadNextPage(group)") 加载下一页
 
     
