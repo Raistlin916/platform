@@ -5,10 +5,11 @@ angular.module('platform')
   return {
     restrict: 'E',
     link: function(scope, elem, attr){
-      var opened = false;
+      // -1 not open, 0 opening, 1 opened
+      var openState = -1;
       $document.delegate('.big-lightbulb', 'click', function(){
-        if(opened) return;
-        opened = true;
+        if(openState !== -1) return;
+        openState = 0;
         var $content = $('.input-body-content')
         , $nav = $('.input-body-nav')
         , $main = $('.top-input .post-main');
@@ -18,26 +19,26 @@ angular.module('platform')
 
         $main.width(initW).animate({
           width: mainW
-        }, 500, function(){
+        }, 300, function(){
           $nav.animate({
             opacity: 0
-          }, 500, function(){
+          }, 300, function(){
             $nav.css({
               display: 'none'
             });
-            h = $content.css({height: 'auto'}).height();
+            h = $content.css({display: 'block', height: 'auto'}).height();
             $content.css({
               opacity: 0,
-              height: $nav.height(),
-              display: 'block'
+              height: $nav.height()
             }).animate({
               height: h,
-            }, 600).animate({
+            }, 300).animate({
               opacity: 1
-            }, 600, function(){
+            }, 300, function(){
               $content.css({
                 height: 'auto'
               });
+              openState = 1;
             });
           });
         }).css('overflow', 'visible');
@@ -46,19 +47,17 @@ angular.module('platform')
       .delegate('.submit-input', 'click', closeInputAnimation);
 
       function closeInputAnimation(){
-        if(!opened){
-          return;
-        }
-        opened = false;
+        if(openState !== 1) return;
+        openState = 0;
         var $content = $('.input-body-content')
         , $nav = $('.input-body-nav')
         , $main = $('.top-input .post-main');
 
         $content.animate({
             opacity: 0
-          }, 600).animate({
+          }, 300).animate({
             height: $nav.height(),
-          }, 600, function(){
+          }, 300, function(){
             $content.css({
               display: 'none'
             });
@@ -66,10 +65,12 @@ angular.module('platform')
               display: 'block'
             }).animate({
               opacity: 1
-            }, 500, function(){
+            }, 300, function(){
               $main.animate({
                 width: 70
-              }, 500).css('overflow', 'visible');
+              }, 300, function(){
+                openState = -1;
+              }).css('overflow', 'visible');
             });
           });
       }

@@ -14,16 +14,19 @@
           .input-body-nav
             .icon-lightbulb.big-lightbulb(ng-click="openInput()")
           .input-body-content
+            .post-head.buffer-bottom
+              .username {{userState.info.username}}
             .row.buffer-bottom
-              .col-lg-10
-                input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")
-              .col-lg-2  
-                button.btn.btn-default.submit-input(type="button", ng-click="addPost()") 提交
+              .col-lg-12
+                input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")    
             .row
-              .col-lg-10
+              .col-lg-8
                 file-upload(model="data")
-              .col-lg-2
-                button.btn.btn-default.close-input(type="button", ng-click="closeInput()") 返回
+              .col-lg-4
+                .pull-right
+                  button.btn.btn-default.submit-input(type="button", ng-click="addPost()") 提交
+                  | 
+                  a.close-input(href="javascript:;", ng-click="closeInput()") 返回
               
                 
           
@@ -34,7 +37,7 @@
           .post-head
             .date {{mp.date | ago}}
               a(ng-click="deletePost(mp)", href="javascript:;") [x]
-            div {{mp.author.username}}
+            .username {{mp.author.username}}
           .post-content {{mp.content}}
           .post-img(ng-if="mp.img")
             img(ng-src="/upload/{{mp.img}}")

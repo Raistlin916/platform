@@ -122,6 +122,9 @@ post {
             @include secondary-font;
             float: right;
           }
+          .username {
+            @include secondary-font;
+          }
         }
         .post-content {
           word-break: break-all;
