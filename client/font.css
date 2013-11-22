@@ -32,3 +32,9 @@
 .icon-lightbulb:before {
 	content: "\e602";
 }
+.icon-exit:before {
+	content: "\e604";
+}
+.icon-cog:before {
+	content: "\e603";
+}

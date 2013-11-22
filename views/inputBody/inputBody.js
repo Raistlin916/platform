@@ -1,6 +1,6 @@
 angular.module('platform')
 .directive('inputBody', function($document){
-  // 我尝试了angular-animation, 单纯的css3动画，经过三天努力，都失败了
+  // 我尝试了angular-animation, css3动画，经过三天努力，都失败了
   // 最后决定还是用jq做动画，我有罪。
   return {
     restrict: 'E',
@@ -16,6 +16,8 @@ angular.module('platform')
 
         var initW = $main.width()
         , mainW = $main.width('auto').width();
+
+        console.log(mainW);
 
         $main.width(initW).animate({
           width: mainW
@@ -41,10 +43,10 @@ angular.module('platform')
               openState = 1;
             });
           });
-        }).css('overflow', 'visible');
+        }).css({overflow: 'visible'});
       })
       .delegate('.close-input', 'click', closeInputAnimation)
-      .delegate('.submit-input', 'click', closeInputAnimation);
+      .delegate('.h-submit-input', 'click', closeInputAnimation);
 
       function closeInputAnimation(){
         if(openState !== 1) return;
@@ -70,7 +72,7 @@ angular.module('platform')
                 width: 70
               }, 300, function(){
                 openState = -1;
-              }).css('overflow', 'visible');
+              }).css({overflow: 'visible'});
             });
           });
       }

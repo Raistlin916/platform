@@ -44,7 +44,7 @@ function listPosts(req, res){
   var gid = req.params.gid
   , uid = req.session.uid
   , p = ~~(req.query.p) || 0
-  , step = ~~(req.query.step) || 10
+  , step = ~~(req.query.step) || 2
   , offset = p * step;
 
   // 下面这个迁移之前赋值无效，迁移之后无法查询，

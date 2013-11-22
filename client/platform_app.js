@@ -298,31 +298,30 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     restrict: 'E',
     scope: {model: "="},
     link: function(scope, elem, attr){
-      elem = elem[0];
-      var fileInput = elem.querySelector('input[type=file]')
-      , showcase = elem.querySelector('.showcase')
-      , showcaseImg = elem.querySelector('img');
+      var fileInput = elem.find('input[type=file]')
+      , showcase = elem.find('.showcase')
+      , showcaseImg = elem.find('img');
 
       scope.callUpload = function(){
         fileInput.click();
       }
       scope.$watch('model.imageData', function(n){
-        showcase.style.height = n ? showcaseImg.height + 'px' : (0, fileInput.value = null);
+        showcase.height(n ? parseInt(showcaseImg.css('marginTop'))+showcaseImg.height(): (0, fileInput.val(null)));
       });
 
-      fileInput.onchange = function(e){
+      fileInput.on('change', function(e){
         if(e.target.files[0] == undefined){
           return;
         }
         var fileData = e.target.files[0]
         , url = URL.createObjectURL(fileData);
-        showcaseImg.onload = function(){
+        showcaseImg.on('load', function(){
           scope.model.imageData = fileData;
           // http://stackoverflow.com/questions/15344610/angularjs-scope-watch-on-json-object-not-working-inside-directive
           scope.$digest();
-        }
-        showcaseImg.src = url;
-      }
+        });
+        showcaseImg.attr('src', url);
+      });
     },
     templateUrl : '/partials/fileUpload.html'
   }
@@ -432,7 +431,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 });
 ;angular.module('platform')
 .directive('inputBody', function($document){
-  // 我尝试了angular-animation, 单纯的css3动画，经过三天努力，都失败了
+  // 我尝试了angular-animation, css3动画，经过三天努力，都失败了
   // 最后决定还是用jq做动画，我有罪。
   return {
     restrict: 'E',
@@ -448,6 +447,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
         var initW = $main.width()
         , mainW = $main.width('auto').width();
+
+        console.log(mainW);
 
         $main.width(initW).animate({
           width: mainW
@@ -473,10 +474,10 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
               openState = 1;
             });
           });
-        }).css('overflow', 'visible');
+        }).css({overflow: 'visible'});
       })
       .delegate('.close-input', 'click', closeInputAnimation)
-      .delegate('.submit-input', 'click', closeInputAnimation);
+      .delegate('.h-submit-input', 'click', closeInputAnimation);
 
       function closeInputAnimation(){
         if(openState !== 1) return;
@@ -502,7 +503,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
                 width: 70
               }, 300, function(){
                 openState = -1;
-              }).css('overflow', 'visible');
+              }).css({overflow: 'visible'});
             });
           });
       }
@@ -574,8 +575,10 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
    
     newPost.$save(null, function(newPost){
       $scope.posts.push(newPost);
+      $('.h-submit-input').click();
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
+      $('.h-submit-input').click();
     });
 
     $scope.closeInput();
@@ -599,13 +602,15 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
   $scope.posts = [];
   $scope.p = -1;
   $scope.loading = false;
+  $scope.hasMore = true;
   $scope.loadPage = function(){
-    if($scope.p+1== $scope.totalPage){
+    if(!$scope.hasMore){
       return;
     }
     $scope.loading = true;
     $scope.p++;
     Post.query({gid: $scope.group._id, p: $scope.p}, function(res){
+      $scope.hasMore = $scope.p+1 != $scope.totalPage;
       $scope.loading = false;
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;

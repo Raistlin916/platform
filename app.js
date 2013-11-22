@@ -21,7 +21,7 @@ app.configure(function(){
   app.use(express.cookieParser('love'));
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'client')));
+  app.use(express.static(path.join(__dirname, 'client'), {maxAge: 86400000}));
   app.use('/upload/', express.static(path.join(__dirname, 'upload')));
 });
 

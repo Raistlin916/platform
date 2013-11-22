@@ -19,6 +19,12 @@ $box-body-bg-color: rgba(255,255,255,.85);
 	font-family: 'Helvetica Neue',Helvetica,Arial,'Microsoft Yahei',Sans-serif;
 }
 
+@mixin illustrate-font() {
+  color: rgb(164, 160, 167);
+  font-size: 14px;
+  font-family: '宋体','Helvetica Neue',Helvetica,Arial,'Microsoft Yahei',Sans-serif;
+} 
+
 
 body {
 	@include primary-font;
@@ -127,9 +133,12 @@ post {
           }
         }
         .post-content {
+          margin: 10px 0;
+          font-size: 16px;
           word-break: break-all;
         }
         .post-img img{
+          margin: 10px;
           max-height: 300px;
           max-width: 800px;
         }
@@ -165,6 +174,32 @@ post {
       }
     }
   }
+  .bottom-control {
+    padding-left: 10px;
+    .load-more {
+      font-size: 14px;
+      
+      text-align: center;
+      .more, .no-more {
+        padding: 5px;
+      }
+      .more {
+        cursor: pointer;
+        background: silver;
+        color: white;
+      }
+      .no-more {
+        color: #a0a0a0;
+      }
+    }
+    .loading {
+      .loading-text {
+        margin-left: 5px;
+        @include illustrate-font;
+      }
+    }
+  }
+  
 }
 
 
@@ -377,6 +412,34 @@ error-panel {
   }
 }
 
+userport {
+  .avatar-container {
+    float: left;
+  }
+  .user-control {
+    font-size: 15px;
+    padding: 5px 0 0 5px;
+    display: inline-block;
+    overflow: hidden;
+    .icon-item {
+      cursor: pointer;
+      margin-bottom: 5px;
+      transition: .5s transform ease;
+    }
+    .icon-item:nth-child(1) {
+      transform: translateX(-25px);
+    }
+    .icon-item:nth-child(2) {
+      transform: translateX(-45px);
+    }
+  }
+  .outside {
+    .icon-item {
+      transform: translateX(0) !important;
+    }
+  }
+}
+
 @keyframes slide {
   0% {
     transform: translateX(-100%);
@@ -429,12 +492,13 @@ file-upload {
     display: none;
   }
   .showcase {
-    margin-top: 10px;
     transition: .3s height ease-in-out;
     height: 0;
     overflow: hidden;
     img {
+      margin-top: 10px;
       max-height: 300px;
     }
   }
 }
+

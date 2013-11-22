@@ -25,6 +25,7 @@
               .col-lg-4
                 .pull-right
                   button.btn.btn-default.submit-input(type="button", ng-click="addPost()") 提交
+                  input.h-submit-input(type="hidden")
                   | 
                   a.close-input(href="javascript:;", ng-click="closeInput()") 返回
               
@@ -47,7 +48,13 @@
             ul.post-praise-list.clearfix
               li(ng-repeat="praisedUser in mp.praisedUserList") 
                 avatar.avatar-half-thumbnail(hash="{{praisedUser.emailHash}}", title="{{praisedUser.username}}")
-    div(ng-if="loading") 加载中..
+    .bottom-control
+      .load-more(ng-if="!loading")
+        .more(ng-if="hasMore", ng-click="loadPage()") 加载更多
+        .no-more(ng-if="!hasMore") 到底了
+      .loading(ng-if="loading")
+        img(src="/images/cat.gif")
+        span.loading-text 加载中...
 
 
     

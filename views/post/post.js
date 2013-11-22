@@ -32,8 +32,10 @@ angular.module('platform')
    
     newPost.$save(null, function(newPost){
       $scope.posts.push(newPost);
+      $('.h-submit-input').click();
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
+      $('.h-submit-input').click();
     });
 
     $scope.closeInput();
@@ -57,13 +59,15 @@ angular.module('platform')
   $scope.posts = [];
   $scope.p = -1;
   $scope.loading = false;
+  $scope.hasMore = true;
   $scope.loadPage = function(){
-    if($scope.p+1== $scope.totalPage){
+    if(!$scope.hasMore){
       return;
     }
     $scope.loading = true;
     $scope.p++;
     Post.query({gid: $scope.group._id, p: $scope.p}, function(res){
+      $scope.hasMore = $scope.p+1 != $scope.totalPage;
       $scope.loading = false;
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;

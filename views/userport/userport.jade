@@ -43,11 +43,12 @@ div(ng-switch="state")
       |  
       a(href="javascript:;", ng-click="changeState('out')") 取消
   div(ng-switch-when="in")
-    avatar(hash="{{userState.info.emailHash}}")
-    div
-      a(href="javascript:;", call-dialog="user-setting") 修改
-    div
-      a(href="javascript:;", ng-click="logout()") 退出
+    .user-control(ng-class="{outside: pop}")
+      .icon-item.icon-cog(call-dialog="user-setting", title="修改资料")
+      .icon-item.icon-exit(ng-click="logout()", title="退出")
+    .avatar-container(ng-click="pop = !pop")
+      avatar(hash="{{userState.info.emailHash}}")
+
 
 
   

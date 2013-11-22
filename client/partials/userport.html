@@ -58,8 +58,12 @@
     </div>
   </div>
   <div ng-switch-when="in">
-    <avatar hash="{{userState.info.emailHash}}"></avatar>
-    <div><a href="javascript:;" call-dialog="user-setting">修改</a></div>
-    <div><a href="javascript:;" ng-click="logout()">退出</a></div>
+    <div ng-class="{outside: pop}" class="user-control">
+      <div call-dialog="user-setting" title="修改资料" class="icon-item icon-cog"></div>
+      <div ng-click="logout()" title="退出" class="icon-item icon-exit"></div>
+    </div>
+    <div ng-click="pop = !pop" class="avatar-container">
+      <avatar hash="{{userState.info.emailHash}}"></avatar>
+    </div>
   </div>
 </div>
