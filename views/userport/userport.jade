@@ -2,9 +2,11 @@ div(ng-switch="state")
   dialog(name="user-setting", controller="changeUserInfo", global="true")
     .box-head
       h3 修改资料
-    .box-body
-      avatar(hash="{{emailHash}}")
-      input(type="email", ng-model="email")
+    .row.box-body
+      .col-lg-4
+        avatar(hash="{{emailHash}}")
+      .col-lg-8
+        input(type="email", ng-model="email")
     .box-foot
       button.btn.btn-primary(ng-click="ok()") 保存
       button.btn(ng-click="close()") 取消

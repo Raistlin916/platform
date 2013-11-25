@@ -430,7 +430,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
 });
 ;angular.module('platform')
-.directive('inputBody', function($document){
+.directive('inputBody', function(){
   // 我尝试了angular-animation, css3动画，经过三天努力，都失败了
   // 最后决定还是用jq做动画，我有罪。
   return {
@@ -438,7 +438,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     link: function(scope, elem, attr){
       // -1 not open, 0 opening, 1 opened
       var openState = -1;
-      $document.delegate('.big-lightbulb', 'click', function(){
+      elem.delegate('.big-lightbulb', 'click', function(){
         if(openState !== -1) return;
         openState = 0;
         var $content = $('.input-body-content')
@@ -447,8 +447,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
         var initW = $main.width()
         , mainW = $main.width('auto').width();
-
-        console.log(mainW);
 
         $main.width(initW).animate({
           width: mainW
@@ -610,11 +608,11 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     $scope.loading = true;
     $scope.p++;
     Post.query({gid: $scope.group._id, p: $scope.p}, function(res){
-      $scope.hasMore = $scope.p+1 != $scope.totalPage;
       $scope.loading = false;
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;
       $scope.totalPage = Math.ceil(res.total/res.step);
+      $scope.hasMore = $scope.p+1 != $scope.totalPage;
       angular.extend($scope, res);
     });
   }
@@ -718,7 +716,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     });
   }
   $scope.logout = function(){
-    self.logout();
+    confirm('确认要退出吗？') && self.logout();
   }
 
   function emptyString(v){

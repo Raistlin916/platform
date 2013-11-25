@@ -63,7 +63,7 @@ angular.module('platform')
     });
   }
   $scope.logout = function(){
-    self.logout();
+    confirm('确认要退出吗？') && self.logout();
   }
 
   function emptyString(v){

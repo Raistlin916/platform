@@ -1,5 +1,5 @@
 angular.module('platform')
-.directive('inputBody', function($document){
+.directive('inputBody', function(){
   // 我尝试了angular-animation, css3动画，经过三天努力，都失败了
   // 最后决定还是用jq做动画，我有罪。
   return {
@@ -7,7 +7,7 @@ angular.module('platform')
     link: function(scope, elem, attr){
       // -1 not open, 0 opening, 1 opened
       var openState = -1;
-      $document.delegate('.big-lightbulb', 'click', function(){
+      elem.delegate('.big-lightbulb', 'click', function(){
         if(openState !== -1) return;
         openState = 0;
         var $content = $('.input-body-content')
@@ -16,8 +16,6 @@ angular.module('platform')
 
         var initW = $main.width()
         , mainW = $main.width('auto').width();
-
-        console.log(mainW);
 
         $main.width(initW).animate({
           width: mainW

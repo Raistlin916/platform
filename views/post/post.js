@@ -67,11 +67,11 @@ angular.module('platform')
     $scope.loading = true;
     $scope.p++;
     Post.query({gid: $scope.group._id, p: $scope.p}, function(res){
-      $scope.hasMore = $scope.p+1 != $scope.totalPage;
       $scope.loading = false;
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;
       $scope.totalPage = Math.ceil(res.total/res.step);
+      $scope.hasMore = $scope.p+1 != $scope.totalPage;
       angular.extend($scope, res);
     });
   }

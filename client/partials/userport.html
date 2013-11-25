@@ -4,9 +4,13 @@
     <div class="box-head">
       <h3>修改资料</h3>
     </div>
-    <div class="box-body">
-      <avatar hash="{{emailHash}}"></avatar>
-      <input type="email" ng-model="email"/>
+    <div class="row box-body">
+      <div class="col-lg-4">
+        <avatar hash="{{emailHash}}"></avatar>
+      </div>
+      <div class="col-lg-8">
+        <input type="email" ng-model="email"/>
+      </div>
     </div>
     <div class="box-foot">
       <button ng-click="ok()" class="btn btn-primary">保存</button>
