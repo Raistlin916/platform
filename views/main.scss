@@ -37,6 +37,11 @@ body {
   padding-bottom: 40px;
 }
 
+h1, h2, h3 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .clearfix {
   zoom:1;
   &:before, &:after {
@@ -127,6 +132,7 @@ post {
           .date {
             @include secondary-font;
             float: right;
+            margin-right: 5px;
           }
           .username {
             @include secondary-font;
@@ -252,26 +258,41 @@ post {
 .btn-primary {
   background-color: #0078e7;
   color: #fff;
+  &:hover, &:active {
+    color: #fff;
+  }
 }
 
 .btn-secondary {
   background-color: #529ECC;
   color: #fff;
+  &:hover, &:active {
+    color: #fff;
+  }
 }
 
 .btn-success {
   background: rgb(28, 184, 65);
   color: #fff;
+  &:hover, &:active {
+    color: #fff;
+  }
 }
 
 .btn-error {
   background: rgb(202, 60, 60);
   color: #fff;
+  &:hover, &:active {
+    color: #fff;
+  }
 }
 
 .btn-warning {
   background: rgb(223, 117, 20);
   color: #fff;
+  &:hover, &:active {
+    color: #fff;
+  }
 }
 
 input[type="text"], input[type="password"], input[type="email"] {
@@ -307,7 +328,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
     height: 40px;
   }
   .btn-default {
-    border: 1px solid rgba(0,0,0,.2)
+    border: 1px solid rgba(0,0,0,.2);
   }
   .box-head {
     background: $box-bg-color;

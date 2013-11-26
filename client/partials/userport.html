@@ -1,5 +1,5 @@
 
-<div ng-switch="state">
+<div ng-switch="state" class="clearfix">
   <dialog name="user-setting" controller="changeUserInfo" global="true">
     <div class="box-head">
       <h3>修改资料</h3>
@@ -14,7 +14,7 @@
     </div>
     <div class="box-foot">
       <button ng-click="ok()" class="btn btn-primary">保存</button>
-      <button ng-click="close()" class="btn">取消</button>
+      <button ng-click="close()" class="btn btn-default">取消</button>
     </div>
   </dialog>
   <div ng-switch-when="out">
@@ -67,7 +67,7 @@
       <div ng-click="logout()" title="退出" class="icon-item icon-exit"></div>
     </div>
     <div ng-click="pop = !pop" class="avatar-container">
-      <avatar hash="{{userState.info.emailHash}}"></avatar>
+      <avatar hash="{{self.info.emailHash}}"></avatar>
     </div>
   </div>
 </div>

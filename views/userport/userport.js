@@ -19,7 +19,7 @@ angular.module('platform')
 
   $scope.changeUserInfo = {
     init: function(){
-      angular.extend(this, self.getInfo());
+      angular.extend(this, self.info);
     },
     ok: function(){
       var that = this;
@@ -105,8 +105,8 @@ angular.module('platform')
     });
   }
   
-  $scope.userState = self.getState();
-  $scope.$watch('userState.logging', function(n, o){
+  $scope.self = self;
+  $scope.$watch('self.logging', function(n, o){
     if(n != undefined){
       $scope.state = n? 'in' : 'out';
     }

@@ -38,22 +38,20 @@ angular.module('platform')
 
 
   return FieldTester;
-}).factory('self', function(models, $http, progressService){
-  var state = {};
+}).factory('self', function(models, $http, progressService, $rootScope){
+  var ins = {};
   function verify(){
     var p = $http.get('/verify')
     p.then(function(res){
-      state.info = res.data;
-      state.info.emailHash = md5(res.data.email);
-      state.logging = true;
+      ins.info = res.data;
+      ins.info.emailHash = md5(res.data.email);
+      ins.logging = true;
     }, function(r){
-      state.logging = false;
+      ins.logging = false;
     });
     progressService.watch(p);
   }
-  
-
-  return {
+  var methods = {
     login: function(username, pw){
       var p = $http.post('/login', {username: username, pw: pw});
       p.then(function(){
@@ -67,19 +65,15 @@ angular.module('platform')
     logout: function(){
       $http.post('/logout')
       .then(function(){
-        state.logging = false;
+        ins.logging = false;
       }, function(s){
         console.log(s);
       });
     },
-    getInfo: function(){
-      return state.info;
-    },
-    getState: function(){
-      return state;
-    },
     verify: verify
   }
+  angular.extend(ins, methods);
+  return ins;
 }).factory('util', function(){
   function arrayRemove(array, value) {
     var index = array.indexOf(value);

@@ -9,13 +9,13 @@
   .box-body
     .post-bubble.top-input(ng-class="{editing: coverOther}")
       .post-bubble-content
-        avatar.avatar-thumbnail(hash="{{userState.info.emailHash}}")
+        avatar.avatar-thumbnail(hash="{{self.info.emailHash}}")
         input-body.post-main
           .input-body-nav
             .icon-lightbulb.big-lightbulb(ng-click="openInput()")
           .input-body-content
             .post-head.buffer-bottom
-              .username {{userState.info.username}}
+              .username {{self.info.username}}
             .row.buffer-bottom
               .col-lg-12
                 input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")    
@@ -36,8 +36,8 @@
         avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}")
         .post-main
           .post-head
+            .close(ng-if="mp.author._id == self.info._id", ng-click="deletePost(mp)") &times;
             .date {{mp.date | ago}}
-              a(ng-click="deletePost(mp)", href="javascript:;") [x]
             .username {{mp.author.username}}
           .post-content {{mp.content}}
           .post-img(ng-if="mp.img")

@@ -1,4 +1,4 @@
-div(ng-switch="state")
+.clearfix(ng-switch="state")
   dialog(name="user-setting", controller="changeUserInfo", global="true")
     .box-head
       h3 修改资料
@@ -9,7 +9,7 @@ div(ng-switch="state")
         input(type="email", ng-model="email")
     .box-foot
       button.btn.btn-primary(ng-click="ok()") 保存
-      button.btn(ng-click="close()") 取消
+      button.btn.btn-default(ng-click="close()") 取消
   div(ng-switch-when="out")
     button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  
@@ -49,7 +49,7 @@ div(ng-switch="state")
       .icon-item.icon-cog(call-dialog="user-setting", title="修改资料")
       .icon-item.icon-exit(ng-click="logout()", title="退出")
     .avatar-container(ng-click="pop = !pop")
-      avatar(hash="{{userState.info.emailHash}}")
+      avatar(hash="{{self.info.emailHash}}")
 
 
 

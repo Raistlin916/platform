@@ -60,8 +60,50 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       GroupUser: GroupUser,
       Praise: $resource('/groups/:gid/posts/:pid/praises', {pid:'@pid', gid: '@gid'})
     }
-  });
+  })
+.factory('docStore', function(models){
+  var store = {};
+  return {
+    get: function(name){
+      return store[name] = store[name] ? store[name] : models[name].query();
+    }
+  }
+});
 
+;angular.module('platform')
+.directive('admin', function(){
+  return {
+    restrict: 'E',
+    scope: {},
+    controller: 'Admin',
+    templateUrl : '/partials/admin.html'
+  }
+}).controller('Admin', function($scope, models, docStore){
+  $scope.groups = docStore.get('Group');
+
+  $scope.addGroup = {
+    ok: function(){
+      var newGroup = new models.Group(this.data)
+      , that = this;
+      newGroup.$save(null, function(){
+        newGroup.joined = false;
+        $scope.groups.push(newGroup);
+        that.reset();
+        that.close();
+      }, function(){
+        $scope.$emit('error', {message: '提交失败'});
+      });
+    }
+  };
+  $scope.deleteGroup = function(i){
+    confirm('确定删除？') && $scope.groups[i].$remove(null
+      , function(){
+      $scope.groups.splice(i, 1);
+    }, function(){
+      $scope.$emit('error', {message: '删除失败'});
+    });
+  };
+});
 ;angular.module('platform')
 .directive('avatar', function(){
     return {
@@ -186,22 +228,20 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
 
   return FieldTester;
-}).factory('self', function(models, $http, progressService){
-  var state = {};
+}).factory('self', function(models, $http, progressService, $rootScope){
+  var ins = {};
   function verify(){
     var p = $http.get('/verify')
     p.then(function(res){
-      state.info = res.data;
-      state.info.emailHash = md5(res.data.email);
-      state.logging = true;
+      ins.info = res.data;
+      ins.info.emailHash = md5(res.data.email);
+      ins.logging = true;
     }, function(r){
-      state.logging = false;
+      ins.logging = false;
     });
     progressService.watch(p);
   }
-  
-
-  return {
+  var methods = {
     login: function(username, pw){
       var p = $http.post('/login', {username: username, pw: pw});
       p.then(function(){
@@ -215,19 +255,15 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     logout: function(){
       $http.post('/logout')
       .then(function(){
-        state.logging = false;
+        ins.logging = false;
       }, function(s){
         console.log(s);
       });
     },
-    getInfo: function(){
-      return state.info;
-    },
-    getState: function(){
-      return state;
-    },
     verify: verify
   }
+  angular.extend(ins, methods);
+  return ins;
 }).factory('util', function(){
   function arrayRemove(array, value) {
     var index = array.indexOf(value);
@@ -375,36 +411,13 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     templateUrl : '/partials/group.html'
   }
 })
-.controller('Group', function($scope, models, self, $timeout){
+.controller('Group', function($scope, models, self, $timeout, docStore){
   $scope.state = 'choose-group';
-  $scope.selfState = self.getState();
-  $scope.groups = models.Group.query();
-  $scope.$watch('selfState.logging', function(n){
-    
-  });  
+  $scope.self = self;
+  $scope.groups = docStore.get('Group');
 
-  $scope.addGroup = {
-    ok: function(){
-      var newGroup = new models.Group(this.data)
-      , that = this;
-      newGroup.$save(null, function(){
-        newGroup.joined = false;
-        $scope.groups.push(newGroup);
-        that.reset();
-        that.close();
-      }, function(){
-        $scope.$emit('error', {message: '提交失败'});
-      });
-    }
-  };
-  $scope.deleteGroup = function(i){
-    $scope.groups[i].$remove(null
-      , function(){
-      $scope.groups.splice(i, 1);
-    }, function(){
-      $scope.$emit('error', {message: '删除失败'});
-    });
-  };
+
+  
   $scope.joinGroup = function(group){
     new models.GroupUser({gid: group._id}).$save(null
       , function(){
@@ -551,7 +564,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .controller('Post', function($scope, models, self, util){
   
   var Post = models.Post, group;
-  $scope.userState = self.getState();
+  $scope.self = self;
   $scope.$on('load', function(e, data){
     $scope.group = data.group;
   });
@@ -606,20 +619,20 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       return;
     }
     $scope.loading = true;
-    $scope.p++;
-    Post.query({gid: $scope.group._id, p: $scope.p}, function(res){
+    Post.query({gid: $scope.group._id, p: $scope.p+1}, function(res){
       $scope.loading = false;
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;
       $scope.totalPage = Math.ceil(res.total/res.step);
-      $scope.hasMore = $scope.p+1 != $scope.totalPage;
+      $scope.p++;
+      $scope.hasMore = $scope.p+1 < $scope.totalPage;
       angular.extend($scope, res);
     });
   }
   
 
   $scope.deletePost = function(post){
-    new models.Post(post).$remove({gid: $scope.group._id, pid: post._id}, function(){
+    confirm('确认删除？') && new models.Post(post).$remove({gid: $scope.group._id, pid: post._id}, function(){
       util.arrayRemove($scope.posts, post);
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
@@ -672,7 +685,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
   $scope.changeUserInfo = {
     init: function(){
-      angular.extend(this, self.getInfo());
+      angular.extend(this, self.info);
     },
     ok: function(){
       var that = this;
@@ -758,8 +771,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     });
   }
   
-  $scope.userState = self.getState();
-  $scope.$watch('userState.logging', function(n, o){
+  $scope.self = self;
+  $scope.$watch('self.logging', function(n, o){
     if(n != undefined){
       $scope.state = n? 'in' : 'out';
     }

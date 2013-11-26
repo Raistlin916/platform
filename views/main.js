@@ -60,4 +60,12 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       GroupUser: GroupUser,
       Praise: $resource('/groups/:gid/posts/:pid/praises', {pid:'@pid', gid: '@gid'})
     }
-  });
+  })
+.factory('docStore', function(models){
+  var store = {};
+  return {
+    get: function(name){
+      return store[name] = store[name] ? store[name] : models[name].query();
+    }
+  }
+});

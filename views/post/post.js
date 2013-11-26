@@ -10,7 +10,7 @@ angular.module('platform')
 .controller('Post', function($scope, models, self, util){
   
   var Post = models.Post, group;
-  $scope.userState = self.getState();
+  $scope.self = self;
   $scope.$on('load', function(e, data){
     $scope.group = data.group;
   });
@@ -65,20 +65,20 @@ angular.module('platform')
       return;
     }
     $scope.loading = true;
-    $scope.p++;
-    Post.query({gid: $scope.group._id, p: $scope.p}, function(res){
+    Post.query({gid: $scope.group._id, p: $scope.p+1}, function(res){
       $scope.loading = false;
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;
       $scope.totalPage = Math.ceil(res.total/res.step);
-      $scope.hasMore = $scope.p+1 != $scope.totalPage;
+      $scope.p++;
+      $scope.hasMore = $scope.p+1 < $scope.totalPage;
       angular.extend($scope, res);
     });
   }
   
 
   $scope.deletePost = function(post){
-    new models.Post(post).$remove({gid: $scope.group._id, pid: post._id}, function(){
+    confirm('确认删除？') && new models.Post(post).$remove({gid: $scope.group._id, pid: post._id}, function(){
       util.arrayRemove($scope.posts, post);
     }, function(reason){
       $scope.$emit('error', {message: reason.data});

@@ -1,23 +1,10 @@
-//- dialog(name="add-group", controller="addGroup", global="true")
-//-   .box-head 添加群组
-//-   .box-body
-//-     .float-placeholder
-//-       input(type="text", ng-model="data.name", placeholder="主题名")
-//-     .float-placeholder
-//-       input(type="text", ng-model="data.desc", placeholder="简单的描述")  
-//-   .box-foot
-//-     button.btn.btn-primary(type="button", ng-click="ok()") 提交
-//-     button.btn(type="button", ng-click="close()") 取消
-//- button.btn(call-dialog="add-group") 添加
-
 div(ng-switch="state")
-  .group-list.clearfix(ng-switch-when="choose-group")
-    .group-item.box(ng-repeat="group in groups")
+  ul.group-list(ng-switch-when="choose-group")
+    li.group-item.box(ng-repeat="group in groups")
       .box-head
         h3.group-name {{group.name}}
         .box-control
           button.btn.btn-secondary.btn-sm(ng-click="joinGroup(group)") 进入
       .box-body
         .group-desc {{group.desc}}
-        button.btn.btn-error.btn-sm(ng-click="deleteGroup($index)") 删除
   post(ng-switch-when="in-group")

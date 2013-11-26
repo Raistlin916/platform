@@ -1,0 +1,19 @@
+dialog(name="add-group", controller="addGroup", global="true")
+  .box-head 添加群组
+  .box-body
+    .float-placeholder
+      input(type="text", ng-model="data.name", placeholder="主题名")
+    .float-placeholder
+      input(type="text", ng-model="data.desc", placeholder="简单的描述")  
+  .box-foot
+    button.btn.btn-primary(type="button", ng-click="ok()") 提交
+    button.btn.btn-default(type="button", ng-click="close()") 取消
+
+h4 您好，管理员
+div 群组列表
+button.btn(call-dialog="add-group") 添加
+ul.list-group
+  li.list-group-item(ng-repeat="group in groups")
+    .close(ng-click="deleteGroup($index)") &times;
+    div 组名: {{group.name}}
+    div 简述: {{group.desc}}
