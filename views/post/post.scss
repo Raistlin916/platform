@@ -1,0 +1,121 @@
+@import '../variables';
+
+post {
+  .top-input {
+    position: relative;
+    .big-lightbulb {
+      font-size: 50px;
+      color: #F19F35;
+      cursor: pointer;
+      transition: .8s transform ease;
+    }
+    .big-lightbulb:hover {
+      transform: translateY(-5px);
+    }
+    .post-main {
+      width: 70px;
+      transition: .8s height linear;
+    }
+    .input-body-content {
+      display: none;
+    }
+
+  }
+  .top-input.editing {
+    z-index: 1100;
+  }
+
+  .post-bubble {
+    list-style-type: none;
+    padding: 0;
+    .post-bubble-content {
+      padding: 10px;
+      margin-bottom: 4px;
+      img.avatar-thumbnail {
+        float: left;
+      }
+      .post-main {
+        position: relative;
+        background: #fff;
+        margin: 3px 0 0 60px;
+        border-radius: 3px;
+        padding: 10px;
+        transition: .8s height ease;
+        .post-head {
+          .date {
+            @include secondary-font;
+            float: right;
+            margin-right: 5px;
+          }
+          .username {
+            @include secondary-font;
+          }
+        }
+        .post-content {
+          margin: 10px 0;
+          font-size: 16px;
+          word-break: break-all;
+        }
+        .post-img img{
+          margin: 10px;
+          max-height: 300px;
+          max-width: 800px;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          top: 6px;
+          left: -12px;
+          border: 6px solid transparent;
+          border-right-color: #fff;
+        }
+      }
+      
+      
+      .pink-heart {
+        font-size: 24px;
+        color: pink;
+        cursor: pointer;
+        float: left;
+      }
+      ul.post-praise-list {
+        margin-left: 26px;
+        list-style-type: none;
+        overflow: hidden;
+        padding: 0;
+        li {
+          float: left;
+          margin-right: 3px;
+        }
+        li:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  .bottom-control {
+    padding-left: 10px;
+    .load-more {
+      font-size: 14px;
+      
+      text-align: center;
+      .more, .no-more {
+        padding: 5px;
+      }
+      .more {
+        cursor: pointer;
+        background: silver;
+        color: white;
+      }
+      .no-more {
+        color: #a0a0a0;
+      }
+    }
+    .loading {
+      .loading-text {
+        margin-left: 5px;
+        @include illustrate-font;
+      }
+    }
+  }
+}
