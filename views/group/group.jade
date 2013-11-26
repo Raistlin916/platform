@@ -1,5 +1,5 @@
 div(ng-switch="state")
-  ul.group-list(ng-switch-when="choose-group")
+  ul.group-list.clearfix(ng-switch-when="choose-group")
     li.group-item.box(ng-repeat="group in groups")
       .box-head
         h3.group-name {{group.name}}

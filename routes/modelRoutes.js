@@ -182,14 +182,18 @@ function saveGroup(req, res){
     return;
   }
   var newGroup = new Group(req.body);
+  newGroup.createDate = new Date;
   newGroup.save(function(err, n){
     err ? res.send(403, '创建失败') : res.send(newGroup);
   });
 }
 
 function listGroup(req, res){
-  Group.find(function(err, groups){
-    err ? res.send(500) : res.send(groups);
+  Group.find().sort('createDate').exec()
+  .then(function(doc){
+    res.send(doc);
+  }, function(){
+    res.send(500);
   });
 }
 
