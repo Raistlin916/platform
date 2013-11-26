@@ -48,13 +48,13 @@
             ul.post-praise-list.clearfix
               li(ng-repeat="praisedUser in mp.praisedUserList") 
                 avatar.avatar-half-thumbnail(hash="{{praisedUser.emailHash}}", title="{{praisedUser.username}}")
-    .bottom-control
-      .load-more(ng-if="!loading")
-        .more(ng-if="hasMore", ng-click="loadPage()") 加载更多
-        .no-more(ng-if="!hasMore") 到底了
-      .loading(ng-if="loading")
-        img(src="/images/cat.gif")
-        span.loading-text 加载中...
+  .box-foot
+    .load-more(ng-if="!loading")
+      .more(ng-if="hasMore", ng-click="loadPage()") 加载更多
+      .no-more(ng-if="!hasMore") 到底了
+    .loading(ng-if="loading")
+      img(src="/images/cat.gif")
+      span.loading-text 加载中...
 
 
     

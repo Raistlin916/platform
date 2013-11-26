@@ -12,7 +12,12 @@ angular.module('platform')
         fileInput.click();
       }
       scope.$watch('model.imageData', function(n){
-        showcase.height(n ? parseInt(showcaseImg.css('marginTop'))+showcaseImg.height(): (0, fileInput.val(null)));
+        if(n != undefined){
+          showcase.height(parseInt(showcaseImg.css('marginTop'))+showcaseImg.height());
+        } else {
+          showcase.height(0);
+          fileInput.val(null);
+        }
       });
 
       fileInput.on('change', function(e){

@@ -1,6 +1,6 @@
 angular.module('platform')
 .directive('inputBody', function(){
-  // 我尝试了angular-animation, css3动画，经过三天努力，都失败了
+  // 尝试了angular-animation, css3动画，几天努力，都失败了
   // 最后决定还是用jq做动画，我有罪。
   return {
     restrict: 'E',

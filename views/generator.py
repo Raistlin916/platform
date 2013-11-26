@@ -19,6 +19,13 @@ def create_directive(name):
   }
 });''' % (name, name) )
     js_file.close()
+    scss_file = open(os.path.join(name, name+'.scss'), 'w')
+    scss_file.write(
+'''@import '../variables';
+%s {
+
+}''' % (name) )
+    scss_file.close()
     jade_file = open(os.path.join(name, name+'.jade'), 'w')
     jade_file.close();
     print name + ' has created'

@@ -93,29 +93,24 @@ post {
       }
     }
   }
-  .bottom-control {
-    padding-left: 10px;
-    .load-more {
-      font-size: 14px;
-      
-      text-align: center;
-      .more, .no-more {
-        padding: 5px;
-      }
-      .more {
-        cursor: pointer;
-        background: silver;
-        color: white;
-      }
-      .no-more {
-        color: #a0a0a0;
-      }
+
+  .load-more {
+    font-size: 14px;
+    text-align: center;
+    .more, .no-more {
+      padding: 5px;
     }
-    .loading {
-      .loading-text {
-        margin-left: 5px;
-        @include illustrate-font;
-      }
+    .more {
+      cursor: pointer;
+    }
+    .no-more {
+      color: #a0a0a0;
+    }
+  }
+  .loading {
+    .loading-text {
+      margin-left: 5px;
+      @include illustrate-font;
     }
   }
 }

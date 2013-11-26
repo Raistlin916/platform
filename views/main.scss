@@ -170,7 +170,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
   }
   .box-head {
     background: $box-bg-color;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
     padding: 10px;
     .box-control {
       float: right;
@@ -183,6 +183,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
   }
   .box-foot {
     background: $box-bg-color;
+    border-top: 1px solid rgba(0,0,0,0.1);
     padding: 10px;
   }
 }

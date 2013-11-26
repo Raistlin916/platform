@@ -342,7 +342,12 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
         fileInput.click();
       }
       scope.$watch('model.imageData', function(n){
-        showcase.height(n ? parseInt(showcaseImg.css('marginTop'))+showcaseImg.height(): (0, fileInput.val(null)));
+        if(n != undefined){
+          showcase.height(parseInt(showcaseImg.css('marginTop'))+showcaseImg.height());
+        } else {
+          showcase.height(0);
+          fileInput.val(null);
+        }
       });
 
       fileInput.on('change', function(e){
@@ -444,7 +449,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 });
 ;angular.module('platform')
 .directive('inputBody', function(){
-  // 我尝试了angular-animation, css3动画，经过三天努力，都失败了
+  // 尝试了angular-animation, css3动画，几天努力，都失败了
   // 最后决定还是用jq做动画，我有罪。
   return {
     restrict: 'E',
@@ -663,6 +668,17 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     });
   }
 
+});
+;angular.module('platform')
+.directive('test', function(){
+  return {
+    restrict: 'E',
+    scope: {},
+    link: function(scope, elem, attr){
+        
+    },
+    templateUrl : '/partials/test.html'
+  }
 });
 ;angular.module('platform')
 .directive('userport', function(){
