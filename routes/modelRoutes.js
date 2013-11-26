@@ -27,7 +27,7 @@ function savePost(req, res){
   Group.update({ _id: gid }, { $push: { posts: newPost } }).exec()
     .then(function(){
       var d = Q.defer();
-      newPost.populate('author', 'email username -_id', function(err, doc){
+      newPost.populate('author', 'email username', function(err, doc){
         err ? d.reject(err) : d.resolve(doc);
       });
       return d.promise;

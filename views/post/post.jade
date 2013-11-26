@@ -28,9 +28,7 @@
                   input.h-submit-input(type="hidden")
                   | 
                   a.close-input(href="javascript:;", ng-click="closeInput()") 返回
-              
-                
-          
+                 
     ul.post-bubble(infinite-scroll="loadPage()", infinite-scroll-disabled="loading")
       li.post-bubble-content(ng-repeat="mp in posts | orderBy:'-date' ")
         avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}")
@@ -50,6 +48,7 @@
                 avatar.avatar-half-thumbnail(hash="{{praisedUser.emailHash}}", title="{{praisedUser.username}}")
             span.praised-count(ng-if="mp.praisedCount > mp.praisedUserList.length") 等{{mp.praisedCount}}个人赞了
             span.praised-count(ng-if="mp.praisedCount && mp.praisedCount <= mp.praisedUserList.length") 赞了
+    .post-remind(ng-if="!posts.length") 似乎是空的
   .box-foot
     .load-more(ng-if="!loading")
       .more(ng-if="hasMore", ng-click="loadPage()") 加载更多
