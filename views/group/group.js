@@ -15,7 +15,7 @@ angular.module('platform')
 
   
   $scope.joinGroup = function(group){
-    new models.GroupUser({gid: group._id}).$save(null
+    /*new models.GroupUser({gid: group._id}).$save(null
       , function(){
       $scope.state = 'in-group';
       $timeout(function(){
@@ -23,6 +23,11 @@ angular.module('platform')
       });
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
+    });*/
+
+    $scope.state = 'in-group';
+    $timeout(function(){
+      $scope.$broadcast('load', {group: group});
     });
   }
   $scope.$on('quitGroup', function(){

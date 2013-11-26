@@ -93,12 +93,13 @@ angular.module('platform')
 
     new models.Praise(data)[post.hasPraised? '$remove': '$save'](null, function(){
       post.hasPraised = !post.hasPraised;
-      var selfInfo = self.getInfo();
       if(post.hasPraised) {
-        post.praisedUserList.unshift(selfInfo);
+        post.praisedUserList.unshift(self.info);
+        post.praisedCount++;
       } else {
+        post.praisedCount--;
         post.praisedUserList.forEach(function(item, i, array){
-          if(item._id == selfInfo._id){
+          if(item._id == self.info._id){
             array.splice(i, 1);
           }
         });

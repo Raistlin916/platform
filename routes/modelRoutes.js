@@ -44,7 +44,7 @@ function listPosts(req, res){
   var gid = req.params.gid
   , uid = req.session.uid
   , p = ~~(req.query.p) || 0
-  , step = ~~(req.query.step) || 2
+  , step = ~~(req.query.step) || 10
   , offset = p * step;
 
   // 下面这个迁移之前赋值无效，迁移之后无法查询，
@@ -55,7 +55,8 @@ function listPosts(req, res){
       var total = group.posts.length;
       // 没有用sort，用resverse效率如何，且是否会存在顺序错误？
       group.posts = group.posts.reverse().splice(offset, step).map(function(post, i){
-        aid[i] = { hasPraised: !!~post.praisedUserList.indexOf(uid) };
+        aid[i] = { hasPraised: !!~post.praisedUserList.indexOf(uid), praisedCount: post.praisedUserList.length };
+        post.praisedUserList = post.praisedUserList.reverse().slice(0, 5);
         return post;
       });
       return {group: group, total: total};

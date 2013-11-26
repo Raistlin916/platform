@@ -79,7 +79,8 @@ post {
         float: left;
       }
       ul.post-praise-list {
-        margin-left: 26px;
+        float: left;
+        margin-left: 5px;
         list-style-type: none;
         overflow: hidden;
         padding: 0;
@@ -90,6 +91,11 @@ post {
         li:last-child {
           margin-right: 0;
         }
+      }
+      .praised-count {
+        margin-left: 5px;
+        @include secondary-font;
+        vertical-align: middle;
       }
     }
   }

@@ -424,7 +424,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
   
   $scope.joinGroup = function(group){
-    new models.GroupUser({gid: group._id}).$save(null
+    /*new models.GroupUser({gid: group._id}).$save(null
       , function(){
       $scope.state = 'in-group';
       $timeout(function(){
@@ -432,6 +432,11 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       });
     }, function(reason){
       $scope.$emit('error', {message: reason.data});
+    });*/
+
+    $scope.state = 'in-group';
+    $timeout(function(){
+      $scope.$broadcast('load', {group: group});
     });
   }
   $scope.$on('quitGroup', function(){
@@ -652,12 +657,13 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
     new models.Praise(data)[post.hasPraised? '$remove': '$save'](null, function(){
       post.hasPraised = !post.hasPraised;
-      var selfInfo = self.getInfo();
       if(post.hasPraised) {
-        post.praisedUserList.unshift(selfInfo);
+        post.praisedUserList.unshift(self.info);
+        post.praisedCount++;
       } else {
+        post.praisedCount--;
         post.praisedUserList.forEach(function(item, i, array){
-          if(item._id == selfInfo._id){
+          if(item._id == self.info._id){
             array.splice(i, 1);
           }
         });
@@ -668,17 +674,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     });
   }
 
-});
-;angular.module('platform')
-.directive('test', function(){
-  return {
-    restrict: 'E',
-    scope: {},
-    link: function(scope, elem, attr){
-        
-    },
-    templateUrl : '/partials/test.html'
-  }
 });
 ;angular.module('platform')
 .directive('userport', function(){
