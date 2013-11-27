@@ -42,7 +42,7 @@ function savePost(req, res){
 
 function listPosts(req, res){
   var gid = req.params.gid
-  , uid = req.session.uid
+  , uid = (req.session || {}).uid
   , p = ~~(req.query.p) || 0
   , step = ~~(req.query.step) || 10
   , offset = p * step;

@@ -17,6 +17,11 @@ exports.setRoutes = function(app){
     delete: ['/groups/:gid/posts/:pid', '/groups/:gid/users/:uid']
   });
 
+  authenticate.setAdminVerifyRoutes({
+    post: ['/groups/:gid', '/groups'],
+    delete: ['/groups/:gid']
+  });
+
   authenticate.init(app);
 
   

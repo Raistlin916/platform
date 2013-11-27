@@ -82,13 +82,31 @@ function logout(req, res){
 
 
 // verify routes
-var verifyList = {};
+var verifyList = {
+  normal: null,
+  admin: null
+};
 
 function bindVerify(app){
-  for(var method in verifyList){
-    verifyList[method].forEach(function(url){
-      app[method](url, deliver);
-    });
+  var chmod, method, d;
+  for(chmod in verifyList){
+    switch(chmod){
+      case 'admin': 
+        d = deliver(function(session){
+          return session.uid != null && session.admin;
+        });
+        break;
+      default:
+        d = deliver(function(session){
+          return session.uid != null;
+        });
+    }
+    
+    for(method in verifyList[chmod]){
+      verifyList[chmod][method].forEach(function(url){
+        app[method](url, d);
+      });
+    }
   }
 }
 
@@ -106,23 +124,29 @@ function verify(req, res, next){
   });
 }
 
-function deliver(req, res, next){
-  verify(req, res);
-  var uid = req.session.uid;
-  if(uid == null){
-    res.send(401, '验证失败');
-  } else {
-    next();
+function deliver(determine){
+  return function(req, res, next){
+    verify(req, res, function(){
+      if(determine(req.session)){
+        next();
+      } else {
+        res.send(401, '验证失败');
+      }
+    });
   }
 }
 
-function setVerifyRoutes(v){
-  verifyList = v;
+function setVerifyRoutes(list){
+  verifyList.normal = list;
+}
+
+function setAdminVerifyRoutes(list){
+  verifyList.admin = list;
 }
 
 
 exports.init = function(app){
-  app.all('/*', verify);
+  //app.all('/*', verify);
 
   bindVerify(app);
   app.post('/login', login);
@@ -130,5 +154,6 @@ exports.init = function(app){
   app.get('/verify', verifyAndReturnInfo);
 }
 
+exports.setAdminVerifyRoutes = setAdminVerifyRoutes;
 exports.setVerifyRoutes = setVerifyRoutes;
 exports.checkin = checkin;
