@@ -1,7 +1,12 @@
 var models = require('../model/schema')
-, Q = require('Q');
+, Q = require('Q')
+, fs = require('fs')
+, path = require('path');
 
-var md5 = require('../util').md5;
+var md5 = require('../util').md5
+, adminList = fs.readFileSync(path.join(__dirname, './admin')) + '';
+
+adminList = adminList.split(',');
 
 function login(req, res){
   var username = req.body.username
@@ -44,10 +49,6 @@ function checkin(uid, res){
 }
 
 
-
-
-
-
 function verifyAndReturnInfo(req, res){
   var sid = req.cookies.sid;
 
@@ -59,6 +60,8 @@ function verifyAndReturnInfo(req, res){
     return models.User.findById(doc.uid, {pw: false}).exec();
   })
   .then(function(user){
+    user = user.toObject();
+    user.admin = adminList.indexOf(user._id.toString()) != -1;
     res.send(user);
   }, function(reason){
     res.send(401, reason);
@@ -97,12 +100,14 @@ function verify(req, res, next){
     }
     if(doc){
       req.session.uid = doc.uid;
+      req.session.admin = adminList.indexOf(doc.uid.toString()) != -1;
     }
-    next();
+    next && next();
   });
 }
 
 function deliver(req, res, next){
+  verify(req, res);
   var uid = req.session.uid;
   if(uid == null){
     res.send(401, '验证失败');

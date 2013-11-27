@@ -17,8 +17,15 @@ h4 您好，管理员
     ul.list-group
       li.list-group-item(ng-repeat="group in groups")
         .close(ng-click="deleteGroup($index)") &times;
-        div 组名: {{group.name}}
-        div 简述: {{group.desc}}
+        div 
+          span.item-key 组名: 
+          span.item-value {{group.name}}
+        div 
+          span.item-key 简述: 
+          span.item-value {{group.desc}}
+        div 
+          span.item-key 创建时间: 
+          span.item-value{{group.createDate | date:'yy年MM月dd日 HH:MM'}}
   .box-foot
     .clearfix
       .icon-plus.pull-right(call-dialog="add-group", title="添加群组")

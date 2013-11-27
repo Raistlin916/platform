@@ -1,0 +1,10 @@
+@import '../variables';
+
+admin {
+	.item-key {
+
+	}
+	.item-value {
+		@include illustrate-font;
+	}
+}

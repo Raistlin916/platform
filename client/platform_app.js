@@ -225,10 +225,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       return d.promise;
     }
   }
-
-
   return FieldTester;
-}).factory('self', function(models, $http, progressService, $rootScope){
+}).factory('self', function($http, progressService, $rootScope){
   var ins = {};
   function verify(){
     var p = $http.get('/verify')
@@ -236,7 +234,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       ins.info = res.data;
       ins.info.emailHash = md5(res.data.email);
       ins.logging = true;
+      $rootScope.self = ins;
     }, function(r){
+      ins.info = {};
       ins.logging = false;
     });
     progressService.watch(p);
@@ -255,6 +255,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     logout: function(){
       $http.post('/logout')
       .then(function(){
+        ins.info = {};
         ins.logging = false;
       }, function(s){
         console.log(s);
