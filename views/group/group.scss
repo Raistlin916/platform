@@ -1,0 +1,18 @@
+@import '../variables';
+
+group {
+  .group-list {
+    padding: 0;
+    .group-item {
+      margin: 0 10px 10px 0;
+      float: left;
+      width: 240px;
+      .group-name {
+        display: inline-block;
+      }
+      .group-desc {
+        height: 80px;
+      }
+    }
+  }
+}

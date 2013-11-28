@@ -1,0 +1,61 @@
+.box
+  .box-head
+    .box-control
+      button.btn.btn-default(ng-click="quit()") 退出
+    h3 {{group.name}}
+
+
+  .mask.fade-in(ng-if="coverOther")
+  .box-body
+    .post-bubble.top-input(ng-class="{editing: coverOther}", ng-if="self.logging")
+      .post-bubble-content
+        avatar.avatar-thumbnail(hash="{{self.info.emailHash}}")
+        input-body.post-main
+          .input-body-nav
+            .icon-lightbulb.big-lightbulb(ng-click="openInput()")
+          .input-body-content
+            .post-head.buffer-bottom
+              .username {{self.info.username}}
+            .row.buffer-bottom
+              .col-lg-12
+                input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")    
+            .row
+              .col-lg-8
+                file-upload(model="data")
+              .col-lg-4
+                .pull-right
+                  button.btn.btn-default.submit-input(type="button", ng-click="addPost()") 提交
+                  input.h-submit-input(type="hidden")
+                  | 
+                  a.close-input(href="javascript:;", ng-click="closeInput()") 返回
+                 
+    ul.post-bubble(infinite-scroll="loadPage()", infinite-scroll-disabled="loading")
+      li.post-bubble-content(ng-repeat="mp in posts | orderBy:'-date' ")
+        avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}")
+        .post-main
+          .post-head
+            .close(ng-if="mp.author._id == self.info._id", ng-click="deletePost(mp)") &times;
+            .date {{mp.date | ago}}
+            .username {{mp.author.username}}
+          .post-content {{mp.content}}
+          .post-img(ng-if="mp.img")
+            img(ng-src="/upload/{{mp.img}}")
+          .post-opt.clearfix
+            .pink-heart(ng-click="togglePraise(mp)", title="{{mp.hasPraised ? '取消赞':'赞'}}", ng-class="{'icon-heart': !mp.hasPraised, 'icon-heart-outline': mp.hasPraised}")
+            | 
+            ul.post-praise-list.clearfix
+              li(ng-repeat="praisedUser in mp.praisedUserList") 
+                avatar.avatar-half-thumbnail(hash="{{praisedUser.emailHash}}", title="{{praisedUser.username}}")
+            span.praised-count(ng-if="mp.praisedCount > mp.praisedUserList.length") 等{{mp.praisedCount}}个人赞了
+            span.praised-count(ng-if="mp.praisedCount && mp.praisedCount <= mp.praisedUserList.length") 赞了
+    .post-remind(ng-if="!posts.length") 似乎是空的
+  .box-foot
+    .load-more(ng-if="!loading")
+      .more(ng-if="hasMore", ng-click="loadPage()") 加载更多
+      .no-more(ng-if="!hasMore") 到底了
+    .loading(ng-if="loading")
+      img(src="/images/cat.gif")
+      span.loading-text 加载中...
+
+
+    

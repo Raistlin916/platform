@@ -1,0 +1,4 @@
+div
+  label(ng-if='showPh', ng-class='{blur: blur}') {{placeholder}}
+  label(ng-if='!showPh') &nbsp
+  div(ng-transclude)

@@ -1,0 +1,56 @@
+.clearfix(ng-switch="state")
+  dialog(name="user-setting", controller="changeUserInfo", global="true")
+    .box-head
+      h3 修改资料
+    .row.box-body
+      .col-lg-4
+        avatar(hash="{{emailHash}}")
+      .col-lg-8
+        input(type="email", ng-model="email")
+    .box-foot
+      button.btn.btn-primary(ng-click="ok()") 保存
+      button.btn.btn-default(ng-click="close()") 取消
+  div(ng-switch-when="out")
+    button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
+    |  
+    button.btn.btn-success(type="button", ng-click="changeState('register')") 注册
+  .bounce-box(ng-switch-when="login")
+    .box-head
+      h3 欢迎回来
+    .box-body
+      h4.text-danger(ng-if="errorMessage") {{errorMessage}}
+      .float-placeholder
+        input(type="text", ng-model="data.username", placeholder="用户名")
+      .float-placeholder
+        input(type="password", ng-model="data.pw", placeholder="密码")
+    .box-foot
+      button.btn.btn-primary(type="button", ng-click="login()") 登录
+      |  
+      a(href="javascript:;", ng-click="changeState('out')") 取消
+  .bounce-box(ng-switch-when="register")
+    .box-head
+      h3 注册您的账号
+    .box-body
+      h4.text-danger(ng-if="errorMessage") {{errorMessage}}
+      .float-placeholder
+        input(type="text", ng-model="data.username", placeholder="用户名")
+      .float-placeholder
+        input(type="password", ng-model="data.pw", placeholder="密码")
+      .float-placeholder
+        input(type="password", ng-model="data.pwAgain", placeholder="密码确认")
+      .float-placeholder
+        input(type="text", ng-model="data.email", placeholder="邮箱")
+    .box-foot
+      button.btn.btn-success(type="button", ng-click="register()") 注册
+      |  
+      a(href="javascript:;", ng-click="changeState('out')") 取消
+  div(ng-switch-when="in")
+    .user-control(ng-class="{outside: pop}")
+      .icon-item.icon-cog(call-dialog="user-setting", title="修改资料")
+      .icon-item.icon-exit(ng-click="logout()", title="退出")
+    .avatar-container(ng-click="pop = !pop")
+      avatar(hash="{{self.info.emailHash}}")
+
+
+
+  
