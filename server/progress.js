@@ -4,6 +4,7 @@ var mongoose = require('mongoose')
 , Q = require('Q')
 , routes = require('./routes')
 , etherRoute = require('./ether/route')
+, config = require('../config')
 , db = mongoose.connection
 , app;
 
@@ -45,7 +46,7 @@ function setTrulyRoutes(app){
 var dbHandler = {
   connect: function(){
     var d = Q.defer();
-    mongoose.connect('localhost', 'platform_db', function(err){
+    mongoose.connect('mongodb://' + config.dbLocation + ':' + config.dbPort + '/' + config.dbName, {user: config.dbUser, pass: config.dbPw}, function(err){
       if(err){
         mongoose.disconnect();
         d.reject(err);

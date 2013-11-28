@@ -4,4 +4,5 @@ client/style.css
 client/platform_app.js
 routes/admin
 upload/
+config.js
 run.bat
