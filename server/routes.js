@@ -4,7 +4,7 @@ var path = require('path');
 var authenticate = require('./authenticate');
 
 function index(req, res){
-  res.render('main');
+  res.sendfile(path.join(__dirname, '../client/partials/main.html'));
 };
 
 
