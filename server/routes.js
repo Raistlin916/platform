@@ -10,24 +10,18 @@ function index(req, res){
 
 exports.setRoutes = function(app){
   
-  
   authenticate.setVerifyRoutes({
     get: ['/userGroups/:uid'],
     post: ['/groups/:gid/posts', '/users/:id', '/groups/:gid/users', '/groups/:gid/posts/:pid/praises'],
-    delete: ['/groups/:gid/posts/:pid', '/groups/:gid/users/:uid']
+    delete: ['/groups/:gid/posts/:pid', '/groups/:gid/users/:uid', '/groups/:gid/posts/:pid/praises']
   });
-
   authenticate.setAdminVerifyRoutes({
     post: ['/groups/:gid', '/groups'],
     delete: ['/groups/:gid']
   });
-
   authenticate.init(app);
 
-  
-  require('./debug').init(app);
   require('./modelRoutes').init(app);
-  
   app.get('/', index);
 }
 

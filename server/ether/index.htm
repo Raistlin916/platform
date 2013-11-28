@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ether</title>
+  <script src="http://cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+</head>
+<body>
+  <button onclick="startDB()">start db</button>
+  <div class="result"></div>
+  <script>
+    var $result = $('.result');
+    function startDB(){
+      $.post('/startdb', function(res){
+        $('<div>').html(res).appendTo($result);
+      });
+    }
+    
+  </script>
+</body>
+</html>

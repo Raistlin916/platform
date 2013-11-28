@@ -41,6 +41,12 @@ function savePost(req, res){
 }
 
 function listPosts(req, res){
+  authenticate.verify(req, res, function(){
+    _listPosts(req, res);
+  });
+}
+
+function _listPosts(req, res){
   var gid = req.params.gid
   , uid = (req.session || {}).uid
   , p = ~~(req.query.p) || 0

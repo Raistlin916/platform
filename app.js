@@ -4,9 +4,10 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
+  , progress = require('./server/progress')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , mongoose = require('mongoose');
 
 var app = express();
 
@@ -30,8 +31,5 @@ app.configure('development', function(){
 });
 
 
-routes.setRoutes(app);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
+progress.start(app);

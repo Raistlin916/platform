@@ -154,6 +154,8 @@ exports.init = function(app){
   app.get('/verify', verifyAndReturnInfo);
 }
 
+
+exports.verify = verify;
 exports.setAdminVerifyRoutes = setAdminVerifyRoutes;
 exports.setVerifyRoutes = setVerifyRoutes;
 exports.checkin = checkin;

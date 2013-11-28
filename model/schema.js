@@ -3,8 +3,6 @@ var mongoose = require('mongoose')
   , ObjectId = mongoose.Schema.Types.ObjectId
   , md5 = require('../util').md5;
 
-mongoose.connect('localhost', 'platform_db');
-
 var PostSchema = new Schema({
   content:  {
     type: String,
