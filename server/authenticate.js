@@ -6,7 +6,10 @@ var models = require('../model/schema')
 var md5 = require('../util').md5
 , adminList = fs.readFileSync(path.join(__dirname, './admin')) + '';
 
-adminList = adminList.split(',');
+adminList = adminList.split(',')
+  .map(function(item){
+    return item.trim();
+  });
 
 function login(req, res){
   var username = req.body.username
