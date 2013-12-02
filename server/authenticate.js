@@ -41,9 +41,8 @@ function login(req, res){
 
 // uid加入在线列表
 function checkin(uid, res){
-  return models.OnlineUser.find({uid: uid}).exec()
+  return models.OnlineUser.findOne({uid: uid}).exec()
     .then(function(onlineUser){
-      onlineUser = onlineUser[0];
       if(onlineUser == null){
         onlineUser = new models.OnlineUser({uid: uid});
       }

@@ -2,6 +2,7 @@ var models = require('../model/schema')
 , authenticate = require('./authenticate')
 , util = require('../util')
 , md5 = util.md5
+, fs = require('fs')
 , path = require('path')
 , Q = require('q');
 
@@ -90,12 +91,19 @@ function deletePost(req, res){
   var gid = req.params.gid, uid = req.session.uid, pid = req.params.pid;
 
   // 怎么合并查询和删除
-  Group.find({ _id: gid })
+  Group.findOne({ _id: gid })
     .where('posts').elemMatch({ _id: pid, author: uid })
+    .select({'posts.$': 1})
     .exec()
-    .then(function(docs){
-      if(docs.length == 0){
+    .then(function(doc){
+      if(doc == null){
         return Q.reject(401);
+      }
+      if(doc.posts[0] && doc.posts[0].img){
+        var imgPath = path.join( __dirname, '../upload', doc.posts[0].img);
+        fs.unlink(imgPath, function(err){
+          if(err) { return console.log(err); }
+        });
       }
       // 下面总是返回1，即使author不对
       return Group.update({ _id: gid }, {$pull: {posts: { _id: pid, author: uid }}}).exec();
@@ -104,10 +112,7 @@ function deletePost(req, res){
     }, function(reason){
       res.send(500, reason);
     });
-
-
 }
-
 
 /*** handle user routes ***/
 var User = models.User;
@@ -204,8 +209,19 @@ function listGroup(req, res){
 }
 
 function deleteGroup(req, res){
-  Group.findOneAndRemove({ _id: req.params.id }, function (err) {
-    err ? res.send(500, '删除失败') : res.send(200);
+  Group.findOne({_id: req.params.id}).exec()
+  .then(function(doc){
+    doc.posts.forEach(function(post){
+      if(post.img){
+        var imgPath = path.join( __dirname, '../upload', post.img);
+        fs.unlink(imgPath, function(err){
+          if(err) { return console.log(err); }
+        });
+      }
+    });
+    doc.remove(function(err){
+      err ? res.send(500, '删除失败') : res.send(200);
+    });
   });
   UserGroup.remove({gid: req.params.id}, function (err){
     if(err){ console.log(err)};
