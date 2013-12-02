@@ -5,7 +5,7 @@
     h3 {{group.name}}
 
 
-  .mask.fade-in(ng-if="coverOther")
+  .mask(ng-if="coverOther")
   .box-body
     .post-bubble.top-input(ng-class="{editing: coverOther}", ng-if="self.logging")
       .post-bubble-content
