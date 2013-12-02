@@ -7,4 +7,10 @@ admin {
 	.item-value {
 		@include illustrate-font;
 	}
+
+  .model-control {
+    [class^="icon-"], [class*=" icon-"] {
+      cursor: pointer;
+    }
+  }
 }

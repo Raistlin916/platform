@@ -14,12 +14,12 @@
           .input-body-nav
             .icon-lightbulb.big-lightbulb(ng-click="openInput()")
           .input-body-content
-            .post-head.buffer-bottom
+            .post-head
               .username {{self.info.username}}
-            .row.buffer-bottom
+            .post-content.row
               .col-lg-12
                 input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")    
-            .row
+            .post-foot.row
               .col-lg-8
                 file-upload(model="data")
               .col-lg-4
@@ -40,7 +40,7 @@
           .post-content {{mp.content}}
           .post-img(ng-if="mp.img")
             img(ng-src="/upload/{{mp.img}}")
-          .post-opt.clearfix
+          .post-foot.clearfix
             .pink-heart(ng-click="togglePraise(mp)", title="{{mp.hasPraised ? '取消赞':'赞'}}", ng-class="{'icon-heart': !mp.hasPraised, 'icon-heart-outline': mp.hasPraised}")
             | 
             ul.post-praise-list.clearfix
