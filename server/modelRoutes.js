@@ -3,7 +3,7 @@ var models = require('../model/schema')
 , util = require('../util')
 , md5 = util.md5
 , path = require('path')
-, Q = require('Q');
+, Q = require('q');
 
 
 /*** handle post routes ***/

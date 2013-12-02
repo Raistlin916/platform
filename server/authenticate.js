@@ -1,5 +1,5 @@
 var models = require('../model/schema')
-, Q = require('Q')
+, Q = require('q')
 , fs = require('fs')
 , path = require('path');
 
