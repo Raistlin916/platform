@@ -32,6 +32,7 @@ function login(req, res){
       });
   })
   .then(null, function(error){
+    console.log(error);
     res.send(401, error);
   });
 
@@ -40,8 +41,9 @@ function login(req, res){
 
 // uid加入在线列表
 function checkin(uid, res){
-  return models.OnlineUser.findById(uid).exec()
+  return models.OnlineUser.find({uid: uid}).exec()
     .then(function(onlineUser){
+      onlineUser = onlineUser[0];
       if(onlineUser == null){
         onlineUser = new models.OnlineUser({uid: uid});
       }
