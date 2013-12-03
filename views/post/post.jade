@@ -1,3 +1,11 @@
+mixin input-foot(type)
+  .pull-right
+    button.btn.btn-primary.submit-input(type="button", ng-click="submitPost('#{type}')") 提交
+    input.h-submit-input(type="hidden")
+    | 
+    a.close-input(href="javascript:;", ng-click="closeInput()") 返回
+
+
 .box
   .box-head
     .box-control
@@ -12,22 +20,25 @@
         avatar.avatar-thumbnail(hash="{{self.info.emailHash}}")
         input-body.post-main
           .input-body-nav
-            .icon-lightbulb.big-lightbulb(ng-click="openInput()")
-          .input-body-content
+            .icon.icon-lightbulb(ng-click="openInput()", data-target="micro")
+            .icon.icon-list(ng-click="openInput()", data-target="todo")
+          .input-body-content(data-type="micro")
             .post-head
               .username {{self.info.username}}
-            .post-content.row
-              .col-lg-12
-                input.form-control(type="text", ng-model="data.content", ng-enter="addPost()")    
+            .post-content
+              input.form-control(type="text", ng-model="data.micro", ng-enter="submitPost('micro')")    
             .post-foot.row
               .col-lg-8
                 file-upload(model="data")
               .col-lg-4
-                .pull-right
-                  button.btn.btn-default.submit-input(type="button", ng-click="addPost()") 提交
-                  input.h-submit-input(type="hidden")
-                  | 
-                  a.close-input(href="javascript:;", ng-click="closeInput()") 返回
+                mixin input-foot("micro")
+          .input-body-content(data-type="todo")
+            .post-head
+              .username {{self.info.username}}
+            .post-content
+              todo-list(model="data")
+            .post-foot.clearfix
+              mixin input-foot("todo")
                  
     ul.post-bubble(infinite-scroll="loadPage()", infinite-scroll-disabled="loading")
       li.post-bubble-content(ng-repeat="mp in posts | orderBy:'-date' ")
@@ -37,7 +48,11 @@
             .close(ng-if="mp.author._id == self.info._id", ng-click="deletePost(mp)") &times;
             .date {{mp.date | ago}}
             .username {{mp.author.username}}
-          .post-content {{mp.content}}
+          .post-content(ng-switch="mp.type")
+            .post-content-micro(ng-switch-when="micro") {{mp.content}}
+            .post-content-todo(ng-switch-when="todo")
+              todo-list(json="mp.content")
+            .post-content-error(ng-switch-default) error
           .post-img(ng-if="mp.img")
             img(ng-src="/upload/{{mp.img}}")
           .post-foot.clearfix
@@ -57,5 +72,3 @@
       img(src="/images/cat.gif")
       span.loading-text 加载中...
 
-
-    

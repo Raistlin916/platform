@@ -7,6 +7,7 @@
 @import 'userport/userport';
 @import 'avatar/avatar';
 @import 'admin/admin';
+@import 'todoList/todoList';
 @import 'variables';
 
 body {
@@ -32,7 +33,7 @@ h1, h2, h3 {
     display: block;
     height: 0;
     overflow: hidden;
-  }
+  } 
   &:after {
     clear: both;
   }
@@ -45,9 +46,6 @@ h1, h2, h3 {
 .pull-right {
   float: right;
 }
-
-
-
 
 .container {
 	padding-top: 20px;
@@ -95,7 +93,7 @@ h1, h2, h3 {
 }
 
 .btn-primary {
-  background-color: #0078e7;
+  background-color: #2588C9;
   color: #fff;
   &:hover, &:active {
     color: #fff;

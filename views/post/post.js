@@ -20,16 +20,51 @@ angular.module('platform')
     $scope.$emit('quitGroup');
   }
   
-  $scope.data = {content: ""};
+  var initialData = {micro: null, todoList: [{content: ''}], imageData: null};
+  $scope.resetInputData = function(){
+    $scope.data = angular.copy(initialData);
+  }
 
-  $scope.addPost = function(){
-    var data = angular.extend({}, $scope.data);
-    if(!data.content.trim().length){
+  $scope.resetInputData();
+
+  function validPost(data, type){
+    if(data.content == null){
+      return false;
+    }
+    switch (type){
+      case 'micro':
+        return !!data.content.trim().length;
+      break;
+      case 'todo':
+        return data.content.length != 0;
+      break;
+      default:
+        return false;
+    }
+  }
+
+  function dispatchPost(type){
+    switch (type){
+      case 'micro':
+        return {content: $scope.data.micro, imageData: $scope.data.imageData};
+      break;
+      case 'todo':
+        return {content: angular.toJson($scope.data.todoList)};
+      break;
+      default:
+        return {};
+    }
+  }
+
+  $scope.submitPost = function(type){
+    var data = dispatchPost(type);
+    if(!validPost(data, type)){
       return;
     }
     data.gid = $scope.group._id;
-    var newPost = new Post(data);
-   
+    data.type = type;
+
+    var newPost = new Post(data);   
     newPost.$save(null, function(newPost){
       $scope.posts.push(newPost);
       $('.h-submit-input').click();
@@ -41,17 +76,14 @@ angular.module('platform')
     $scope.closeInput();
   };
 
-  $scope.clearInputData = function(){
-    $scope.data.content = "";
-    $scope.data.imageData = null;
-  }
+  
 
   $scope.openInput = function(){
     $scope.coverOther = true;
   }
 
   $scope.closeInput = function(){
-    $scope.clearInputData();
+    $scope.resetInputData();
     $scope.coverOther = false;
   }
 

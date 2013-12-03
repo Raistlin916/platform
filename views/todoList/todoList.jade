@@ -1,0 +1,10 @@
+ul.todo-list-content
+  li.todo.row(ng-repeat="todo in todoList")
+    .col-lg-8
+      input.underline(type="text", ng-if="edit", ng-model="todo.content")
+      .todo-content(ng-if="!edit") {{todo.content}}
+    .col-lg-4
+      span(ng-click="remove($index)", ng-if="edit") -
+  li.row(ng-if="edit")
+    .col-lg-8
+      .add-todo.icon-plus(ng-click="addTodo()")

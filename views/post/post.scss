@@ -3,21 +3,37 @@
 post {
   .top-input {
     position: relative;
-    .big-lightbulb {
-      font-size: 50px;
-      color: #F19F35;
-      cursor: pointer;
-      transition: .8s transform ease;
+    .input-body-nav {
+      .icon {
+        display: inline-block;
+        
+        cursor: pointer;
+        transition: .8s transform ease;
+      }
+      .icon:hover {
+        transform: translateY(-5px);
+      }
     }
-    .big-lightbulb:hover {
-      transform: translateY(-5px);
+    .icon-lightbulb {
+      color: #E9A449;
+      font-size: 50px;
+    }
+    .icon-list {
+      position: relative;
+      top: -3px;
+      color: #F5CB43;
+      font-size: 40px;
     }
     .post-main {
-      width: 70px;
+      width: 130px;
       transition: .8s height linear;
+    }
+    .post-foot {
+      margin-top: 10px;
     }
     .input-body-content {
       display: none;
+      padding: 10px 10px 8px;
     }
 
   }
@@ -52,10 +68,11 @@ post {
           }
         }
         .post-content {
-          padding: 10px 0;
+          padding: 10px;
           font-size: 16px;
           word-break: break-all;
         }
+        
         .post-img img{
           margin: 10px;
           max-height: 300px;

@@ -16,6 +16,7 @@ function savePost(req, res){
         author: uid,
         date: new Date,
         content: req.body.content,
+        type: req.body.type,
         img: (function(){
           var imagePath = ((req.files || {}).imageData || {}).path;
           if(imagePath == undefined){

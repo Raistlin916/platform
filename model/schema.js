@@ -18,6 +18,7 @@ var PostSchema = new Schema({
     unique: true,
     ref: 'User'
   }],
+  type: String,
   img: String,
   date: Date
 },

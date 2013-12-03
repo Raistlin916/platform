@@ -1,16 +1,17 @@
 angular.module('platform')
 .directive('inputBody', function(){
-  // 尝试了angular-animation, css3动画，几天努力，都失败了
-  // 最后决定还是用jq做动画，我有罪。
   return {
     restrict: 'E',
     link: function(scope, elem, attr){
       // -1 not open, 0 opening, 1 opened
       var openState = -1;
-      elem.delegate('.big-lightbulb', 'click', function(){
+      elem.delegate('.icon', 'click', function(){
         if(openState !== -1) return;
         openState = 0;
-        var $content = $('.input-body-content')
+        var target = $(this).data('target');
+        var $content = $('.input-body-content').filter(function(){
+                    return $(this).data('type') == target;
+                  })
         , $nav = $('.input-body-nav')
         , $main = $('.top-input .post-main');
 
@@ -27,6 +28,7 @@ angular.module('platform')
               display: 'none'
             });
             h = $content.css({display: 'block', height: 'auto'}).height();
+            h += parseFloat($content.css('padding-top'))+ parseFloat($content.css('padding-bottom'));
             $content.css({
               opacity: 0,
               height: $nav.height()
@@ -67,7 +69,7 @@ angular.module('platform')
               opacity: 1
             }, 300, function(){
               $main.animate({
-                width: 70
+                width: 130
               }, 300, function(){
                 openState = -1;
               }).css({overflow: 'visible'});

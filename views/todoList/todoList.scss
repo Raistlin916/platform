@@ -1,0 +1,42 @@
+@import '../variables';
+todo-list {
+  display: block;
+  input[type="text"].underline {
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-radius: 0;
+    height: 30px;
+    line-height: 20px;
+    padding: 0;
+    font-size: 18px;
+    text-indent: .5em;
+  }
+  .add-todo {
+    cursor: pointer;
+    background: #4e4e4e;
+    color: white;
+    padding: 10px;
+    width: 40px;
+    font-size: 20px;
+    margin: 20px auto 0;
+    border-radius: 5px;
+  }
+  .add-todo:hover {
+    background: #202020;
+  }
+  ul {
+    margin-bottom: 0;
+    li {
+      list-style: none;
+    }
+  }
+  .todo {
+    font-size: 18px;
+    .todo-content {
+      padding: 5px 0;
+    }
+  }
+  .todo-list-content {
+
+  }
+}

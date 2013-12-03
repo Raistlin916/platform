@@ -455,17 +455,18 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 });
 ;angular.module('platform')
 .directive('inputBody', function(){
-  // 尝试了angular-animation, css3动画，几天努力，都失败了
-  // 最后决定还是用jq做动画，我有罪。
   return {
     restrict: 'E',
     link: function(scope, elem, attr){
       // -1 not open, 0 opening, 1 opened
       var openState = -1;
-      elem.delegate('.big-lightbulb', 'click', function(){
+      elem.delegate('.icon', 'click', function(){
         if(openState !== -1) return;
         openState = 0;
-        var $content = $('.input-body-content')
+        var target = $(this).data('target');
+        var $content = $('.input-body-content').filter(function(){
+                    return $(this).data('type') == target;
+                  })
         , $nav = $('.input-body-nav')
         , $main = $('.top-input .post-main');
 
@@ -482,6 +483,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
               display: 'none'
             });
             h = $content.css({display: 'block', height: 'auto'}).height();
+            h += parseFloat($content.css('padding-top'))+ parseFloat($content.css('padding-bottom'));
             $content.css({
               opacity: 0,
               height: $nav.height()
@@ -522,7 +524,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
               opacity: 1
             }, 300, function(){
               $main.animate({
-                width: 70
+                width: 130
               }, 300, function(){
                 openState = -1;
               }).css({overflow: 'visible'});
@@ -585,16 +587,51 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     $scope.$emit('quitGroup');
   }
   
-  $scope.data = {content: ""};
+  var initialData = {micro: null, todoList: [{content: ''}], imageData: null};
+  $scope.resetInputData = function(){
+    $scope.data = angular.copy(initialData);
+  }
 
-  $scope.addPost = function(){
-    var data = angular.extend({}, $scope.data);
-    if(!data.content.trim().length){
+  $scope.resetInputData();
+
+  function validPost(data, type){
+    if(data.content == null){
+      return false;
+    }
+    switch (type){
+      case 'micro':
+        return !!data.content.trim().length;
+      break;
+      case 'todo':
+        return data.content.length != 0;
+      break;
+      default:
+        return false;
+    }
+  }
+
+  function dispatchPost(type){
+    switch (type){
+      case 'micro':
+        return {content: $scope.data.micro, imageData: $scope.data.imageData};
+      break;
+      case 'todo':
+        return {content: angular.toJson($scope.data.todoList)};
+      break;
+      default:
+        return {};
+    }
+  }
+
+  $scope.submitPost = function(type){
+    var data = dispatchPost(type);
+    if(!validPost(data, type)){
       return;
     }
     data.gid = $scope.group._id;
-    var newPost = new Post(data);
-   
+    data.type = type;
+
+    var newPost = new Post(data);   
     newPost.$save(null, function(newPost){
       $scope.posts.push(newPost);
       $('.h-submit-input').click();
@@ -606,17 +643,14 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     $scope.closeInput();
   };
 
-  $scope.clearInputData = function(){
-    $scope.data.content = "";
-    $scope.data.imageData = null;
-  }
+  
 
   $scope.openInput = function(){
     $scope.coverOther = true;
   }
 
   $scope.closeInput = function(){
-    $scope.clearInputData();
+    $scope.resetInputData();
     $scope.coverOther = false;
   }
 
@@ -675,6 +709,41 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     });
   }
 
+});
+;angular.module('platform')
+.directive('todoList', function(){
+  return {
+    restrict: 'E',
+    scope: {model: "=", json: "="},
+    link: function(scope, elem, attr){
+        if(scope.json){
+          scope.todoList = JSON.parse(scope.json);
+        }
+        scope.edit = scope.model != undefined;
+        
+        scope.addTodo = function(){
+          scope.todoList.push({content: ''});
+        }
+        scope.remove = function(index){
+          scope.todoList.splice(index, 1);
+        }
+        scope.$watch('model.todoList', function(n){
+          if(n == undefined) return;
+          scope.todoList = n;
+        });
+        /*scope.$watch('todoList.length', function(n){
+          if(n == undefined) return;
+          setTimeout(function(){
+            var h = elem.height()
+            , naturalH = elem.height('auto').height();
+            if(h != 0){
+              elem.height(h).animate({height: naturalH}, 300);
+            }
+          });
+        });*/
+    },
+    templateUrl : '/partials/todoList.html'
+  }
 });
 ;angular.module('platform')
 .directive('userport', function(){
