@@ -8,6 +8,7 @@ var PostSchema = new Schema({
     type: String,
     required: true
   },
+  todoList: [TodoSchema],
   author: {
     type: ObjectId,
     required: true,
@@ -27,6 +28,15 @@ var PostSchema = new Schema({
   toJSON: { virtuals: true },
   versionKey: false,
   id: false 
+});
+
+var TodoSchema = new Schema({
+  content: String,
+  hasDone: Boolean,
+  doneAt: Date
+}, {
+  versionKey: false,
+  id: false
 });
 
 var UserSchema = new Schema({
@@ -65,7 +75,7 @@ var OnlineUser = new Schema({
   versionKey: false
 });
 
-var Group = new Schema({
+var GroupSchema = new Schema({
   chomd: {
     type: String
   },
@@ -107,6 +117,7 @@ module.exports = {
   Post: mongoose.model('Post', PostSchema),
   User: mongoose.model('User', UserSchema),
   OnlineUser: mongoose.model('OnlineUser', OnlineUser),
-  Group: mongoose.model('Group', Group),
-  UserGroup: mongoose.model('UserGroup', UserGroup)
+  Group: mongoose.model('Group', GroupSchema),
+  UserGroup: mongoose.model('UserGroup', UserGroup),
+  Todo: mongoose.model('Todo', TodoSchema)
 }

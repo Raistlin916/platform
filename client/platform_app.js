@@ -603,7 +603,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
         return !!data.content.trim().length;
       break;
       case 'todo':
-        return data.content.length != 0;
+        return data.todoList.length > 0;
       break;
       default:
         return false;
@@ -616,7 +616,12 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
         return {content: $scope.data.micro, imageData: $scope.data.imageData};
       break;
       case 'todo':
-        return {content: angular.toJson($scope.data.todoList)};
+        return {  
+                  content: "", 
+                  todoList: $scope.data.todoList.filter(function(item){
+                    return item.content.trim().length > 0;
+                  })
+                };
       break;
       default:
         return {};
@@ -714,10 +719,10 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .directive('todoList', function(){
   return {
     restrict: 'E',
-    scope: {model: "=", json: "="},
+    scope: {model: "=", data: "="},
     link: function(scope, elem, attr){
-        if(scope.json){
-          scope.todoList = JSON.parse(scope.json);
+        if(scope.data){
+          scope.todoList = scope.data;
         }
         scope.edit = scope.model != undefined;
         

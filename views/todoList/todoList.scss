@@ -13,7 +13,7 @@ todo-list {
   }
   .add-todo {
     cursor: pointer;
-    background: #4e4e4e;
+    background: #A5A4A4;
     color: white;
     padding: 10px;
     width: 40px;
@@ -26,14 +26,45 @@ todo-list {
   }
   ul {
     margin-bottom: 0;
+    padding-left: 2rem;
     li {
       list-style: none;
     }
   }
   .todo {
     font-size: 18px;
+    margin-bottom: 5px;
     .todo-content {
       padding: 5px 0;
+      cursor: pointer;
+      font-weight: normal;
+
+      .todo-content-checkbox {
+        float: left;
+        font-size: 18px;
+        position: relative;
+        top: 4px;
+      }
+      .todo-content-text {
+        margin-left: 25px;
+      }
+
+    }
+
+    .todo-content.checked {
+      color: #A5A4A4;
+      text-decoration: line-through;
+    }
+
+    .icon-minus {
+      cursor: pointer;
+      font-size: 24px;
+      display: inline-block;
+      margin-top: 5px;
+      color: #A5A4A4;
+    }
+    .icon-minus:hover {
+      color: #202020;
     }
   }
   .todo-list-content {

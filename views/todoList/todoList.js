@@ -2,10 +2,10 @@ angular.module('platform')
 .directive('todoList', function(){
   return {
     restrict: 'E',
-    scope: {model: "=", json: "="},
+    scope: {model: "=", data: "="},
     link: function(scope, elem, attr){
-        if(scope.json){
-          scope.todoList = JSON.parse(scope.json);
+        if(scope.data){
+          scope.todoList = scope.data;
         }
         scope.edit = scope.model != undefined;
         

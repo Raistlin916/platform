@@ -17,7 +17,23 @@ function savePost(req, res){
         date: new Date,
         content: req.body.content,
         type: req.body.type,
+        todoList: req.body.todoList.map(function(item){
+          // TODO: 属性验证应该移到mongoose的schema中做          
+          if(typeof item.content != 'string'){
+            return null;
+          }
+          var content = item.content.trim();
+          if(!content.length){
+            return null;
+          }
+          return new models.Todo({
+            content: content,
+            hasDone: false
+          })
+        }),
         img: (function(){
+          // express的文件上传是不安全的，需要重写一下
+          // http://andrewkelley.me/post/do-not-use-bodyparser-with-express-js.html
           var imagePath = ((req.files || {}).imageData || {}).path;
           if(imagePath == undefined){
             return undefined;
@@ -201,7 +217,7 @@ function saveGroup(req, res){
 }
 
 function listGroup(req, res){
-  Group.find().sort('createDate').exec()
+  Group.find().select("-posts").sort('createDate').exec()
   .then(function(doc){
     res.send(doc);
   }, function(){

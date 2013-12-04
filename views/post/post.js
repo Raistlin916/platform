@@ -36,7 +36,7 @@ angular.module('platform')
         return !!data.content.trim().length;
       break;
       case 'todo':
-        return data.content.length != 0;
+        return data.todoList.length > 0;
       break;
       default:
         return false;
@@ -49,7 +49,12 @@ angular.module('platform')
         return {content: $scope.data.micro, imageData: $scope.data.imageData};
       break;
       case 'todo':
-        return {content: angular.toJson($scope.data.todoList)};
+        return {  
+                  content: "", 
+                  todoList: $scope.data.todoList.filter(function(item){
+                    return item.content.trim().length > 0;
+                  })
+                };
       break;
       default:
         return {};

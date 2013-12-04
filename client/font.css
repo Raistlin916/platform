@@ -44,3 +44,12 @@
 .icon-list:before {
 	content: "\e606";
 }
+.icon-checkbox-checked:before {
+	content: "\e607";
+}
+.icon-checkbox-unchecked:before {
+	content: "\e608";
+}
+.icon-minus:before {
+	content: "\e609";
+}
