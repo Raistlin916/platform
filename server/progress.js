@@ -14,6 +14,9 @@ db.on('connecting', function() {
 db.on('connected', function() {
   console.log('db connected!');
 });
+db.on('error', function(reason){
+  console.log(reason);
+});
 db.once('open', function() {
   console.log('db connection opened!');
   setTrulyRoutes(app);

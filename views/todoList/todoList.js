@@ -2,12 +2,20 @@ angular.module('platform')
 .directive('todoList', function(){
   return {
     restrict: 'E',
-    scope: {model: "=", data: "="},
+    scope: {model: "=", data: "=", owner: "="},
     link: function(scope, elem, attr){
         if(scope.data){
           scope.todoList = scope.data;
         }
         scope.edit = scope.model != undefined;
+
+        scope.toggleStatus = function(todo){
+          if(!scope.owner){
+            return;
+          }
+          todo.hasDone = !todo.hasDone;
+          todo.$save();
+        }
         
         scope.addTodo = function(){
           scope.todoList.push({content: ''});

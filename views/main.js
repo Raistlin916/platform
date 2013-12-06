@@ -16,6 +16,7 @@
 
 angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .factory('models', function($resource){
+    var Todo = $resource('groups/:gid/posts/:pid/todo/:tid', {pid:'@pid', gid: '@gid', tid: '@tid'});
     var Post = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {
         method: 'get',
@@ -25,6 +26,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
             item.author.emailHash = md5(item.author.email);
             item.praisedUserList.forEach(function(pu){
               pu.emailHash = md5(pu.email);
+            });
+            item.todoList = item.todoList.map(function(todo){
+              return new Todo(angular.extend(todo, {gid: res.gid, pid: item._id, tid:todo._id}));
             });
             return item;
           });

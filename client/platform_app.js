@@ -16,6 +16,7 @@
 
 angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .factory('models', function($resource){
+    var Todo = $resource('groups/:gid/posts/:pid/todo/:tid', {pid:'@pid', gid: '@gid', tid: '@tid'});
     var Post = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {
         method: 'get',
@@ -25,6 +26,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
             item.author.emailHash = md5(item.author.email);
             item.praisedUserList.forEach(function(pu){
               pu.emailHash = md5(pu.email);
+            });
+            item.todoList = item.todoList.map(function(todo){
+              return new Todo(angular.extend(todo, {gid: res.gid, pid: item._id, tid:todo._id}));
             });
             return item;
           });
@@ -304,6 +308,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
   }
 }).filter('ago', function($filter){
   return function(input){
+    if(input == null){
+      return '';
+    }
     var distance = Date.now() - new Date(input)
     , result = '', dih, diy
     , dim = ~~(distance/60000); // distance in minutes
@@ -719,12 +726,20 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .directive('todoList', function(){
   return {
     restrict: 'E',
-    scope: {model: "=", data: "="},
+    scope: {model: "=", data: "=", owner: "="},
     link: function(scope, elem, attr){
         if(scope.data){
           scope.todoList = scope.data;
         }
         scope.edit = scope.model != undefined;
+
+        scope.toggleStatus = function(todo){
+          if(!scope.owner){
+            return;
+          }
+          todo.hasDone = !todo.hasDone;
+          todo.$save();
+        }
         
         scope.addTodo = function(){
           scope.todoList.push({content: ''});

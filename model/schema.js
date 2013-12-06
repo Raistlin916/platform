@@ -5,8 +5,8 @@ var mongoose = require('mongoose')
 
 var PostSchema = new Schema({
   content:  {
-    type: String,
-    required: true
+    type: String/*,
+    required: true*/
   },
   todoList: [TodoSchema],
   author: {

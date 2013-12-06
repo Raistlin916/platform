@@ -6,7 +6,6 @@ var models = require('../model/schema')
 , path = require('path')
 , Q = require('q');
 
-
 /*** handle post routes ***/
 
 function savePost(req, res){
@@ -17,7 +16,7 @@ function savePost(req, res){
         date: new Date,
         content: req.body.content,
         type: req.body.type,
-        todoList: req.body.todoList.map(function(item){
+        todoList: req.body.todoList && req.body.todoList.map(function(item){
           // TODO: 属性验证应该移到mongoose的schema中做          
           if(typeof item.content != 'string'){
             return null;
@@ -26,10 +25,11 @@ function savePost(req, res){
           if(!content.length){
             return null;
           }
-          return new models.Todo({
+          var todo = new models.Todo({
             content: content,
             hasDone: false
-          })
+          });
+          return todo;
         }),
         img: (function(){
           // express的文件上传是不安全的，需要重写一下
@@ -56,6 +56,9 @@ function savePost(req, res){
       console.log(reason);
       res.send(500);
     });
+
+
+  
 }
 
 function listPosts(req, res){
@@ -97,7 +100,7 @@ function _listPosts(req, res){
         p.praisedUserList.reverse();
         return util.extend(p, aid[i]);
       });
-      res.send({data: data.posts, total: data.total, p: p, step: step});
+      res.send({data: data.posts, total: data.total, p: p, step: step, gid: gid});
     }, function(reason){
       console.log(reason);
       res.send(500);
@@ -129,6 +132,37 @@ function deletePost(req, res){
     }, function(reason){
       res.send(500, reason);
     });
+}
+
+function updateTodo(req, res){
+  // 这个地方如果不是我使用有误，就是mongoose的大坑
+  // 当有两层的nested document，一切都不对了
+  // 必须将tid转为ObjectId, 且无法用{$set: {'posts.$.todoList.$.hasDone: foo'}} 来更新
+  // {$set: {'posts.$.todoList.0.hasDone: foo'}} 可以，但是这有什么用
+  // 更新的时候 必须改变array item的地址引用，只改变array的引用或只改变item的属性都无法正确保存！
+
+  var tid = req.params.tid
+  , uid = req.session.uid
+  , ObjTid = new require('mongoose').Types.ObjectId(tid);
+  Group.findOne({'posts.todoList._id': ObjTid, 'posts.author': uid}, {'posts.$.todoList.$': 1}, function(err, doc){
+    if(err){
+      return res.send(500);
+    }
+    if(doc == null || doc.post.length == 0){
+      return res.send(401);
+    }
+    var post = doc.posts[0];
+    post.todoList = post.todoList.map(function(todo){
+      if(todo._id == tid){
+        return {content: todo.content, hasDone: req.body.hasDone, doneAt: new Date, _id: todo._id};
+      } else {
+        return todo;
+      }
+    });
+    doc.save(function(err, doc){
+      err ? res.send(500, err) : res.send(200);
+    });
+  });
 }
 
 /*** handle user routes ***/
@@ -316,6 +350,8 @@ exports.init = function(app){
   app.post('/groups/:gid/posts', savePost);
   app.get('/groups/:gid/posts', listPosts);
   app.delete('/groups/:gid/posts/:pid', deletePost);
+
+  app.post('/groups/:gid/posts/:pid/todo/:tid', updateTodo);
   
   app.delete('/groups/:id', deleteGroup);
   app.post('/groups/:gid/users', joinGroup);

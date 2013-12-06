@@ -114,6 +114,9 @@ angular.module('platform')
   }
 }).filter('ago', function($filter){
   return function(input){
+    if(input == null){
+      return '';
+    }
     var distance = Date.now() - new Date(input)
     , result = '', dih, diy
     , dim = ~~(distance/60000); // distance in minutes

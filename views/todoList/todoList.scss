@@ -36,7 +36,6 @@ todo-list {
     margin-bottom: 5px;
     .todo-content {
       padding: 5px 0;
-      cursor: pointer;
       font-weight: normal;
 
       .todo-content-checkbox {
@@ -48,7 +47,9 @@ todo-list {
       .todo-content-text {
         margin-left: 25px;
       }
-
+    }
+    .todo-content.owner {
+      cursor: pointer;
     }
 
     .todo-content.checked {
