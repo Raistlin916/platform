@@ -140,25 +140,33 @@ function updateTodo(req, res){
   // 必须将tid转为ObjectId, 且无法用{$set: {'posts.$.todoList.$.hasDone: foo'}} 来更新
   // {$set: {'posts.$.todoList.0.hasDone: foo'}} 可以，但是这有什么用
   // 更新的时候 必须改变array item的地址引用，只改变array的引用或只改变item的属性都无法正确保存！
+  // 如果加上select  'posts.$.todoList.$' 只返回相应的post，修改之后再保存会变成修改第一个post
 
   var tid = req.params.tid
+  , pid = req.params.pid
   , uid = req.session.uid
   , ObjTid = new require('mongoose').Types.ObjectId(tid);
-  Group.findOne({'posts.todoList._id': ObjTid, 'posts.author': uid}, {'posts.$.todoList.$': 1}, function(err, doc){
+  Group.findOne({'posts.todoList._id': ObjTid, 'posts.author': uid}, function(err, doc){
     if(err){
       return res.send(500);
     }
     if(doc == null || doc.post.length == 0){
       return res.send(401);
     }
-    var post = doc.posts[0];
-    post.todoList = post.todoList.map(function(todo){
-      if(todo._id == tid){
-        return {content: todo.content, hasDone: req.body.hasDone, doneAt: new Date, _id: todo._id};
-      } else {
-        return todo;
+
+    doc.posts.forEach(function(post){
+      if(post._id != pid){
+        return;
       }
+      post.todoList = post.todoList.map(function(todo){
+        if(todo._id == tid){
+          return {content: todo.content, hasDone: req.body.hasDone, doneAt: new Date, _id: todo._id};
+        } else {
+          return todo;
+        }
+      });
     });
+    
     doc.save(function(err, doc){
       err ? res.send(500, err) : res.send(200);
     });

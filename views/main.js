@@ -28,7 +28,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
               pu.emailHash = md5(pu.email);
             });
             item.todoList = item.todoList.map(function(todo){
-              return new Todo(angular.extend(todo, {gid: res.gid, pid: item._id, tid:todo._id}));
+              return new Todo(angular.extend(todo, {gid: res.gid, pid: item._id, tid: todo._id}));
             });
             return item;
           });
@@ -44,6 +44,10 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
           } catch(e){
             return data;
           }
+
+          item.todoList = item.todoList.map(function(todo){
+            return new Todo(angular.extend(todo, {pid: item._id, tid: todo._id}));
+          });
 
           item.author.emailHash = md5(item.author.email);
           return item;
