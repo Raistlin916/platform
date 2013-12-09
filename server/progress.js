@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
 , etherRoute = require('./ether/route')
 , config = require('../config')
 , db = mongoose.connection
+, fs = require('fs')
 , app;
 
 db.on('connecting', function() {
@@ -63,8 +64,13 @@ var dbHandler = {
 
 exports.start = function(eApp){
   app = eApp;
-  app.set('uploadPath', path.join( __dirname, '../upload'));
+  // 一些初始化设置
+  var uploadPath = path.join( __dirname, '../upload');
+  fs.existsSync(uploadPath) || fs.mkdir(uploadPath);
+  app.set('uploadPath', uploadPath);
+
   dbHandler.connect();
+  
   http.createServer(app).listen(app.get('port'), function(){
     console.log("http server listening on port " + app.get('port'));
   });
