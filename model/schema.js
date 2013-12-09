@@ -5,8 +5,7 @@ var mongoose = require('mongoose')
 
 var PostSchema = new Schema({
   content:  {
-    type: String/*,
-    required: true*/
+    type: String
   },
   todoList: [TodoSchema],
   author: {
@@ -19,6 +18,10 @@ var PostSchema = new Schema({
     unique: true,
     ref: 'User'
   }],
+  gid: {
+    type: ObjectId,
+    required: true
+  },
   type: String,
   img: String,
   date: Date
@@ -90,8 +93,7 @@ var GroupSchema = new Schema({
     type: String,
     required: true
   },
-  createDate: Date,
-  posts: [PostSchema]
+  createDate: Date
 }, {
   versionKey: false
 });
