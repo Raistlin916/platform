@@ -27,7 +27,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
             item.praisedUserList.forEach(function(pu){
               pu.emailHash = md5(pu.email);
             });
-            item.todoList = item.todoList.map(function(todo){
+            item.todoList = (item.todoList || []).map(function(todo){
               return new Todo(angular.extend(todo, {gid: res.gid, pid: item._id, tid: todo._id}));
             });
             return item;
@@ -45,7 +45,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
             return data;
           }
 
-          item.todoList = item.todoList.map(function(todo){
+          item.todoList = (item.todoList || []).map(function(todo){
             return new Todo(angular.extend(todo, {pid: item._id, tid: todo._id}));
           });
 

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , ObjectId = mongoose.Schema.Types.ObjectId
-  , md5 = require('../util').md5;
+  , md5 = require('../server/util').md5;
 
 var PostSchema = new Schema({
   content:  {

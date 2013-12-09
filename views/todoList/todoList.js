@@ -27,6 +27,10 @@ angular.module('platform')
           if(n == undefined) return;
           scope.todoList = n;
         });
+
+        scope.updateTodoList = function(){
+          
+        }
         /*scope.$watch('todoList.length', function(n){
           if(n == undefined) return;
           setTimeout(function(){

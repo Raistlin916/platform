@@ -1,4 +1,6 @@
 ul.todo-list-content
+  div
+    a(href="javscript:;", ng-click="edit = !edit;!edit && updateTodoList();") {{edit ? '确定' : '编辑'}}
   li.todo.row(ng-repeat="todo in todoList")
     .col-lg-10
       input.underline(type="text", ng-if="edit", ng-model="todo.content")

@@ -63,6 +63,7 @@ var dbHandler = {
 
 exports.start = function(eApp){
   app = eApp;
+  app.set('uploadPath', path.join( __dirname, '../upload'));
   dbHandler.connect();
   http.createServer(app).listen(app.get('port'), function(){
     console.log("http server listening on port " + app.get('port'));

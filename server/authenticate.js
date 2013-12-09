@@ -3,7 +3,7 @@ var models = require('../model/schema')
 , fs = require('fs')
 , path = require('path');
 
-var md5 = require('../util').md5
+var md5 = require('./util').md5
 , adminList = fs.readFileSync(path.join(__dirname, './admin')) + '';
 
 adminList = adminList.split(',')
