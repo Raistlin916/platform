@@ -1,5 +1,5 @@
 ul.todo-list-content
-  .todo-control(ng-if="!model", ng-click="toggleEdit();") {{edit ? '确定' : '编辑'}}
+  .todo-control(ng-if="!model && owner", ng-click="toggleEdit();") {{edit ? '确定' : '编辑'}}
   li.todo.row(ng-repeat="todo in todoList")
     .col-lg-10
       input.underline(type="text", ng-if="edit", ng-model="todo.content")
