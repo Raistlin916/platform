@@ -16,8 +16,8 @@
 
 angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .factory('models', function($resource){
-    var Todo = $resource('groups/:gid/posts/:pid/todo/:tid', {pid:'@pid', gid: '@gid', tid: '@tid'});
-    var Post = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
+    var Todo = $resource('/posts/:pid/todo/:tid', {tid: '@_id', pid: '@pid'});
+    var Post = $resource('/groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {
         method: 'get',
         transformResponse: function(res){
@@ -28,7 +28,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
               pu.emailHash = md5(pu.email);
             });
             item.todoList = (item.todoList || []).map(function(todo){
-              return new Todo(angular.extend(todo, {gid: res.gid, pid: item._id, tid: todo._id}));
+              return new Todo(angular.extend(todo, {pid: item._id}));
             });
             return item;
           });
@@ -46,7 +46,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
           }
 
           item.todoList = (item.todoList || []).map(function(todo){
-            return new Todo(angular.extend(todo, {pid: item._id, tid: todo._id}));
+            return new Todo(angular.extend(todo, {pid: item._id}));
           });
 
           item.author.emailHash = md5(item.author.email);
@@ -66,7 +66,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       User: $resource('/users/:id', {id: '@_id'}),
       Group: $resource('/groups/:id', {id: '@_id'}),
       GroupUser: GroupUser,
-      Praise: $resource('/groups/:gid/posts/:pid/praises', {pid:'@pid', gid: '@gid'})
+      Praise: $resource('/posts/:pid/praises', {pid:'@pid'}),
+      Todo: Todo
     }
   })
 .factory('docStore', function(models){

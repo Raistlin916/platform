@@ -51,7 +51,7 @@ mixin input-foot(type)
           .post-content(ng-switch="mp.type")
             .post-content-micro(ng-switch-when="micro") {{mp.content}}
             .post-content-todo(ng-switch-when="todo")
-              todo-list(data="mp.todoList", owner="mp.author._id == self.info._id")
+              todo-list(data="mp.todoList", pid="mp._id", owner="mp.author._id == self.info._id")
             .post-content-error(ng-switch-default) error
           .post-img(ng-if="mp.img")
             img(ng-src="/upload/{{mp.img}}")

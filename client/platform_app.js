@@ -16,8 +16,8 @@
 
 angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .factory('models', function($resource){
-    var Todo = $resource('groups/:gid/posts/:pid/todo/:tid', {pid:'@pid', gid: '@gid', tid: '@tid'});
-    var Post = $resource('groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
+    var Todo = $resource('/posts/:pid/todo/:tid', {tid: '@_id', pid: '@pid'});
+    var Post = $resource('/groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {
         method: 'get',
         transformResponse: function(res){
@@ -28,7 +28,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
               pu.emailHash = md5(pu.email);
             });
             item.todoList = (item.todoList || []).map(function(todo){
-              return new Todo(angular.extend(todo, {gid: res.gid, pid: item._id, tid: todo._id}));
+              return new Todo(angular.extend(todo, {pid: item._id}));
             });
             return item;
           });
@@ -46,7 +46,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
           }
 
           item.todoList = (item.todoList || []).map(function(todo){
-            return new Todo(angular.extend(todo, {pid: item._id, tid: todo._id}));
+            return new Todo(angular.extend(todo, {pid: item._id}));
           });
 
           item.author.emailHash = md5(item.author.email);
@@ -66,7 +66,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       User: $resource('/users/:id', {id: '@_id'}),
       Group: $resource('/groups/:id', {id: '@_id'}),
       GroupUser: GroupUser,
-      Praise: $resource('/groups/:gid/posts/:pid/praises', {pid:'@pid', gid: '@gid'})
+      Praise: $resource('/posts/:pid/praises', {pid:'@pid'}),
+      Todo: Todo
     }
   })
 .factory('docStore', function(models){
@@ -650,9 +651,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     var newPost = new Post(data);   
     newPost.$save(null, function(newPost){
       
-      newPost.todoList.forEach(function(todo){
-        todo.gid = $scope.group._id;
-      });
       $scope.posts.push(newPost);
       $('.h-submit-input').click();
     }, function(reason){
@@ -706,7 +704,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
   $scope.togglePraise = function(post){
     var data = {
-      gid: $scope.group._id,
       pid: post._id
     }
 
@@ -731,22 +728,23 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 
 });
 ;angular.module('platform')
-.directive('todoList', function(){
+.directive('todoList', function(models, $http){
+  var Todo = models.Todo;
   return {
     restrict: 'E',
-    scope: {model: "=", data: "=", owner: "="},
+    scope: {model: "=", data: "=", owner: "=", pid: "="},
     link: function(scope, elem, attr){
         if(scope.data){
           scope.todoList = scope.data;
         }
         scope.edit = scope.model != undefined;
 
-        scope.toggleStatus = function(todo){
+        scope.toggleHasDone = function(todo){
           if(!scope.owner){
             return;
           }
           todo.hasDone = !todo.hasDone;
-          todo.$save();
+          todo.$save({pid: scope.pid});
         }
         
         scope.addTodo = function(){
@@ -760,10 +758,36 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
           scope.todoList = n;
         });
 
-        scope.updateTodoList = function(){
-          
+        scope.toggleEdit = function(){
+          if(scope.edit){
+            var todoList = scope.todoList.filter(function(item){
+              item.content = item.content.trim();
+              if(!item.content.length){
+                return false;
+              }
+              return true;
+            });
+            scope.todoList = todoList;
+
+            $http.post('/posts/'+scope.pid+'/todo', {todoList: todoList})
+              .then(function(res){
+                scope.todoList = res.data.todoList.map(function(item){
+                  return new Todo(angular.extend(item, {pid: scope.pid}));
+                });
+              })
+              .then(null, function(res){
+                  console.log(res);
+                }); 
+          }
+          scope.edit = !scope.edit;
         }
-        /*scope.$watch('todoList.length', function(n){
+    },
+    templateUrl : '/partials/todoList.html'
+  }
+});
+
+
+      /*scope.$watch('todoList.length', function(n){
           if(n == undefined) return;
           setTimeout(function(){
             var h = elem.height()
@@ -773,10 +797,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
             }
           });
         });*/
-    },
-    templateUrl : '/partials/todoList.html'
-  }
-});
 ;angular.module('platform')
 .directive('userport', function(){
   return {

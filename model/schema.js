@@ -24,7 +24,10 @@ var PostSchema = new Schema({
   },
   type: String,
   img: String,
-  date: Date
+  date: {
+    type: Date,
+    default: Date.now
+  }
 },
 {
   toObject: { virtuals: true },
@@ -35,7 +38,10 @@ var PostSchema = new Schema({
 
 var TodoSchema = new Schema({
   content: String,
-  hasDone: Boolean,
+  hasDone: {
+    type: Boolean,
+    default: false
+  },
   doneAt: Date
 }, {
   versionKey: false,

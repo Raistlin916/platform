@@ -3,10 +3,11 @@ exports.init = function(app){
   app.get('/groups/:gid/posts', listPosts);
   app.delete('/groups/:gid/posts/:pid', deletePost);
   
-  app.post('/groups/:gid/posts/:pid/todo/:tid', updateTodo);
+  app.post('/posts/:pid/todo/:tid', updateTodo);
+  app.post('/posts/:pid/todo', saveTodo);
 
-  app.post('/groups/:gid/posts/:pid/praises', savePraise);
-  app.delete('/groups/:gid/posts/:pid/praises', deletePraise);
+  app.post('/posts/:pid/praises', savePraise);
+  app.delete('/posts/:pid/praises', deletePraise);
 
   uploadPath = app.get('uploadPath');
 }
@@ -27,7 +28,6 @@ function savePost(req, res){
 
   var newPost = new Post({
         author: uid,
-        date: new Date,
         content: req.body.content,
         type: req.body.type,
         gid: gid,
@@ -42,8 +42,18 @@ function savePost(req, res){
         })()
       });
 
-  req.body.todoList && req.body.todoList.forEach(function(item){
-    // TODO: 属性验证应该移到mongoose的schema中做          
+  newPost.todoList = transTodoList(req.body.todoList);
+
+  newPost.save(function(err, doc){
+    newPost.populate('author', 'email username', function(err, doc){
+      err ? res.send(500) : res.send(doc);
+    });
+  });
+  
+}
+
+function transTodoList(orgTodoList){
+  return (orgTodoList || []).map(function(item){
     if(typeof item.content != 'string'){
       return null;
     }
@@ -53,17 +63,11 @@ function savePost(req, res){
     }
     var todo = new models.Todo({
       content: content,
-      hasDone: false
+      doneAt: item.doneAt,
+      hasDone: item.hasDone
     });
-    newPost.todoList.push(todo);
-  });
-
-  newPost.save(function(err, doc){
-    newPost.populate('author', 'email username', function(err, doc){
-      err ? res.send(500) : res.send(doc);
-    });
-  });
-  
+    return todo;
+  }).filter(function(item){ return item != null; });
 }
 
 function listPosts(req, res){
@@ -108,7 +112,7 @@ function _listPosts(req, res){
     data.posts = data.posts.map(function(p, i){
       return util.extend(p.toObject(), aid[i], true);
     });
-    res.send({data: data.posts, total: data.total, p: p, step: step, gid: gid});
+    res.send({data: data.posts, total: data.total, p: p, step: step});
   })
   .then(null, function(reason){
     console.log(reason);
@@ -145,21 +149,39 @@ function deletePost(req, res){
     });
 }
 
-
+function saveTodo(req, res){
+  var pid = req.params.pid
+  , uid = req.session.uid;
+  Post.findOne({_id: pid, type: 'todo', author: uid}).exec()
+  .then(function(doc){
+    if(doc == null){
+      return res.send(401);
+    }
+    doc.todoList = transTodoList(req.body.todoList);
+    doc.save(function(err, doc){
+      err ? res.send(500) : res.send({todoList: doc.todoList});
+    });
+  });
+}
 
 function updateTodo(req, res){
   var tid = req.params.tid
   , uid = req.session.uid;
 
-  // 下面如果用mongoose的ObjectId会导致奇怪的现象require('mongoose').Schema.ObjectId
+  // 下面如果用mongoose的ObjectId会导致奇怪的现象 require('mongoose').Schema.ObjectId
   // 应该是个bug
-  Post.findOneAndUpdate({'todoList._id': new ObjectID(tid), 'author': uid}, {$set: {'todoList.$.hasDone': req.body.hasDone}})
+  Post.findOneAndUpdate({'todoList._id': new ObjectID(tid), 'author': uid}, 
+    {$set: {'todoList.$.hasDone': req.body.hasDone, 'todoList.$.doneAt': req.body.hasDone ? new Date : null}})
+  .where('todoList.$')
   .exec()
   .then(function(doc){
     if(doc == null){
       return res.send(401);
     }
-    res.send(200);
+    return Post.findOne({'todoList._id': new ObjectID(tid)}, 'todoList.$').exec()
+  })
+  .then(function(doc){
+    res.send(doc.todoList[0]);
   })
   .then(null, function(reason){
     console.log(reason);

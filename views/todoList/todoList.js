@@ -1,20 +1,21 @@
 angular.module('platform')
-.directive('todoList', function(){
+.directive('todoList', function(models, $http){
+  var Todo = models.Todo;
   return {
     restrict: 'E',
-    scope: {model: "=", data: "=", owner: "="},
+    scope: {model: "=", data: "=", owner: "=", pid: "="},
     link: function(scope, elem, attr){
         if(scope.data){
           scope.todoList = scope.data;
         }
         scope.edit = scope.model != undefined;
 
-        scope.toggleStatus = function(todo){
+        scope.toggleHasDone = function(todo){
           if(!scope.owner){
             return;
           }
           todo.hasDone = !todo.hasDone;
-          todo.$save();
+          todo.$save({pid: scope.pid});
         }
         
         scope.addTodo = function(){
@@ -28,10 +29,36 @@ angular.module('platform')
           scope.todoList = n;
         });
 
-        scope.updateTodoList = function(){
-          
+        scope.toggleEdit = function(){
+          if(scope.edit){
+            var todoList = scope.todoList.filter(function(item){
+              item.content = item.content.trim();
+              if(!item.content.length){
+                return false;
+              }
+              return true;
+            });
+            scope.todoList = todoList;
+
+            $http.post('/posts/'+scope.pid+'/todo', {todoList: todoList})
+              .then(function(res){
+                scope.todoList = res.data.todoList.map(function(item){
+                  return new Todo(angular.extend(item, {pid: scope.pid}));
+                });
+              })
+              .then(null, function(res){
+                  console.log(res);
+                }); 
+          }
+          scope.edit = !scope.edit;
         }
-        /*scope.$watch('todoList.length', function(n){
+    },
+    templateUrl : '/partials/todoList.html'
+  }
+});
+
+
+      /*scope.$watch('todoList.length', function(n){
           if(n == undefined) return;
           setTimeout(function(){
             var h = elem.height()
@@ -41,7 +68,3 @@ angular.module('platform')
             }
           });
         });*/
-    },
-    templateUrl : '/partials/todoList.html'
-  }
-});

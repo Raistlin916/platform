@@ -72,9 +72,6 @@ angular.module('platform')
     var newPost = new Post(data);   
     newPost.$save(null, function(newPost){
       
-      newPost.todoList.forEach(function(todo){
-        todo.gid = $scope.group._id;
-      });
       $scope.posts.push(newPost);
       $('.h-submit-input').click();
     }, function(reason){
@@ -128,7 +125,6 @@ angular.module('platform')
 
   $scope.togglePraise = function(post){
     var data = {
-      gid: $scope.group._id,
       pid: post._id
     }
 

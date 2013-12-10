@@ -24,6 +24,14 @@ todo-list {
   .add-todo:hover {
     background: #202020;
   }
+  .todo-control {
+    cursor: pointer;
+    float: right;
+    @include illustrate-font;
+  }
+  .todo-control:hover {
+    text-decoration: underline;
+  }
   ul {
     margin-bottom: 0;
     padding-left: 2rem;
