@@ -18,5 +18,8 @@
     "grunt-contrib-watch": "*",
     "grunt-sass": "*",
     "node-sass": "*"
+  },
+  "devDependencies": {
+    "grunt-contrib-compress": "~0.5.3"
   }
 }

@@ -48,6 +48,14 @@ module.exports = function(grunt) {
         files: 'views/**/*.jade',
         tasks: ['jade'],
       },
+    },
+    compress: {
+      main: {
+        options: {
+          archive: '<%= pkg.name %>.zip'
+        },
+        src: ['client/**', 'model/**', 'server/**', 'app.js', 'config.js']
+      }
     }
   });
 
@@ -56,8 +64,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-compress');
 
 
   grunt.registerTask('default', ['concat', 'sass', 'jade', 'watch']);
-
+  grunt.registerTask('package', ['concat', 'sass', 'jade', 'compress']);
 };
