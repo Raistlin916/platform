@@ -1,6 +1,6 @@
 angular.module('platform')
 .directive('dialog', function(){
-    var reservedField = ['opened', 'close', 'global', 'data'];
+    var reservedField = ['opened', 'close', 'data'];
     function verify(target){
       if(reservedField.some(function(k){
         return angular.isDefined(target[k]);
@@ -28,9 +28,9 @@ angular.module('platform')
               verify(scope.controller);
               scope.controller.init && scope.controller.init.call(scope);
             }
-            scope.global = attr.global == 'true';
+
             scope.opened = true;
-            angular.extend(scope, scope.controller);
+            angular.extend(scope, scope.controller, data);
             scope.$digest();
           }
         });
@@ -43,9 +43,10 @@ angular.module('platform')
 .directive('callDialog', function($rootScope){
   return {
     restrict: 'A',
+    scope: {dialogModel: '='},
     link: function(scope, elem, attr){
-      angular.element(elem).bind('click', function(){
-        $rootScope.$broadcast('openDialog', {name: attr.callDialog});
+      elem.bind('click', function(){
+        $rootScope.$broadcast('openDialog', {name: attr.callDialog, model: scope.dialogModel});
       });
     }
   }

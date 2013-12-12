@@ -31,15 +31,7 @@ function savePost(req, res){
         content: req.body.content,
         type: req.body.type,
         gid: gid,
-        img: (function(){
-          // express的文件上传是不安全的，需要重写一下
-          // http://andrewkelley.me/post/do-not-use-bodyparser-with-express-js.html
-          var imagePath = ((req.files || {}).imageData || {}).path;
-          if(imagePath == undefined){
-            return undefined;
-          }
-          return path.basename(imagePath);
-        })()
+        img: require('../util/imageHandler').getPath(req)
       });
 
   newPost.todoList = transTodoList(req.body.todoList);

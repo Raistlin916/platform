@@ -81,7 +81,7 @@ h1, h2, h3 {
 }
 
 .btn:active {
-  box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset, 0 0 6px rgba(0,0,0,.2) inset;
+  box-shadow: none;
 }
 
 .btn:active, .btn:focus {

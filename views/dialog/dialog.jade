@@ -1,5 +1,4 @@
 div(ng-if="opened")
-  .mask(ng-if="global")
+  .mask
     .dialog-content
       .bounce-box(ng-transclude)
-  .bounce-box(ng-if="!global", ng-transclude)

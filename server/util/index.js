@@ -21,7 +21,17 @@ function extend(target) {
 		return target;
 	}
 
+function pick(target){
+	var r = {}, args;
+	args = [].slice.call(arguments, 1, arguments.length);
+	args.forEach(function(k){
+		r[k] = target[k];
+	});
+	return r;
+}
+
 module.exports = {
 	md5: md5,
-	extend: extend
+	extend: extend,
+	pick: pick
 }

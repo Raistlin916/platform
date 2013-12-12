@@ -13,4 +13,9 @@ admin {
       cursor: pointer;
     }
   }
+
+  .item-control {
+    cursor: pointer;
+    @include secondary-font;
+  }
 }

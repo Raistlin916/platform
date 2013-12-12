@@ -99,6 +99,7 @@ var GroupSchema = new Schema({
     type: String,
     required: true
   },
+  bgPath: String,
   createDate: Date
 }, {
   versionKey: false

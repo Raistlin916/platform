@@ -1,17 +1,27 @@
 @import '../variables';
 
+.group-name {
+  @include title-font;
+}
+
 group {
   .group-list {
     padding: 0;
     .group-item {
       margin: 0 10px 10px 0;
       float: left;
-      width: 240px;
-      .group-name {
-        display: inline-block;
+      width: 288px;
+      height: 192px;
+      background-color: white;
+      background-size: cover;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      .group-desc.has-bg {
+        text-shadow: rgb(51, 51, 51) 1px 1px 1px;
+        color: white;
       }
       .group-desc {
-        height: 80px;
+        padding: 20px 30px;
       }
     }
   }

@@ -12,7 +12,13 @@ angular.module('platform')
   $scope.self = self;
   $scope.groups = docStore.get('Group');
 
-
+  $scope.getBg = function(group){
+    if(group.bgPath == null || group.bgPath.length == 0){
+      return;
+    } else {
+      return {'background-image': 'url(upload/'+group.bgPath+')' };
+    }
+  }
   
   $scope.joinGroup = function(group){
     /*new models.GroupUser({gid: group._id}).$save(null

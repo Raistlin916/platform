@@ -1,10 +1,29 @@
-dialog(name="add-group", controller="addGroup", global="true")
+dialog(name="add-group", controller="addGroup")
   .box-head 添加群组
   .box-body
     .float-placeholder
       input(type="text", ng-model="data.name", placeholder="主题名")
     .float-placeholder
-      input(type="text", ng-model="data.desc", placeholder="简单的描述")  
+      input(type="text", ng-model="data.desc", placeholder="简单的描述")
+    br
+    div 封面
+      file-upload(model="data")
+  .box-foot
+    button.btn.btn-primary(type="button", ng-click="ok()") 提交
+    button.btn.btn-default(type="button", ng-click="close()") 取消
+
+dialog(name="update-group", controller="updateGroup")
+  .box-head 修改群组
+  .box-body
+    .float-placeholder
+      input(type="text", ng-model="model.name", placeholder="主题名")
+    .float-placeholder
+      input(type="text", ng-model="model.desc", placeholder="简单的描述")
+    br
+    div 封面
+      file-upload(model="model")
+    br
+    button.btn.btn-default(type="button", ng-click="model.noPic = true;model.bgPath = null;model.imageData = null;") 无封面
   .box-foot
     button.btn.btn-primary(type="button", ng-click="ok()") 提交
     button.btn.btn-default(type="button", ng-click="close()") 取消
@@ -24,8 +43,9 @@ h4 您好，管理员
           span.item-key 简述: 
           span.item-value {{group.desc}}
         div 
-          span.item-key 创建时间: 
+          span.item-key 创建于: 
           span.item-value{{group.createDate | date:'yy年MM月dd日 HH:MM'}}
+        small.item-control(call-dialog="update-group", dialog-model="group") 编辑
   .box-foot
     .model-control.clearfix
       .icon-plus.pull-right(call-dialog="add-group", title="添加群组")

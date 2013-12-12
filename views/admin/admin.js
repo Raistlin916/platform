@@ -23,6 +23,12 @@ angular.module('platform')
       });
     }
   };
+  $scope.updateGroup = {
+    ok: function(){
+      this.model.$save();
+      this.close();
+    }
+  }
   $scope.deleteGroup = function(i){
     confirm('确定删除？') && $scope.groups[i].$remove(null
       , function(){
@@ -31,4 +37,6 @@ angular.module('platform')
       $scope.$emit('error', {message: '删除失败'});
     });
   };
+
+
 });

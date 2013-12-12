@@ -104,6 +104,12 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       });
     }
   };
+  $scope.updateGroup = {
+    ok: function(){
+      this.model.$save();
+      this.close();
+    }
+  }
   $scope.deleteGroup = function(i){
     confirm('确定删除？') && $scope.groups[i].$remove(null
       , function(){
@@ -112,6 +118,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       $scope.$emit('error', {message: '删除失败'});
     });
   };
+
+
 });
 ;angular.module('platform')
 .directive('avatar', function(){
@@ -124,7 +132,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 });
 ;angular.module('platform')
 .directive('dialog', function(){
-    var reservedField = ['opened', 'close', 'global', 'data'];
+    var reservedField = ['opened', 'close', 'data'];
     function verify(target){
       if(reservedField.some(function(k){
         return angular.isDefined(target[k]);
@@ -152,9 +160,9 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
               verify(scope.controller);
               scope.controller.init && scope.controller.init.call(scope);
             }
-            scope.global = attr.global == 'true';
+
             scope.opened = true;
-            angular.extend(scope, scope.controller);
+            angular.extend(scope, scope.controller, data);
             scope.$digest();
           }
         });
@@ -167,9 +175,10 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
 .directive('callDialog', function($rootScope){
   return {
     restrict: 'A',
+    scope: {dialogModel: '='},
     link: function(scope, elem, attr){
-      angular.element(elem).bind('click', function(){
-        $rootScope.$broadcast('openDialog', {name: attr.callDialog});
+      elem.bind('click', function(){
+        $rootScope.$broadcast('openDialog', {name: attr.callDialog, model: scope.dialogModel});
       });
     }
   }
@@ -434,7 +443,13 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
   $scope.self = self;
   $scope.groups = docStore.get('Group');
 
-
+  $scope.getBg = function(group){
+    if(group.bgPath == null || group.bgPath.length == 0){
+      return;
+    } else {
+      return {'background-image': 'url(upload/'+group.bgPath+')' };
+    }
+  }
   
   $scope.joinGroup = function(group){
     /*new models.GroupUser({gid: group._id}).$save(null
