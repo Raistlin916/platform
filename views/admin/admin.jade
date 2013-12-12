@@ -30,7 +30,7 @@ dialog(name="update-group", controller="updateGroup")
 
 h4 您好，管理员
 
-.box
+.box(accordion-box="close")
   .box-head 群组列表
   .box-body
     ul.list-group
@@ -48,4 +48,5 @@ h4 您好，管理员
         small.item-control(call-dialog="update-group", dialog-model="group") 编辑
   .box-foot
     .model-control.clearfix
+      .accordion-btn.pull-left
       .icon-plus.pull-right(call-dialog="add-group", title="添加群组")

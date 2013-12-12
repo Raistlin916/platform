@@ -169,7 +169,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
   }
   .box-head {
     background: $box-bg-color;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+    overflow: hidden;
     padding: 10px;
     .box-control {
       float: right;
@@ -178,11 +178,13 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
   }
   .box-body {
     background: $box-body-bg-color;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    border-top: 1px solid rgba(0,0,0,0.1);
     padding: 10px;
   }
   .box-foot {
     background: $box-bg-color;
-    border-top: 1px solid rgba(0,0,0,0.1);
     padding: 10px;
   }
 }

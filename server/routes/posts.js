@@ -19,7 +19,7 @@ var models = require('../../model/schema')
 , util = require('../util')
 , Q = require('q')
 , Post = models.Post
-, ObjectID = require('../../node_modules/mongoose/node_modules/mongodb').ObjectID;
+, ObjectID = require('../../../node_modules/mongoose/node_modules/mongodb').ObjectID;
 
 var uploadPath;
 

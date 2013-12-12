@@ -50,6 +50,12 @@
 .icon-checkbox-unchecked:before {
 	content: "\e608";
 }
+.icon-arrow-up:before {
+	content: "\e60a";
+}
+.icon-arrow-down:before {
+	content: "\e60b";
+}
 .icon-minus:before {
 	content: "\e609";
 }

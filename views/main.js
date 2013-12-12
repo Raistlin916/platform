@@ -78,3 +78,5 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     }
   }
 });
+
+

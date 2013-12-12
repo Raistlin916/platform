@@ -79,6 +79,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
   }
 });
 
+
+
 ;angular.module('platform')
 .directive('admin', function(){
   return {
@@ -317,6 +319,30 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
           });
           e.preventDefault();
         }
+      });
+    }
+  }
+}).directive('accordionBox', function(){
+  return {
+    restict: 'A',
+    link: function(scope, elem, attr){
+      var body = elem.find('.box-body')
+      , btn = elem.find('.accordion-btn');
+      if(attr.accordionBox == 'close'){
+        btn.addClass('icon-arrow-down');
+        body.hide();
+      } else {
+        btn.addClass('icon-arrow-up');
+      }
+      
+      elem.find('.accordion-btn').click(function(){
+        body.animate({height: 'toggle'});
+        if(body.height()){
+          btn.removeClass('icon-arrow-up').addClass('icon-arrow-down');
+        } else {
+          btn.removeClass('icon-arrow-down').addClass('icon-arrow-up');
+        }
+        
       });
     }
   }
