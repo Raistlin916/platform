@@ -1,0 +1,30 @@
+@import '../variables';
+[observer=""] {
+  cursor: pointer;
+}
+
+.bounce-box.image-observer {
+  position: relative;
+  overflow: visible;
+  width: 600px;
+  margin: 20px auto 0;
+  .image-observer-close {
+    position: absolute;
+    right: -16px;
+    top: -10px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,.1);
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    background: white;
+    float: right;
+    font-size: 12px;
+  }
+  img {
+    border: 5px solid white;
+    box-shadow: 0 0 3px rgba(0,0,0,.5);
+  }
+}

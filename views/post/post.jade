@@ -54,7 +54,7 @@ mixin input-foot(type)
               todo-list(data="mp.todoList", pid="mp._id", owner="mp.author._id == self.info._id")
             .post-content-error(ng-switch-default) error
           .post-img(ng-if="mp.img")
-            img(ng-src="/upload/{{mp.img}}")
+              img(ng-src="/upload/{{mp.img}}", observer="")
           .post-foot.clearfix
             .pink-heart(ng-click="togglePraise(mp)", title="{{mp.hasPraised ? '取消赞':'赞'}}", ng-class="{'icon-heart': !mp.hasPraised, 'icon-heart-outline': mp.hasPraised}")
             | 

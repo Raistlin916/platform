@@ -3,13 +3,9 @@ var models = require('../model/schema')
 , fs = require('fs')
 , path = require('path');
 
-var md5 = require('./util').md5
-, adminList = fs.readFileSync(path.join(__dirname, './admin')) + '';
+var md5 = require('./util').md5;
 
-adminList = adminList.split(',')
-  .map(function(item){
-    return item.trim();
-  });
+
 
 function login(req, res){
   var username = req.body.username
@@ -65,7 +61,6 @@ function verifyAndReturnInfo(req, res){
   })
   .then(function(user){
     user = user.toObject();
-    user.admin = adminList.indexOf(user._id.toString()) != -1;
     res.send(user);
   }, function(reason){
     res.send(401, reason);
@@ -122,7 +117,7 @@ function verify(req, res, next){
     }
     if(doc){
       req.session.uid = doc.uid;
-      req.session.admin = adminList.indexOf(doc.uid.toString()) != -1;
+      req.session.admin = doc.admin;
     }
     next && next();
   });
