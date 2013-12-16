@@ -3,18 +3,6 @@
   cursor: pointer;
 }
 
-/* .bounce-box.image-observer {
-  text-align: center;
-  .image-observer-container {
-    position: relative;
-    overflow: visible;
-    display: inline-block;
-  }
-  
-  
-} */
-
-
 .image-observer {
   display: table;
   width: 100%;
@@ -27,11 +15,14 @@
   .image-observer-content {
     position: relative;
     display: inline-block;
+    border: 5px solid white;
+    background: white;
+    box-shadow: 0 0 3px rgba(0,0,0,.5);
   }
   .image-observer-close {
     position: absolute;
-    right: -16px;
-    top: -16px;
+    right: -20px;
+    top: -20px;
     cursor: pointer;
     border-radius: 50%;
     width: 32px;
@@ -49,11 +40,7 @@
     background: #262626;
   }
   img {
-    border: 5px solid white;
-    box-shadow: 0 0 3px rgba(0,0,0,.5);
     max-width: 800px;
     max-height: 800px;
-    min-width: 200px;
-    min-height: 200px;
   }
 }

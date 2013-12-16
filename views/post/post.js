@@ -7,7 +7,7 @@ angular.module('platform')
         controller: 'Post'
     }
 })
-.controller('Post', function($scope, models, self, util){
+.controller('Post', function($scope, models, self, util, $q){
   
   var Post = models.Post, group;
   $scope.self = self;
@@ -102,8 +102,22 @@ angular.module('platform')
     if(!$scope.hasMore){
       return;
     }
+    var d1 = $q.defer()
+    , d2 = $q.defer();
+
+    setTimeout(function(){
+      d1.resolve();
+    }, 300);
+
     $scope.loading = true;
     Post.query({gid: $scope.group._id, p: $scope.p+1}, function(res){
+      d2.resolve(res);
+    });
+
+    d1.promise.then(function(){
+      return d2.promise;
+    }).then(function(res){
+
       $scope.loading = false;
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;
@@ -112,6 +126,8 @@ angular.module('platform')
       $scope.hasMore = $scope.p+1 < $scope.totalPage;
       angular.extend($scope, res);
     });
+
+
   }
   
 

@@ -602,19 +602,45 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     }
   }
 })
-.directive('observer', function(){
+.directive('observer', function($q){
   return {
     restrict: 'E',
     scope: {},
     link: function(scope, elem, attr){
+      var tid;
       scope.$on('openObserver', function(e, src){
+        
         scope.opened = true;
         scope.src = src;
+        
         scope.$digest();
+
+        var d = $q.defer()
+        , d2 = $q.defer();
+
+        tid = setTimeout(function(){
+          d.resolve();
+        }, 700);
+
+        elem.find('img').on('load', function(){
+          d2.resolve();
+        });
+
+        d.promise.then(function(){
+          return d2.promise;
+        }).then(function(){
+          scope.loaded = true;
+        });
+
       });
-      scope.close = function(){
+
+      scope.close = function close(){
         scope.opened = false;
+        scope.loaded = false;
+        clearTimeout(tid);
       }
+
+      close();
     },
     templateUrl: '/partials/observer.html'
   }
@@ -656,7 +682,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
         controller: 'Post'
     }
 })
-.controller('Post', function($scope, models, self, util){
+.controller('Post', function($scope, models, self, util, $q){
   
   var Post = models.Post, group;
   $scope.self = self;
@@ -751,8 +777,22 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     if(!$scope.hasMore){
       return;
     }
+    var d1 = $q.defer()
+    , d2 = $q.defer();
+
+    setTimeout(function(){
+      d1.resolve();
+    }, 300);
+
     $scope.loading = true;
     Post.query({gid: $scope.group._id, p: $scope.p+1}, function(res){
+      d2.resolve(res);
+    });
+
+    d1.promise.then(function(){
+      return d2.promise;
+    }).then(function(res){
+
       $scope.loading = false;
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;
@@ -761,6 +801,8 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       $scope.hasMore = $scope.p+1 < $scope.totalPage;
       angular.extend($scope, res);
     });
+
+
   }
   
 

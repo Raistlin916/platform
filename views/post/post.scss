@@ -141,6 +141,7 @@ post {
     }
   }
   .loading {
+    text-align: center;
     .loading-text {
       margin-left: 5px;
       @include illustrate-font;

@@ -69,6 +69,6 @@ mixin input-foot(type)
       .more(ng-if="hasMore", ng-click="loadPage()") 加载更多
       .no-more(ng-if="!hasMore") 到底了
     .loading(ng-if="loading")
-      img(src="/images/cat.gif")
+      .loading-global
       span.loading-text 加载中...
 

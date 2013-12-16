@@ -1,6 +1,7 @@
 .mask(ng-if="opened")
-  .bounce-box.image-observer
+  .image-observer(ng-class="{'bounce-box': loaded}")
     .image-observer-container
       .image-observer-content
         .image-observer-close.icon-cancel(ng-click="close()")
-        img(ng-src="{{src}}")
+        .loading-global.image-loading(ng-if="!loaded")
+        img(ng-src="{{src}}", ng-show="loaded")

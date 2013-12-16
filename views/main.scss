@@ -191,7 +191,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 }
 
 .bounce-box {
-	animation: pulse .15s forwards ease-in-out;
+	animation: pulse .15s forwards ease-in-out .05s;
   transform: translate3d(0,0,0);
 }
 
@@ -245,4 +245,21 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #9499a5;
+}
+
+
+.loading-global {
+  display: inline-block;
+  width: 40px;
+  height: 32px;
+  background-image: url(images/cat.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
+  vertical-align: middle;
+}
+
+.loading-global.image-loading {
+  width: 128px;
+  height: 103px;
+  background-image: url(images/bigcat.gif);
 }
