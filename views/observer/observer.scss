@@ -3,28 +3,57 @@
   cursor: pointer;
 }
 
-.bounce-box.image-observer {
-  position: relative;
-  overflow: visible;
-  width: 600px;
-  margin: 20px auto 0;
+/* .bounce-box.image-observer {
+  text-align: center;
+  .image-observer-container {
+    position: relative;
+    overflow: visible;
+    display: inline-block;
+  }
+  
+  
+} */
+
+
+.image-observer {
+  display: table;
+  width: 100%;
+  height: 100%;
+  .image-observer-container {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .image-observer-content {
+    position: relative;
+    display: inline-block;
+  }
   .image-observer-close {
     position: absolute;
     right: -16px;
-    top: -10px;
+    top: -16px;
     cursor: pointer;
     border-radius: 50%;
-    border: 1px solid rgba(0,0,0,.1);
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
+    width: 32px;
+    height: 32px;
+    line-height: 29px;
     text-align: center;
-    background: white;
+    background: #505050;
+    color: white;
     float: right;
-    font-size: 12px;
+    font-size: 24px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    border: 2px solid white;
+  }
+  .image-observer-close:hover {
+    background: #262626;
   }
   img {
     border: 5px solid white;
     box-shadow: 0 0 3px rgba(0,0,0,.5);
+    max-width: 800px;
+    max-height: 800px;
+    min-width: 200px;
+    min-height: 200px;
   }
 }

@@ -192,6 +192,7 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
 
 .bounce-box {
 	animation: pulse .15s forwards ease-in-out;
+  transform: translate3d(0,0,0);
 }
 
 @keyframes pulse {
@@ -215,9 +216,10 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
   height: 100%;
   width: 100%;
   z-index: 1040;
-  overflow-y: auto;
+  overflow: hidden;
   background: rgba(0,0,0,.7);
   animation: fade-in 1s forwards ease;
+  transform: translate3d(0,0,0);
 }
 
 @keyframes fade-in {

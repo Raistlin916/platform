@@ -1,4 +1,6 @@
 .mask(ng-if="opened")
   .bounce-box.image-observer
-    .image-observer-close(ng-click="close()") 关
-    img(ng-src="{{src}}")
+    .image-observer-container
+      .image-observer-content
+        .image-observer-close.icon-cancel(ng-click="close()")
+        img(ng-src="{{src}}")

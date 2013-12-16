@@ -59,3 +59,6 @@
 .icon-minus:before {
 	content: "\e609";
 }
+.icon-cancel:before {
+	content: "\e60c";
+}
