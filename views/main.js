@@ -14,8 +14,41 @@
   window.md5 = md5Cache;
 })();
 
-angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
+angular.module('platform', ['ngResource', 'infinite-scroll'])
+.factory('httpLoadingInterceptor', function($rootScope, $q, $timeout){
+    var reqNoResCount = 0
+    , atLeast = 1000, tid, d;
+    return {
+      request: function(req){
+        if(!reqNoResCount){
+          $rootScope.$broadcast('loading');
+
+          $timeout.cancel(tid);
+          d = $q.defer();
+          tid = $timeout(function(){
+            d.resolve();
+          }, atLeast);
+        }
+        reqNoResCount++;
+        return req;
+      },
+      response: function(res){
+        reqNoResCount--;
+        if(!reqNoResCount){
+          d.promise.then(function(){
+            $rootScope.$broadcast('loadingDone');
+          });
+        }
+
+        return res;
+      }
+    }
+})
+.config(function ($httpProvider){
+  $httpProvider.interceptors.push('httpLoadingInterceptor');
+})
 .factory('models', function($resource){
+
     var Todo = $resource('/posts/:pid/todo/:tid', {tid: '@_id', pid: '@pid'});
     var Post = $resource('/groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {

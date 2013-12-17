@@ -14,8 +14,41 @@
   window.md5 = md5Cache;
 })();
 
-angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
+angular.module('platform', ['ngResource', 'infinite-scroll'])
+.factory('httpLoadingInterceptor', function($rootScope, $q, $timeout){
+    var reqNoResCount = 0
+    , atLeast = 1000, tid, d;
+    return {
+      request: function(req){
+        if(!reqNoResCount){
+          $rootScope.$broadcast('loading');
+
+          $timeout.cancel(tid);
+          d = $q.defer();
+          tid = $timeout(function(){
+            d.resolve();
+          }, atLeast);
+        }
+        reqNoResCount++;
+        return req;
+      },
+      response: function(res){
+        reqNoResCount--;
+        if(!reqNoResCount){
+          d.promise.then(function(){
+            $rootScope.$broadcast('loadingDone');
+          });
+        }
+
+        return res;
+      }
+    }
+})
+.config(function ($httpProvider){
+  $httpProvider.interceptors.push('httpLoadingInterceptor');
+})
 .factory('models', function($resource){
+
     var Todo = $resource('/posts/:pid/todo/:tid', {tid: '@_id', pid: '@pid'});
     var Post = $resource('/groups/:gid/posts/:pid', {pid:'@pid', gid: '@gid'}, {
       query: {
@@ -246,7 +279,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     }
   }
   return FieldTester;
-}).factory('self', function($http, progressService, $rootScope){
+}).factory('self', function($http, $rootScope){
   var ins = {};
   function verify(){
     var p = $http.get('/verify')
@@ -259,7 +292,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       ins.info = {};
       ins.logging = false;
     });
-    progressService.watch(p);
   }
   var methods = {
     login: function(username, pw){
@@ -269,7 +301,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
       }, function(s){
         console.log(s);
       });
-      progressService.watch(p);
       return p;
     },
     logout: function(){
@@ -294,19 +325,6 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
   }
   return {
     arrayRemove: arrayRemove
-  }
-}).factory('progressService', function($q, ngProgressLite){
-  return {
-    watch: function(p){
-      ngProgressLite.start();
-      $q.when(p, function(){
-        ngProgressLite.done();
-      }, function(){
-        
-        ngProgressLite.done();
-        ngProgressLite.remove();
-      });
-    }
   }
 }).directive('ngEnter', function(){
   return {
@@ -597,6 +615,22 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
     transclude: true,
     replace: true,
     template: '<div ng-transclude/>'
+  }
+});
+;angular.module('platform')
+.directive('loadingBall', function(){
+  return {
+    restrict: 'E',
+    scope: {},
+    link: function(scope, elem, attr){
+      scope.$on('loading', function(){
+        scope.loading = true;
+      });
+      scope.$on('loadingDone', function(){
+        scope.loading = false;
+      });
+    },
+    template: '<div ng-if="loading"><div class="ball"></div><div class="ball-inner"></div></div>'
   }
 });
 ;angular.module('platform')

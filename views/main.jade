@@ -4,7 +4,6 @@ html(ng-app="platform")
     title platform
     meta(charset="utf-8")
     link(rel="stylesheet", href="/vendor/bootstrap.css")
-    link(rel="stylesheet", href="/vendor/ngprogress.css")
     link(rel="stylesheet", href="/style.css")
     link(rel="stylesheet", href="/font.css")
     script(src="http://cdn.staticfile.org/prefixfree/1.0.7/prefixfree.min.js")
@@ -15,9 +14,7 @@ html(ng-app="platform")
     script(src="/vendor/angular-resource.js")
     script(src="/vendor/ng-infinite-scroll.min.js")
     script(src="/platform_app.js")
-    script(src="/vendor/ngprogress.js")
-  body
-    error-panel
+  body 
     .container
       .col-sm-3.col-sm-push-9.buffer-bottom
         userport
@@ -25,7 +22,11 @@ html(ng-app="platform")
         admin(ng-if="self.info.admin")
       .col-sm-9.col-sm-pull-3
         group
-    observer
+    components
+      error-panel
+      loading-ball
+      observer
+    
 
 
       

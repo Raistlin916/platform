@@ -9,7 +9,9 @@
 @import 'admin/admin';
 @import 'todoList/todoList';
 @import 'observer/observer';
+@import 'loadingBall/loadingBall';
 @import 'variables';
+// simplify @import('foo/foo') ?
 
 body {
 	@include primary-font;

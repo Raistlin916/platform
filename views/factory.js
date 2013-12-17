@@ -36,7 +36,7 @@ angular.module('platform')
     }
   }
   return FieldTester;
-}).factory('self', function($http, progressService, $rootScope){
+}).factory('self', function($http, $rootScope){
   var ins = {};
   function verify(){
     var p = $http.get('/verify')
@@ -49,7 +49,6 @@ angular.module('platform')
       ins.info = {};
       ins.logging = false;
     });
-    progressService.watch(p);
   }
   var methods = {
     login: function(username, pw){
@@ -59,7 +58,6 @@ angular.module('platform')
       }, function(s){
         console.log(s);
       });
-      progressService.watch(p);
       return p;
     },
     logout: function(){
@@ -84,19 +82,6 @@ angular.module('platform')
   }
   return {
     arrayRemove: arrayRemove
-  }
-}).factory('progressService', function($q, ngProgressLite){
-  return {
-    watch: function(p){
-      ngProgressLite.start();
-      $q.when(p, function(){
-        ngProgressLite.done();
-      }, function(){
-        
-        ngProgressLite.done();
-        ngProgressLite.remove();
-      });
-    }
   }
 }).directive('ngEnter', function(){
   return {
