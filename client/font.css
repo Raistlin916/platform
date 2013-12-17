@@ -56,6 +56,9 @@
 .icon-arrow-down:before {
 	content: "\e60b";
 }
+.icon-quill:before {
+	content: "\e60d";
+}
 .icon-minus:before {
 	content: "\e609";
 }

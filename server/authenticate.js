@@ -5,7 +5,14 @@ var models = require('../model/schema')
 
 var md5 = require('./util').md5;
 
+var adminList;
 
+models.User.find({admin: true}).exec()
+.then(function(doc){
+  adminList = doc.map(function(item){
+    return item._id.toString();
+  });
+});
 
 function login(req, res){
   var username = req.body.username
@@ -117,7 +124,7 @@ function verify(req, res, next){
     }
     if(doc){
       req.session.uid = doc.uid;
-      req.session.admin = doc.admin;
+      req.session.admin = adminList.indexOf(doc.uid.toString()) != -1;
     }
     next && next();
   });

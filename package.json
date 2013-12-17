@@ -1,6 +1,6 @@
 {
   "name": "platform",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node app"
@@ -9,17 +9,16 @@
     "express": "3.1.0",
     "jade": "*",
     "mongoose": "*",
-    "q": "*",
-    "underscore": "*",
+    "q": "*"  
+  },
+  "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-concat": "*",
     "grunt-contrib-jade": "*",
     "grunt-contrib-watch": "*",
     "grunt-sass": "*",
-    "node-sass": "*"
-  },
-  "devDependencies": {
+    "node-sass": "*",
     "grunt-contrib-compress": "~0.5.3"
   }
 }

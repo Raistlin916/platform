@@ -523,6 +523,15 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
         , $nav = $('.input-body-nav')
         , $main = $('.top-input .post-main');
 
+        if(target == 'blog'){
+          $(this).parents('.flip-container').toggleClass('turnover');
+        }
+
+        if(!$content.length){
+          openState = -1;
+          return;
+        }
+
         var initW = $main.width()
         , mainW = $main.width('auto').width();
 
@@ -577,7 +586,7 @@ angular.module('platform', ['ngResource', 'ngProgressLite', 'infinite-scroll'])
               opacity: 1
             }, 300, function(){
               $main.animate({
-                width: 130
+                width: 170
               }, 300, function(){
                 openState = -1;
               }).css({overflow: 'visible'});

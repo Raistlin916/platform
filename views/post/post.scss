@@ -1,12 +1,40 @@
 @import '../variables';
 
 post {
+  display: block;
+  perspective: 1500px;
+  .flip-container {
+    position: relative;
+    transition: 1s transform ease;
+    transform-style: preserve-3d;
+    &.turnover {
+      transform: rotateY(.5turn);
+    }
+  }
+  .blog-edit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 800px;
+    backface-visibility: hidden;
+    background: white;
+    transform: rotateY(.5turn);
+    z-index: 600;
+  }
+
+  .post-box {
+    backface-visibility: hidden;
+    position: relative;
+    z-index: 400;
+  }
+
   .top-input {
     position: relative;
     .input-body-nav {
       .icon {
         display: inline-block;
-        
+        margin-right: 2px;
         cursor: pointer;
         transition: .8s transform ease;
       }
@@ -21,11 +49,18 @@ post {
     .icon-list {
       position: relative;
       top: -3px;
+      left: -3px;
       color: #F5CB43;
       font-size: 40px;
     }
+    .icon-quill {
+      position: relative;
+      top: -3px;
+      color: #FCE07C;
+      font-size: 40px;
+    }
     .post-main {
-      width: 130px;
+      width: 170px;
       transition: .8s height linear;
     }
     .post-foot {

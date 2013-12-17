@@ -54,7 +54,7 @@ module.exports = function(grunt) {
         options: {
           archive: '<%= pkg.name %>.zip'
         },
-        src: ['client/**', 'model/**', 'server/**', 'app.js', 'config.js']
+        src: ['client/**', 'model/**', 'server/**', 'app.js', 'config.js', 'package.json']
       }
     }
   });
