@@ -23,12 +23,20 @@ app.configure(function(){
   app.use(express.cookieParser('love'));
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'client'), {maxAge: 0}));
-  app.use('/upload/', express.static(path.join(__dirname, 'upload')));
+  
 });
 
 app.configure('development', function(){
+  console.log('server runned in development');
   app.use(express.errorHandler());
+  app.use(express.static(path.join(__dirname, 'client')));
+  app.use('/upload/', express.static(path.join(__dirname, 'upload')));
+});
+
+app.configure('production', function(){
+  console.log('server runned in production');
+  app.use(express.static(path.join(__dirname, 'client'), {maxAge: 86400000}));
+  app.use('/upload/', express.static(path.join(__dirname, 'upload'), {maxAge: 86400000}));
 });
 
 
