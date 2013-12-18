@@ -18,6 +18,15 @@ angular.module('platform', ['ngResource', 'infinite-scroll'])
 .factory('httpLoadingInterceptor', function($rootScope, $q, $timeout){
     var reqNoResCount = 0
     , atLeast = 1000, tid, d;
+    function gettedRes(){
+      reqNoResCount--;
+      if(!reqNoResCount){
+        d.promise.then(function(){
+          $rootScope.$broadcast('loadingDone');
+        });
+      }
+    }
+
     return {
       request: function(req){
         if(!reqNoResCount){
@@ -33,14 +42,12 @@ angular.module('platform', ['ngResource', 'infinite-scroll'])
         return req;
       },
       response: function(res){
-        reqNoResCount--;
-        if(!reqNoResCount){
-          d.promise.then(function(){
-            $rootScope.$broadcast('loadingDone');
-          });
-        }
-
+        gettedRes();
         return res;
+      },
+      responseError: function(rejection){
+        gettedRes();
+        return $q.reject(rejection);
       }
     }
 })
