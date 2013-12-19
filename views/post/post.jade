@@ -6,8 +6,7 @@ mixin input-foot(type)
     a.close-input(href="javascript:;", ng-click="closeInput()") 返回
 
 .flip-container
-  .box.blog-edit
-    button(onclick="$('.flip-container').removeClass('turnover')") back
+  blog-edit.flip-back
   .box.post-box
     .box-head
       .box-control
@@ -22,9 +21,9 @@ mixin input-foot(type)
           avatar.avatar-thumbnail(hash="{{self.info.emailHash}}")
           input-body.post-main
             .input-body-nav
-              .icon.icon-lightbulb(ng-click="openInput()", data-target="micro")
-              .icon.icon-list(ng-click="openInput()", data-target="todo")
-              .icon.icon-quill(data-target="blog")
+              .icon.icon-lightbulb(ng-click="openInput()", data-target="micro", title="微博")
+              .icon.icon-list(ng-click="openInput()", data-target="todo", title="todo")
+              .icon.icon-quill(data-target="blog", title="长文")
             .input-body-content(data-type="micro")
               .post-head
                 .username {{self.info.username}}

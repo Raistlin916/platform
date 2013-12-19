@@ -24,6 +24,8 @@ angular.module('platform')
           return;
         }
 
+        $('post').removeClass('flip-util');
+
         var initW = $main.width()
         , mainW = $main.width('auto').width();
 
@@ -81,6 +83,7 @@ angular.module('platform')
                 width: 170
               }, 300, function(){
                 openState = -1;
+                $('post').addClass('flip-util');
               }).css({overflow: 'visible'});
             });
           });

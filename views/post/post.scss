@@ -2,31 +2,38 @@
 
 post {
   display: block;
-  perspective: 1500px;
+  
+  &.flip-util {
+    perspective: 1500px;
+    .flip-container {
+      transform-style: preserve-3d;
+    }
+    .post-box {
+      backface-visibility: hidden;
+      z-index: 400;
+    }
+  }
+
   .flip-container {
     position: relative;
     transition: 1s transform ease;
-    transform-style: preserve-3d;
     &.turnover {
       transform: rotateY(.5turn);
     }
   }
-  .blog-edit {
+  .flip-back {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 800px;
     backface-visibility: hidden;
-    background: white;
     transform: rotateY(.5turn);
     z-index: 600;
   }
+  
 
   .post-box {
-    backface-visibility: hidden;
     position: relative;
-    z-index: 400;
   }
 
   .top-input {

@@ -10,6 +10,7 @@
 @import 'todoList/todoList';
 @import 'observer/observer';
 @import 'loadingBall/loadingBall';
+@import 'blogEdit/blogEdit';
 @import 'variables';
 // simplify @import('foo/foo') ?
 
@@ -157,6 +158,19 @@ input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focu
   border-color: #66afe9;
   outline: none;
   box-shadow: none;
+}
+
+input[type="text"].underline {
+  border-width: 0;
+  border-bottom-width: 1px;
+  border-radius: 0;
+  height: 30px;
+  line-height: 20px;
+  padding: 0;
+  font-size: 18px;
+  text-indent: .5em;
+  background-color: transparent;
+  letter-spacing: 1px;
 }
 
 .has-error {

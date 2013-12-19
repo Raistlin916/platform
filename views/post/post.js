@@ -8,6 +8,9 @@ angular.module('platform')
     }
 })
 .controller('Post', function($scope, models, self, util, $q){
+  // 为了解决翻转和遮罩的冲突
+  // 在inputBody中也需要操作flip-util
+  $('post').addClass('flip-util');
   
   var Post = models.Post, group;
   $scope.self = self;
@@ -27,62 +30,82 @@ angular.module('platform')
 
   $scope.resetInputData();
 
-  function validPost(data, type){
-    if(data.content == null){
-      return false;
+  function validPost(post){
+    var d = $q.defer();
+    if(post.content == null){
+      d.reject('');
+      return d.promise;
     }
-    switch (type){
-      case 'micro':
-        return !!data.content.trim().length;
-      break;
-      case 'todo':
-        return data.todoList.length > 0;
-      break;
-      default:
-        return false;
+    if(post.type == 'micro'){
+      if(!post.content.trim().length){
+        d.reject();
+      }
+    } else if(post.type == 'todo'){
+      if(!post.todoList.length){
+        d.reject();
+      }
+    } else if(post.type == 'blog'){
+      if(!post.content.trim().length){
+        d.reject();
+      }
     }
+
+    d.resolve();
+    return d.promise;
   }
 
   function dispatchPost(type){
-    switch (type){
-      case 'micro':
-        return {content: $scope.data.micro, imageData: $scope.data.imageData};
-      break;
-      case 'todo':
-        return {  
-                  content: "", 
-                  todoList: $scope.data.todoList.filter(function(item){
-                    return item.content.trim().length > 0;
-                  })
-                };
-      break;
-      default:
-        return {};
-    }
-  }
+    var data, d;
 
-  $scope.submitPost = function(type){
-    var data = dispatchPost(type);
-    if(!validPost(data, type)){
-      return;
-    }
-    data.gid = $scope.group._id;
-    data.type = type;
-
-    var newPost = new Post(data);   
-    newPost.$save(null, function(newPost){
-      
-      $scope.posts.push(newPost);
+    d = $q.defer();
+    d.promise.then(function(){
+      $scope.closeInput();
       $('.h-submit-input').click();
     }, function(reason){
-      $scope.$emit('error', {message: reason.data});
-      $('.h-submit-input').click();
+      console.log(reason);
+      $scope.$emit('error', {message: reason});
     });
 
-    $scope.closeInput();
-  };
+    switch (type){
+      case 'micro':
+        data = {content: $scope.data.micro, imageData: $scope.data.imageData};
+      break;
+      case 'todo':
+        data = {  
+                content: "", 
+                todoList: $scope.data.todoList.filter(function(item){
+                  return item.content.trim().length > 0;
+                })
+              };
+      break;
+      default:
+        return d.reject('未知类型');
+      break;
+    }
+    data.type = type;
 
-  
+    d.newPost = new models.Post(data);
+    $scope.$emit('addNewPost', d);
+  }
+
+  $scope.$on('addNewPost', function(e, deferred){
+    var newPost = deferred.newPost;
+
+    validPost(newPost).then(function(){
+      newPost.gid = $scope.group._id;
+      newPost.$save(function(newPost){
+        $scope.posts.push(newPost);
+        deferred.resolve();
+      });
+    }, function(reason){
+      deferred.reject(reason);
+    });
+
+  });
+
+  $scope.submitPost = function(type){
+    dispatchPost(type);
+  };
 
   $scope.openInput = function(){
     $scope.coverOther = true;

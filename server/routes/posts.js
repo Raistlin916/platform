@@ -24,16 +24,21 @@ var models = require('../../model/schema')
 var uploadPath;
 
 function savePost(req, res){
-  var gid = req.params.gid, uid = req.session.uid;
+  var gid = req.params.gid, uid = req.session.uid
+  , body = req.body;
 
   var newPost = new Post({
         author: uid,
-        content: req.body.content,
-        type: req.body.type,
+        content: body.content,
+        type: body.type,
+        title: body.title,
         gid: gid,
         img: require('../util/imageHandler').getPath(req)
       });
 
+  // todoList 为null的时候必须存成空数组？
+  // http://stackoverflow.com/questions/12658152/why-does-mongoose-add-blank-arrays
+  // https://github.com/LearnBoost/mongoose/issues/1335  这个不中用
   newPost.todoList = transTodoList(req.body.todoList);
 
   newPost.save(function(err, doc){
@@ -76,7 +81,7 @@ function _listPosts(req, res){
   , offset = p * step;
 
   var aid = {};
-  Post.find({gid: gid})
+  Post.find({gid: gid}, '-gid')
   .sort('-date').skip(offset).limit(step)
   .populate('author praisedUserList', 'email username')
   .exec()

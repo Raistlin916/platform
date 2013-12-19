@@ -23,6 +23,7 @@ var PostSchema = new Schema({
     required: true
   },
   type: String,
+  title: String,
   img: String,
   date: {
     type: Date,
@@ -36,6 +37,7 @@ var PostSchema = new Schema({
   id: false 
 });
 
+
 var TodoSchema = new Schema({
   content: String,
   hasDone: {
@@ -47,6 +49,8 @@ var TodoSchema = new Schema({
   versionKey: false,
   id: false
 });
+
+
 
 var UserSchema = new Schema({
 	username: {
