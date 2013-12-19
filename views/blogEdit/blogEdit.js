@@ -42,6 +42,9 @@ angular.module('platform')
         var d = $q.defer();
         d.promise.then(function(){
           close();
+          transitionDeferred.promise.then(function(){
+            reset();
+          });
         }, function(){
           console.log('error');
         });
@@ -53,9 +56,26 @@ angular.module('platform')
         close();
       }
 
+      var flipContainer = $(".flip-container")
+      , transitionDeferred;
+      flipContainer.bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(e){
+        if(flipContainer[0] == e.target){
+          if($(e.target).hasClass('turnover')){
+            transitionDeferred = $q.defer();
+          } else {
+            transitionDeferred.resolve();
+          }
+        }
+      });
+
       function close(){
-        $('.flip-container').removeClass('turnover');
+        flipContainer.removeClass('turnover');
       }
+      function reset(){
+        scope.blogContent = "";
+        scope.blogTitle = "";
+      }
+      reset();
     },
     templateUrl : '/partials/blogEdit.html'
   }
