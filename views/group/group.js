@@ -7,7 +7,7 @@ angular.module('platform')
     templateUrl : '/partials/group.html'
   }
 })
-.controller('Group', function($scope, models, self, $timeout, docStore){
+.controller('Group', function($scope, models, self, $timeout, docStore, $rootScope){
   $scope.state = 'choose-group';
   $scope.self = self;
   $scope.groups = docStore.get('Group');
@@ -20,18 +20,33 @@ angular.module('platform')
     }
   }
   
-  var groupBg = $('.group-bg');
+
 
   $scope.joinGroup = function(group){
     $scope.state = 'in-group';
     $timeout(function(){
       $scope.$broadcast('load', {group: group});
-      groupBg.css($scope.getBg(group)).addClass('in-group');
+      $rootScope.$broadcast('groupBgChange', $scope.getBg(group));
     });
   }
   $scope.$on('quitGroup', function(){
     $scope.state = 'choose-group';
-    groupBg.removeClass('in-group');
+    $rootScope.$broadcast('groupBgChange', null);
   });
 
+}).directive('groupBg', function(){
+  return {
+    restrict: 'C',
+    scope: {},
+    link: function(scope, elem, attr){
+      scope.$on('groupBgChange', function(e, bg){
+        if(bg == null){
+          scope.inGroup = false;
+        } else {
+          scope.bg = bg;
+          scope.inGroup = true;
+        }
+      });
+    }
+  }
 });
