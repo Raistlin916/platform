@@ -7,6 +7,7 @@ var mongoose = require('mongoose')
 , config = require('../config')
 , db = mongoose.connection
 , fs = require('fs')
+, exec = require('child_process').exec
 , app;
 
 db.on('connecting', function() {
@@ -71,7 +72,8 @@ exports.start = function(eApp){
 
   dbHandler.connect();
   
-  http.createServer(app).listen(app.get('port'), function(){
-    console.log("http server listening on port " + app.get('port'));
+  var server = http.createServer(app).listen(app.get('port'), function(){
+    console.log('http server listening on port ' + app.get('port'));
   });
+  app.set('server', server);
 }

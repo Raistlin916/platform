@@ -92,12 +92,13 @@ post {
     .post-bubble-content {
       padding: 10px;
       margin-bottom: 4px;
-      img.avatar-thumbnail {
+      .avatar-thumbnail {
         float: left;
       }
       .post-main {
         position: relative;
-        background: #fff;
+        background: $bubble-color;
+        box-shadow: $bubble-shadow;
         margin: 3px 0 0 60px;
         border-radius: 3px;
         padding: 10px;
@@ -126,10 +127,10 @@ post {
         &:after {
           content: "";
           position: absolute;
-          top: 6px;
+          top: 16px;
           left: -12px;
           border: 6px solid transparent;
-          border-right-color: #fff;
+          border-right-color: $bubble-color;
         }
       }
       

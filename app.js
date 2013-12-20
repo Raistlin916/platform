@@ -39,6 +39,14 @@ app.configure('production', function(){
   app.use('/upload/', express.static(path.join(__dirname, 'upload'), {maxAge: 86400000}));
 });
 
-
+process.on('exit', function() {
+  console.log('bye, %s', new Date);
+});
 
 progress.start(app);
+
+
+
+
+
+

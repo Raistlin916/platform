@@ -3,13 +3,14 @@
   border-radius: 5px;
   background: white;
   cursor: pointer;
+  box-shadow: $box-shadow;
 }
 
 .avatar-thumbnail {
-  height: 50px;
-  width: 50px;
-  border-radius: 3px;
-  box-shadow: none;
+  height: 40px;
+  width: 40px;
+  border-radius: 2px;
+  box-shadow: $box-shadow;
 }
 
 .avatar-half-thumbnail {

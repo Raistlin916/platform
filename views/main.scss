@@ -180,6 +180,7 @@ input[type="text"].underline {
 .box, .bounce-box {
   border-radius: 4px;
   overflow: hidden;
+  box-shadow:  $box-shadow;
   input[type="text"], input[type="password"] {
     height: 40px;
   }
@@ -234,7 +235,7 @@ input[type="text"].underline {
   height: 100%;
   width: 100%;
   z-index: 1040;
-  overflow: hidden;
+  overflow: auto;
   background: rgba(0,0,0,.7);
   animation: fade-in 1s forwards ease;
   transform: translate3d(0,0,0);

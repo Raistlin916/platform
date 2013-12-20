@@ -2,8 +2,11 @@ $light-box-shadow: 1px 1px 1px rgba(0,0,0,.2);
 $light-border: 1px solid rgba(0,0,0,.2);
 $font-stack: Helvetica, sans-serif;
 $hint-font-color: #66afe9;
-$box-bg-color: rgba(255,255,255,.9);
-$box-body-bg-color: rgba(255,255,255,.85);
+$box-bg-color: white;
+$box-body-bg-color: #E1E3DE;
+$box-shadow: 0 2px 2px rgba(0,0,0,.4);
+$bubble-color: white;
+$bubble-shadow: 0 2px 2px rgba(0,0,0,.1), 0 0 1px rgba(0,0,0,.1);
 
 @mixin primary-font() {
   color: #242628;
