@@ -20,32 +20,18 @@ angular.module('platform')
     }
   }
   
-  $scope.joinGroup = function(group){
-    /*new models.GroupUser({gid: group._id}).$save(null
-      , function(){
-      $scope.state = 'in-group';
-      $timeout(function(){
-        $scope.$broadcast('load', {group: group});
-      });
-    }, function(reason){
-      $scope.$emit('error', {message: reason.data});
-    });*/
+  var groupBg = $('.group-bg');
 
+  $scope.joinGroup = function(group){
     $scope.state = 'in-group';
     $timeout(function(){
       $scope.$broadcast('load', {group: group});
+      groupBg.css($scope.getBg(group)).addClass('in-group');
     });
   }
   $scope.$on('quitGroup', function(){
     $scope.state = 'choose-group';
+    groupBg.removeClass('in-group');
   });
-  $scope.leaveGroup = function(group){
-    new models.GroupUser({gid: group._id, uid: self.getInfo()._id}).$remove(null
-      , function(){
-      
-    }, function(reason){
-      $scope.$emit('error', {message: reason.data});
-    });
-  }
 
 });
