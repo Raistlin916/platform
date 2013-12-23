@@ -14,6 +14,10 @@ html(ng-app="platform")
     script(src="/vendor/angular-resource.js")
     script(src="/vendor/ng-infinite-scroll.min.js")
     script(src="/platform_app.js")
+
+    link(rel="stylesheet", href="/vendor/editor.css")
+    script(src="/vendor/editor.js")
+    script(src="/vendor/marked.js")
   body 
     .group-bg(ng-style="bg", ng-class="{'in-group': inGroup}")
     .container

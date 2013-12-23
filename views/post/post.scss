@@ -18,7 +18,7 @@ post {
     position: relative;
     transition: 1s transform ease;
     &.turnover {
-      transform: rotateY(.5turn);
+      transform: rotateY(-.5turn);
     }
   }
   .flip-back {
@@ -27,7 +27,7 @@ post {
     left: 0;
     width: 100%;
     backface-visibility: hidden;
-    transform: rotateY(.5turn);
+    transform: rotateY(-.5turn);
     z-index: 600;
   }
   

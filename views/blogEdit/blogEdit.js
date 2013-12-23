@@ -1,31 +1,4 @@
 angular.module('platform')
-// http://docs.angularjs.org/api/ng.directive:ngModel.NgModelController
-.directive('contenteditable', function() {
-  return {
-    restrict: 'A',
-    require: '?ngModel',
-    link: function(scope, element, attrs, ngModel) {
-      if(!ngModel) return; 
-
-      ngModel.$render = function() {
-        element.html(ngModel.$viewValue || '');
-      };
-
-      element.on('blur keyup change', function() {
-        scope.$apply(read);
-      });
-      read(); 
-
-      function read() {
-        var html = element.html();
-        if( attrs.stripBr && html == '<br>' ) {
-          html = '';
-        }
-        ngModel.$setViewValue(html);
-      }
-    }
-  };
-})
 .directive('blogEdit', function(models, self, $q){
   return {
     restrict: 'E',
@@ -33,8 +6,9 @@ angular.module('platform')
     link: function(scope, elem, attr){
       scope.saveBlog = function(){
         
+
         var newPost = new models.Post({
-          content: scope.blogContent,
+          content: editor.getValue(),
           title: scope.blogTitle,
           type: 'blog'
         });
@@ -62,17 +36,20 @@ angular.module('platform')
         if(flipContainer[0] == e.target){
           if($(e.target).hasClass('turnover')){
             transitionDeferred = $q.defer();
+            editor.refresh();
           } else {
             transitionDeferred.resolve();
           }
         }
       });
+      var editor = new Editor();
+      editor.render();
 
       function close(){
         flipContainer.removeClass('turnover');
       }
       function reset(){
-        scope.blogContent = "";
+        editor.setValue("");
         scope.blogTitle = "";
       }
       reset();

@@ -3,7 +3,8 @@
     .blog-edit-head.col-lg-8 
       input.underline(type="text", placeholder="标题", ng-model="blogTitle")
   .box-body
-    .blog-edit-content(contentEditable="true", ng-model="blogContent")
+    .blog-edit-content
+      textarea 
   .box-foot.clearfix
     .blog-edit-foot
       button.btn.btn-primary(ng-click="saveBlog()") 确定
