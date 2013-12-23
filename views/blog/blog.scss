@@ -24,3 +24,12 @@ blog-edit {
     float: right;
   }
 }
+
+blog-viewer {
+  .blog-title {
+    @include title-font;
+  }
+  .blog-content {
+
+  }
+}

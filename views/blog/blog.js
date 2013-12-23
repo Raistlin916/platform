@@ -31,11 +31,13 @@ angular.module('platform')
       }
 
       var flipContainer = $(".flip-container")
+      , positiveSide = flipContainer.find('.box.post-box')
       , transitionDeferred;
-      flipContainer.bind("transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd", function(e){
+      flipContainer.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function(e){
         if(flipContainer[0] == e.target){
           if($(e.target).hasClass('turnover')){
             transitionDeferred = $q.defer();
+            flipContainer.find('.box.post-box').css('display', 'none');
             editor.refresh();
           } else {
             transitionDeferred.resolve();
@@ -47,6 +49,7 @@ angular.module('platform')
 
       function close(){
         flipContainer.removeClass('turnover');
+        positiveSide.css('display', 'block');
       }
       function reset(){
         editor.setValue("");
@@ -55,5 +58,18 @@ angular.module('platform')
       reset();
     },
     templateUrl : '/partials/blogEdit.html'
+  }
+}).directive('blogViewer', function(){
+  return {
+    restrict: 'E',
+    scope: {blog: '='},
+    link: function(scope, elem, attr){
+      scope.$watch('blog.content', function(n){
+        if(n != null){
+          elem.find('.blog-content').html(marked(n));
+        }
+      });
+    },
+    templateUrl: "/partials/blogViewer.html"
   }
 });

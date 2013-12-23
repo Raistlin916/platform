@@ -96,6 +96,7 @@ you can use the generic selector below, but it's slower:
 .CodeMirror-scroll {
   /* Set scrolling behaviour here */
   overflow: auto;
+  overflow-x: hidden;
 }
 
 /* PADDING */
@@ -206,7 +207,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
 .CodeMirror-hscrollbar {
   bottom: 0; left: 0;
   overflow-y: hidden;
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 .CodeMirror-scrollbar-filler {
   right: 0; bottom: 0;
@@ -293,7 +294,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   }
 }
 .CodeMirror {
-  height: 450px;
+  height: 350px;
 }
 :-webkit-full-screen {
   background: #f9f9f5;
