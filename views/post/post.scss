@@ -132,11 +132,13 @@ post {
           border: 6px solid transparent;
           border-right-color: $bubble-color;
         }
+
       }
       
       
       .pink-heart {
-        font-size: 24px;
+        margin-top: 1px;
+        font-size: 20px;
         color: pink;
         cursor: pointer;
         float: left;
@@ -144,6 +146,7 @@ post {
       ul.post-praise-list {
         float: left;
         margin-left: 5px;
+        margin-top: 4px;
         list-style-type: none;
         overflow: hidden;
         padding: 0;
@@ -158,7 +161,6 @@ post {
       .praised-count {
         margin-left: 5px;
         @include secondary-font;
-        vertical-align: middle;
       }
     }
   }

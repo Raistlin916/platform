@@ -20,12 +20,13 @@ html(ng-app="platform")
   body 
     .group-bg(ng-style="bg", ng-class="{'in-group': inGroup}")
     .container
-      .col-sm-3.col-sm-push-9.buffer-bottom
+      .col-sm-9.col-sm-push-1
+        group
+      .col-sm-2.col-sm-push-1.buffer-bottom
         userport
         port-list
         admin(ng-if="self.info.admin")
-      .col-sm-9.col-sm-pull-3
-        group
+      
     components
       error-panel
       loading-ball
