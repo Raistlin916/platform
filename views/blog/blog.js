@@ -5,8 +5,6 @@ angular.module('platform')
     scope: {},
     link: function(scope, elem, attr){
       scope.saveBlog = function(){
-        
-
         var newPost = new models.Post({
           content: editor.getValue(),
           title: scope.blogTitle,
@@ -31,25 +29,28 @@ angular.module('platform')
       }
 
       var flipContainer = $(".flip-container")
-      , positiveSide = flipContainer.find('.box.post-box')
       , transitionDeferred;
-      flipContainer.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function(e){
+      flipContainer.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', flipTrans);
+
+      function flipTrans(e){
         if(flipContainer[0] == e.target){
           if($(e.target).hasClass('turnover')){
             transitionDeferred = $q.defer();
-            flipContainer.find('.box.post-box').css('display', 'none');
             editor.refresh();
           } else {
             transitionDeferred.resolve();
           }
         }
+      }
+
+      scope.$on('$destroy', function(){
+        flipContainer.unbind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', flipTrans);
       });
       var editor = new Editor();
       editor.render();
 
       function close(){
-        flipContainer.removeClass('turnover');
-        positiveSide.css('display', 'block');
+        scope.$emit('flip');
       }
       function reset(){
         editor.setValue("");
@@ -62,13 +63,17 @@ angular.module('platform')
 }).directive('blogViewer', function(){
   return {
     restrict: 'E',
-    scope: {blog: '='},
+    scope: {blog: '=', total: '@'},
     link: function(scope, elem, attr){
       scope.$watch('blog.content', function(n){
         if(n != null){
           elem.find('.blog-content').html(marked(n));
         }
       });
+     
+      scope.emitFlip = function(flipBack){
+        scope.$emit('flip', flipBack ? {type: 'blogViewer', model: scope.blog} : null);
+      }
     },
     templateUrl: "/partials/blogViewer.html"
   }

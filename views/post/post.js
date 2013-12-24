@@ -186,4 +186,36 @@ angular.module('platform')
     });
   }
 
+}).directive('flipContainer', function(){
+  return {
+    restrict: 'C',
+    link: function(scope, elem, attr){
+      var postBox = elem.find('.box.post-box');
+      scope.flip = function(type, model){
+        elem.toggleClass('turnover');
+        if(type){
+          scope.flipBackType = type;
+        }
+        if(model){
+          scope.flipBackModel = model;
+        }
+        if(!elem.hasClass('turnover')){
+          postBox.css('display', 'block');
+        }
+      }
+      scope.$on('flip', function(e, data){
+        data = data || {};
+        scope.flip(data.type, data.model);
+      });
+
+      elem.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function(e){
+        if(elem[0] == e.target){
+          if($(e.target).hasClass('turnover')){
+            postBox.css('display', 'none');
+          }
+        }
+      });
+
+    }
+  }
 });

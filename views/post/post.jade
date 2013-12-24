@@ -6,7 +6,9 @@ mixin input-foot(type)
     a.close-input(href="javascript:;", ng-click="closeInput()") 返回
 
 .flip-container
-  blog-edit.flip-back
+  .flip-back(ng-switch="flipBackType")
+    blog-edit(ng-switch-when="blogEdit")
+    blog-viewer(ng-switch-when="blogViewer", blog="flipBackModel", total="true")
   .box.post-box
     .box-head
       .box-control
@@ -23,7 +25,7 @@ mixin input-foot(type)
             .input-body-nav
               .icon.icon-lightbulb(ng-click="openInput()", data-target="micro", title="微博")
               .icon.icon-list(ng-click="openInput()", data-target="todo", title="todo")
-              .icon.icon-quill(data-target="blog", title="长文")
+              .icon.icon-quill(ng-click="flip('blogEdit')", title="长文")
             .input-body-content(data-type="micro")
               .post-head
                 .username {{self.info.username}}

@@ -29,7 +29,8 @@ blog-viewer {
   .blog-title {
     @include title-font;
   }
-  .blog-content {
-
+  .box-body.blog-content {
+    background: white;
+    min-height: 360px;
   }
 }

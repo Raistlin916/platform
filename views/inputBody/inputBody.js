@@ -15,9 +15,6 @@ angular.module('platform')
         , $nav = $('.input-body-nav')
         , $main = $('.top-input .post-main');
 
-        if(target == 'blog'){
-          $(this).parents('.flip-container').toggleClass('turnover');
-        }
 
         if(!$content.length){
           openState = -1;
