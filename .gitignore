@@ -2,6 +2,7 @@ node_modules/
 client/partials
 client/style.css
 client/platform_app.js
+client/vendor/dist/*
 upload/
 config.js
 run.bat

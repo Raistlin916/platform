@@ -56,6 +56,40 @@ module.exports = function(grunt) {
         },
         src: ['client/**', 'model/**', 'server/**', 'app.js', 'config.js', 'package.json']
       }
+    },
+    clean: ['client/partials', 'client/vendor/dist'],
+    copy: {
+      build: {
+        files: [{
+          expand: true,
+          src: '*',
+          dest: 'client/vendor/dist',
+          cwd: 'client/vendor/src'
+        }]
+      }
+    },
+    cssmin: {
+      minify: {
+        options: {
+          keepSpecialComments: 0
+        },
+        files: [{
+          expand: true,
+          src: '*.css',
+          dest: 'client/vendor/dist',
+          cwd: 'client/vendor/src'
+        }]
+      }
+    },
+    uglify: {
+      build: {
+        files: [{
+          expand: true,
+          src: '*.js',
+          dest: 'client/vendor/dist',
+          cwd: 'client/vendor/src'
+        }]
+      }
     }
   });
 
@@ -65,8 +99,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jade');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
 
-  grunt.registerTask('default', ['concat', 'sass', 'jade', 'watch']);
-  grunt.registerTask('package', ['concat', 'sass', 'jade', 'compress']);
+  grunt.registerTask('default', ['clean', 'concat', 'sass', 'jade', 'copy', 'watch']);
+  grunt.registerTask('package', ['clean', 'concat', 'sass', 'jade', 'uglify', 'cssmin', 'compress']);
 };

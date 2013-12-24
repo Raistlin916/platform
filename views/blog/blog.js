@@ -58,7 +58,7 @@ angular.module('platform')
       }
       reset();
     },
-    templateUrl : '/partials/blogEdit.html'
+    templateUrl : '/partials/blog.html'
   }
 }).directive('blogViewer', function(){
   return {
