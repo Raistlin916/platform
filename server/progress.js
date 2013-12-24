@@ -15,13 +15,13 @@ db.on('connecting', function() {
 });
 db.on('connected', function() {
   console.log('db connected!');
+  setTrulyRoutes(app);
 });
 db.on('error', function(reason){
   console.log(reason);
 });
 db.once('open', function() {
   console.log('db connection opened!');
-  setTrulyRoutes(app);
 });
 db.on('reconnected', function () {
   console.log('db reconnected!');
@@ -51,7 +51,7 @@ function setTrulyRoutes(app){
 var dbHandler = {
   connect: function(){
     var d = Q.defer();
-    mongoose.connect('mongodb://' + config.dbLocation + ':' + config.dbPort + '/' + config.dbName, {user: config.dbUser, pass: config.dbPw}, function(err){
+    mongoose.connect('mongodb://' + config.dbLocation + ':' + config.dbPort + '/' + config.dbName, {user: config.dbUser, pass: config.dbPw, server: {auto_reconnect:false} }, function(err){
       if(err){
         mongoose.disconnect();
         d.reject(err);

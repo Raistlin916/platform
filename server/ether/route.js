@@ -2,7 +2,7 @@ var path = require('path');
 
 exports.init = function(app, dbHandler){
   app.get('/db', function(req, res){
-    res.sendfile(path.join(__dirname, './index.htm'));
+    res.sendfile(path.join(__dirname, './db.htm'));
   });
   app.post('/startdb', function(req, res){
     dbHandler.connect()
@@ -13,6 +13,6 @@ exports.init = function(app, dbHandler){
     });
   });
   app.get('/*', function(req, res){
-    res.send('db not connected');
+    res.sendfile(path.join(__dirname, './err.htm'));
   });
 }
