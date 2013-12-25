@@ -90,16 +90,16 @@ post {
     list-style-type: none;
     padding: 0;
     .post-bubble-content {
-      padding: 10px;
-      margin-bottom: 4px;
+      margin: 30px 20px;
       .avatar-thumbnail {
         float: left;
       }
       .post-main {
         position: relative;
+        top: -3px;
         background: $bubble-color;
         box-shadow: $bubble-shadow;
-        margin: 3px 0 0 60px;
+        margin-left: 80px;
         border-radius: 3px;
         padding: 10px;
         transition: .8s height ease;
@@ -114,7 +114,7 @@ post {
           }
         }
         .post-content {
-          padding: 10px;
+          padding: 20px;
           font-size: 16px;
           word-break: break-all;
         }

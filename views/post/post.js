@@ -190,7 +190,8 @@ angular.module('platform')
   return {
     restrict: 'C',
     link: function(scope, elem, attr){
-      var postBox = elem.find('.box.post-box');
+      var backSide = elem.find('.flip-back')
+      , $body = $(document.body);
       scope.flip = function(type, model){
         elem.toggleClass('turnover');
         if(type){
@@ -199,21 +200,13 @@ angular.module('platform')
         if(model){
           scope.flipBackModel = model;
         }
-        if(!elem.hasClass('turnover')){
-          postBox.css('display', 'block');
+        if(elem.hasClass('turnover')){
+          backSide.css('top', $body.scrollTop());
         }
       }
       scope.$on('flip', function(e, data){
         data = data || {};
         scope.flip(data.type, data.model);
-      });
-
-      elem.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function(e){
-        if(elem[0] == e.target){
-          if($(e.target).hasClass('turnover')){
-            postBox.css('display', 'none');
-          }
-        }
       });
 
     }

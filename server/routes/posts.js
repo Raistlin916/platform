@@ -39,7 +39,9 @@ function savePost(req, res){
   // todoList 为null的时候必须存成空数组？
   // http://stackoverflow.com/questions/12658152/why-does-mongoose-add-blank-arrays
   // https://github.com/LearnBoost/mongoose/issues/1335  这个不中用
-  newPost.todoList = transTodoList(req.body.todoList);
+  if(body.type == 'todo'){
+    newPost.todoList = transTodoList(req.body.todoList);
+  }
 
   newPost.save(function(err, doc){
     newPost.populate('author', 'email username', function(err, doc){

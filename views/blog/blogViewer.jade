@@ -1,8 +1,8 @@
-a(href="javascript:;", ng-click="emitFlip(true)", ng-if="!total").blog-title {{blog.title}}
+a(href="javascript:;", ng-click="emitFlip(true)", ng-if="!total").blog-title {{getTitle()}}
 
 .box(ng-if="total")
   .box-head
-    .blog-title {{blog.title}}
+    .blog-title {{getTitle()}}
   .box-body.blog-content
     
   .box-foot.clearfix

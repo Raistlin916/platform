@@ -60,7 +60,7 @@ angular.module('platform')
     },
     templateUrl : '/partials/blog.html'
   }
-}).directive('blogViewer', function(){
+}).directive('blogViewer', function($filter){
   return {
     restrict: 'E',
     scope: {blog: '=', total: '@'},
@@ -70,6 +70,13 @@ angular.module('platform')
           elem.find('.blog-content').html(marked(n));
         }
       });
+
+      scope.getTitle = function(){
+        if(scope.blog.title == '' || scope.blog.title == null){
+          return '发表于' + $filter('date')(scope.blog.date, 'yy年MM月dd日 hh时');
+        }
+        return scope.blog.title;
+      }
      
       scope.emitFlip = function(flipBack){
         scope.$emit('flip', flipBack ? {type: 'blogViewer', model: scope.blog} : null);

@@ -56,7 +56,11 @@ h1, h2, h3 {
   margin: 0 auto;
 }
 
-
+.side {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+}
 
 .buffer-bottom, .buffer-bottom1 {
   margin-bottom: 10px;
