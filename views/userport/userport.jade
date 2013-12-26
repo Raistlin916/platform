@@ -9,7 +9,7 @@
         input(type="email", ng-model="email")
     .box-foot
       button.btn.btn-primary(ng-click="ok()") 保存
-      button.btn.btn-default(ng-click="close()") 取消
+      a.cancel(href="javascript:;", ng-click="close()") 取消
   div(ng-switch-when="out")
     button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  

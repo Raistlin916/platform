@@ -221,6 +221,10 @@ input[type="text"].underline {
   transform: translate3d(0,0,0);
 }
 
+a.cancel {
+  margin: 0 20px;
+}
+
 @keyframes pulse {
   0% {
     transform: scale(1) translateY(1px);

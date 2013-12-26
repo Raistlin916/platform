@@ -2,8 +2,8 @@ mixin input-foot(type)
   .pull-right
     button.btn.btn-primary.submit-input(type="button", ng-click="submitPost('#{type}')") 提交
     input.h-submit-input(type="hidden")
-    | 
-    a.close-input(href="javascript:;", ng-click="closeInput()") 返回
+    a.cancel.close-input(href="javascript:;", ng-click="closeInput()") 返回
+
 
 .flip-container
   .flip-back(ng-switch="flipBackType")
@@ -12,7 +12,7 @@ mixin input-foot(type)
   .box.post-box
     .box-head
       .box-control
-        button.btn.btn-default(ng-click="quit()") 退出
+        a.cancel(href="javascript:;", ng-click="quit()") 退出
       h3.group-name {{group.name}}
 
 

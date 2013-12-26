@@ -4,7 +4,8 @@ a(href="javascript:;", ng-click="emitFlip(true)", ng-if="!total").blog-title {{g
   .box-head
     avatar.avatar-thumbnail.pull-left(hash="{{blog.author.emailHash}}")
     .blog-title.blog-complete-title {{getTitle()}}
-  .box-body.blog-content
+  .box-body
+    .blog-content
     
   .box-foot.clearfix
     button.btn.btn-default.pull-right(ng-click="emitFlip(false)") 返回
