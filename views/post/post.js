@@ -7,28 +7,29 @@ angular.module('platform')
         controller: 'Post'
     }
 })
-.controller('Post', function($scope, models, self, util, $q){
+.controller('Post', function($scope, $rootScope, models, self, util, $q){
   // 为了解决翻转和遮罩的冲突
   // 在inputBody中也需要操作flip-util
   $('post').addClass('flip-util');
   
   var Post = models.Post, group;
   $scope.self = self;
-  $scope.$on('load', function(e, data){
+  $scope.$on('joinGroup', function(e, data){
     $scope.group = data.group;
+  });
+
+  $scope.$on('switchGroup', function(e, data){
+    $scope.group = data.group;
+    init();
+    $scope.loadPage();
   });
 
 
   $scope.quit = function(){
-    $scope.$emit('quitGroup');
+    $rootScope.$broadcast('quitGroup');
   }
   
-  var initialData = {micro: null, todoList: [{content: ''}], imageData: null};
-  $scope.resetInputData = function(){
-    $scope.data = angular.copy(initialData);
-  }
-
-  $scope.resetInputData();
+  
 
   function validPost(post){
     var d = $q.defer();
@@ -116,11 +117,21 @@ angular.module('platform')
     $scope.coverOther = false;
   }
 
+  $scope.resetInputData = function(){
+    $scope.data = angular.copy(initialData);
+  }
 
-  $scope.posts = [];
-  $scope.p = -1;
-  $scope.loading = false;
-  $scope.hasMore = true;
+  var initialData = {micro: null, todoList: [{content: ''}], imageData: null}
+  , p;
+  function init(){
+    $scope.posts = [];
+    p = -1;
+    $scope.loading = false;
+    $scope.hasMore = true;
+    $scope.resetInputData();
+  }
+  init();
+
   $scope.loadPage = function(){
     if(!$scope.hasMore){
       return;
@@ -133,7 +144,7 @@ angular.module('platform')
     }, 300);
 
     $scope.loading = true;
-    Post.query({gid: $scope.group._id, p: $scope.p+1}, function(res){
+    Post.query({gid: $scope.group._id, p: p+1}, function(res){
       d2.resolve(res);
     });
 
@@ -145,8 +156,8 @@ angular.module('platform')
       $scope.posts.push.apply($scope.posts, res.data);
       delete res.data;
       $scope.totalPage = Math.ceil(res.total/res.step);
-      $scope.p++;
-      $scope.hasMore = $scope.p+1 < $scope.totalPage;
+      p++;
+      $scope.hasMore = p+1 < $scope.totalPage;
       angular.extend($scope, res);
     });
 

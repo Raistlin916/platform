@@ -73,7 +73,7 @@ angular.module('platform')
 
       scope.getTitle = function(){
         if(scope.blog.title == '' || scope.blog.title == null){
-          return '发表于' + $filter('date')(scope.blog.date, 'yy年MM月dd日 hh时');
+          return '发表于' + $filter('date')(scope.blog.date, 'yy年MM月dd日 HH时');
         }
         return scope.blog.title;
       }

@@ -11,6 +11,7 @@
 @import 'observer/observer';
 @import 'loadingBall/loadingBall';
 @import 'blog/blog';
+@import 'dockMenu/dockMenu';
 @import 'variables';
 // simplify @import('foo/foo') ?
 
@@ -52,9 +53,10 @@ h1, h2, h3 {
 }
 
 .container {
-	padding-top: 20px;
+	padding-top: 10px;
   margin: 0 auto;
 }
+
 
 .side {
   position: fixed;

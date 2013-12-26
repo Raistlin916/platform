@@ -7,7 +7,7 @@ angular.module('platform')
     templateUrl : '/partials/group.html'
   }
 })
-.controller('Group', function($scope, models, self, $timeout, docStore, $rootScope){
+.controller('Group', function($scope, self, $timeout, docStore, $rootScope){
   $scope.state = 'choose-group';
   $scope.self = self;
   $scope.groups = docStore.get('Group');
@@ -25,7 +25,7 @@ angular.module('platform')
   $scope.joinGroup = function(group){
     $scope.state = 'in-group';
     $timeout(function(){
-      $scope.$broadcast('load', {group: group});
+      $rootScope.$broadcast('joinGroup', {group: group});
       $rootScope.$broadcast('groupBgChange', $scope.getBg(group));
     });
   }
@@ -37,7 +37,6 @@ angular.module('platform')
 }).directive('groupBg', function(){
   return {
     restrict: 'C',
-    scope: {},
     link: function(scope, elem, attr){
       scope.$on('groupBgChange', function(e, bg){
         if(bg == null){

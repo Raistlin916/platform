@@ -8,8 +8,8 @@ html(ng-app="platform")
     link(rel="stylesheet", href="/font.css")
     script(src="http://cdn.staticfile.org/prefixfree/1.0.7/prefixfree.min.js")
     script(src="/vendor/dist/md5.js")
-    script(src="http://cdn.staticfile.org/jquery/2.0.3/jquery.min.js")
-    script(src="/vendor/dist/angular.js")
+    script(src="/vendor/dist/jquery.js")
+    script(src="http://cdn.staticfile.org/angular.js/1.2.5/angular.min.js")
     script(src="/vendor/dist/angular-resource.js")
     script(src="/vendor/dist/ng-infinite-scroll.min.js")
     script(src="/platform_app.js")
@@ -17,7 +17,8 @@ html(ng-app="platform")
     link(rel="stylesheet", href="/vendor/dist/editor.css")
     script(src="/vendor/dist/editor.js")
     script(src="/vendor/dist/marked.js")
-  body 
+  body
+    group-dock-menu
     .group-bg(ng-style="bg", ng-class="{'in-group': inGroup}")
     .container
       .col-sm-10.col-sm-push-1
