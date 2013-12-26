@@ -29,6 +29,10 @@ blog-viewer {
   .blog-title {
     @include title-font;
   }
+  .blog-complete-title {
+    margin-left: 70px;
+    word-break: break-all;
+  }
   .box-body.blog-content {
     background: white;
     min-height: 360px;

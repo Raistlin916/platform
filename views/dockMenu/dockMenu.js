@@ -54,12 +54,15 @@ angular.module('platform')
         saveIconsCacheList();
       }
 
-      elem.bind('DOMNodeInserted', function(e){
+      $(window).on("resize", function(event){
         initList();
-      }).bind('mouseleave', function(){
+      });
+      elem.on('DOMNodeInserted', function(e){
+        initList();
+      }).on('mouseleave', function(){
         resetAndGetIcons();
         keepCenter();
-      }).bind('mousemove', function(e){
+      }).on('mousemove', function(e){
         var x = e.clientX, y = e.clientY
         , n = cacheList.length
         , rect = {}, dx, dy, dirt, target, enlarge;

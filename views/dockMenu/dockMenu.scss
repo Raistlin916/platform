@@ -22,7 +22,6 @@ dock-menu, group-dock-menu {
     height: 40px;
     cursor: pointer;
     transform: translate3d(0,0,0);
-
     &:hover .dock-menu-icon-title {
       display: block;
     }
