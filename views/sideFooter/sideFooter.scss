@@ -1,0 +1,29 @@
+@import '../variables';
+side-footer {
+  a {
+    @include side-font;
+    font-size: 13px;
+  }
+  a:hover {
+    color: rgba(255,255,255,.6);
+  }
+  
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  width: 950px;
+  margin-left: -475px;
+  
+
+  ul.sidebar-nav {
+    list-style: none;
+    float: right;
+    width: 215px;
+    margin: 15px 20px 20px;
+  }
+  li.sidebar-nav-item {
+    float: left;
+    text-align: center;
+    margin: 0 5px 0 0;
+  }
+}

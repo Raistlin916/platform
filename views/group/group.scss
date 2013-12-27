@@ -11,8 +11,8 @@ group {
     .group-item {
       margin: 0 10px 10px 0;
       float: left;
-      width: 288px;
-      height: 192px;
+      width: 240px;
+      height: 163px;
       background-color: white;
       background-size: cover;
       cursor: pointer;
@@ -22,6 +22,9 @@ group {
       }
       .group-desc {
         padding: 20px 30px;
+      }
+      &:nth-child(3n+3) {
+        margin-right: 0;
       }
     }
   }

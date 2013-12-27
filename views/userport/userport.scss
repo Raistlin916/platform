@@ -4,26 +4,31 @@ userport {
   .avatar-container {
     float: left;
   }
-  .user-control {
-    font-size: 15px;
-    padding: 5px 0 0 5px;
-    display: inline-block;
-    overflow: hidden;
-    .icon-item {
-      cursor: pointer;
-      margin-bottom: 5px;
-      transition: .5s transform ease;
-    }
-    .icon-item:nth-child(1) {
-      transform: translateX(-25px);
-    }
-    .icon-item:nth-child(2) {
-      transform: translateX(-45px);
-    }
+  .user-side {
+    @include side-font;
   }
-  .outside {
-    .icon-item {
-      transform: translateX(0) !important;
-    }
+  .user-info {
+    padding: 0 5px;
   }
+  .user-side-sp {
+    border-top: 2px solid rgba(255, 255, 255, 0.15);
+  }
+  .user-side-row {
+    padding: 10px;
+  }
+
+  .user-control-item {
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+  i {
+    position: absolute;
+    left: 2px;
+    top: 3px;
+  }
+  .control-item-name {
+    margin-left: 22px;
+  }
+  
 }

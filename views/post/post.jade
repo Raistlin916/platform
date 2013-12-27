@@ -52,15 +52,16 @@ mixin input-foot(type)
               .close(ng-if="mp.author._id == self.info._id", ng-click="deletePost(mp)") &times;
               .date {{mp.date | ago}}
               .username {{mp.author.username}}
-            .post-content(ng-switch="mp.type")
-              .post-content-micro(ng-switch-when="micro") {{mp.content}}
-              .post-content-todo(ng-switch-when="todo")
-                todo-list(data="mp.todoList", pid="mp._id", owner="mp.author._id == self.info._id")
-              .post-content-blog(ng-switch-when="blog")
-                blog-viewer(blog="mp")
-              .post-content-error(ng-switch-default) error
-            .post-img(ng-if="mp.img")
-              img(ng-src="/upload/{{mp.img}}", observer="")
+            .post-content-wrapper
+              .post-content(ng-switch="mp.type")
+                .post-content-micro(ng-switch-when="micro") {{mp.content}}
+                .post-content-todo(ng-switch-when="todo")
+                  todo-list(data="mp.todoList", pid="mp._id", owner="mp.author._id == self.info._id")
+                .post-content-blog(ng-switch-when="blog")
+                  blog-viewer(blog="mp")
+                .post-content-error(ng-switch-default) error
+              .post-img(ng-if="mp.img")
+                img(ng-src="/upload/{{mp.img}}", observer="")
             .post-foot.clearfix
               .pink-heart(ng-click="togglePraise(mp)", title="{{mp.hasPraised ? '取消赞':'赞'}}", ng-class="{'icon-heart': !mp.hasPraised, 'icon-heart-outline': mp.hasPraised}")
               | 

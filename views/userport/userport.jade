@@ -1,15 +1,25 @@
-.clearfix(ng-switch="state")
-  dialog(name="user-setting", controller="changeUserInfo", global="true")
-    .box-head
-      h3 修改资料
-    .row.box-body
-      .col-lg-4
-        avatar(hash="{{emailHash}}")
-      .col-lg-8
-        input(type="email", ng-model="email")
-    .box-foot
+dialog(name="user-setting", controller="changeUserInfo")
+  .box-head
+    h3 修改资料
+  .row.box-body
+    .col-lg-4
+      avatar(hash="{{emailHash}}")
+    .col-lg-8
+      input(type="email", ng-model="email")
+  .box-foot.clearfix
+    .pull-right
       button.btn.btn-primary(ng-click="ok()") 保存
       a.cancel(href="javascript:;", ng-click="close()") 取消
+
+dialog(name="blog")
+  .box-head
+    h3 抱歉
+  .box-body
+    p 该功能正在开发中
+  .box-foot.clearfix
+    a.pull-right.cancel(href="javascript:;", ng-click="close()") 关闭
+
+.clearfix(ng-switch="state")
   div(ng-switch-when="out")
     button.btn.btn-primary(type="button", ng-click="changeState('login')") 登录
     |  
@@ -45,11 +55,22 @@
       |  
       a(href="javascript:;", ng-click="changeState('out')") 取消
   div(ng-switch-when="in")
-    .avatar-container(ng-click="pop = !pop")
-      avatar(hash="{{self.info.emailHash}}")
-    .user-control(ng-class="{outside: pop}")
-      .icon-item.icon-cog(call-dialog="user-setting", title="修改资料")
-      .icon-item.icon-exit(ng-click="logout()", title="退出")
+    .user-side
+      .user-side-row
+        .user-name {{self.info.username}}
+      .user-side-sp
+      .user-side-row
+        .user-control-item(call-dialog="blog") 
+          i.icon-quill
+          span.control-item-name 博客
+        .user-control-item(call-dialog="user-setting") 
+          i.icon-cog
+          span.control-item-name 设置
+      .user-side-sp
+      .user-side-row
+        .user-control-item(ng-click="logout()")
+          i.icon-exit
+          span.control-item-name 退出
 
 
 

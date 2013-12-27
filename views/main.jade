@@ -21,12 +21,14 @@ html(ng-app="platform")
     group-dock-menu
     //- .group-bg(ng-style="bg", ng-class="{'in-group': inGroup}")
     .container
-      .col-sm-10.col-sm-push-1
+      .main
         group
       .side
         userport
         port-list
         admin(ng-if="self.info.admin")
+      side-footer
+        
       
     components
       error-panel
