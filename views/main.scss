@@ -1,7 +1,6 @@
 @import 'post/post';
 @import 'floatPlaceholder/floatPlaceholder';
 @import 'dialog/dialog';
-@import 'errorPanel/errorPanel';
 @import 'group/group';
 @import 'fileUpload/fileUpload';
 @import 'userport/userport';
@@ -55,9 +54,12 @@ h1, h2, h3 {
 
 .container {
 	width: 1000px;
+  padding: 0;
+}
+
+.main-wrapper {
   background: #2C4762;
   background: linear-gradient(to bottom, #2c4762 0,#395976 800px);
-  margin-top: 10px;
   padding: 20px;
   border-radius: 10px;
   min-height: 800px;
@@ -66,6 +68,8 @@ h1, h2, h3 {
 .main {
   float: left;
   width: 740px;
+  position: relative;
+  z-index: 400;
 }
 
 .side {

@@ -13,6 +13,7 @@ mixin input-foot(type)
     .box-head
       .box-control
         a.cancel(href="javascript:;", ng-click="quit()") 退出
+      .group-image(ng-style="wrapBgImgStyle(group.bgPath)")
       h3.group-name {{group.name}}
 
 

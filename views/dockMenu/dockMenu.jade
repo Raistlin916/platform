@@ -1,5 +1,5 @@
 ul.dock-menu-list
   li.dock-menu-item(ng-repeat="group in groups")
     .dock-menu-icon(ng-click="switchGroup(group)")
-      .dock-menu-icon-image(ng-style="getBg(group)")
+      .dock-menu-icon-image(ng-style="wrapBgImgStyle(group.bgPath)")
         .dock-menu-icon-title {{group.name}}

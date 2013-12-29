@@ -8,6 +8,7 @@ angular.module('platform')
     }
 })
 .controller('Post', function($scope, $rootScope, models, self, util, $q){
+  $scope.wrapBgImgStyle = util.wrapBgImgStyle;
   // 为了解决翻转和遮罩的冲突
   // 在inputBody中也需要操作flip-util
   $('post').addClass('flip-util');
@@ -64,7 +65,6 @@ angular.module('platform')
       $('.h-submit-input').click();
     }, function(reason){
       console.log(reason);
-      $scope.$emit('error', {message: reason});
     });
 
     switch (type){
@@ -169,7 +169,7 @@ angular.module('platform')
     confirm('确认删除？') && new models.Post(post).$remove({gid: $scope.group._id, pid: post._id}, function(){
       util.arrayRemove($scope.posts, post);
     }, function(reason){
-      $scope.$emit('error', {message: reason.data});
+      // catch err
     });
   }
 
@@ -193,7 +193,7 @@ angular.module('platform')
       }
       
     }, function(reason){
-      $scope.$emit('error', {message: reason.data});
+      // catch err
     });
   }
 

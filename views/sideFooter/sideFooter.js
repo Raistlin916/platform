@@ -12,7 +12,7 @@ angular.module('platform')
           url: '/report'
         }, {
           title: '关于',
-          url: '/bout'
+          url: '/about'
         }];
     },
     templateUrl : '/partials/sideFooter.html'

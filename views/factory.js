@@ -74,14 +74,23 @@ angular.module('platform')
   angular.extend(ins, methods);
   return ins;
 }).factory('util', function(){
+  function wrapBgImgStyle(url){
+    if(!url || !url.length){
+      return;
+    }
+    return {
+      'background-image': 'url(upload/' + url + ')'
+    }
+  };
   function arrayRemove(array, value) {
     var index = array.indexOf(value);
     if (index >=0)
       array.splice(index, 1);
     return value;
-  }
+  };
   return {
-    arrayRemove: arrayRemove
+    arrayRemove: arrayRemove,
+    wrapBgImgStyle: wrapBgImgStyle
   }
 }).directive('ngEnter', function(){
   return {

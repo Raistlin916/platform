@@ -16,6 +16,17 @@
 
 post {
   display: block;
+
+  .group-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 2px;
+    background-size: cover;
+    float: left;
+  }
+  .group-name {
+    margin-left: 60px;
+  }
   
   &.flip-util {
     perspective: 1500px;
@@ -23,6 +34,7 @@ post {
       transform-style: preserve-3d;
     }
     .post-box {
+      border-radius: 5px 0 5px 5px;
       backface-visibility: hidden;
       z-index: 400;
     }
@@ -43,6 +55,9 @@ post {
     backface-visibility: hidden;
     transform: rotateY(-.5turn);
     z-index: 600;
+    .box {
+      border-radius: 5px 0 5px 5px;
+    }
   }
   
 

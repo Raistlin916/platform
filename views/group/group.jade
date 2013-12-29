@@ -1,6 +1,6 @@
 div(ng-switch="state")
   ul.group-list.clearfix(ng-switch-when="choose-group")
-    li.group-item.box(ng-repeat="group in groups", ng-click="joinGroup(group)", ng-style="getBg(group)")
+    li.group-item.box(ng-repeat="group in groups", ng-click="joinGroup(group)", ng-style="wrapBgImgStyle(group.bgPath)")
       .group-desc(ng-class="{'has-bg': group.bgPath}")
         h3.group-name {{group.name}}
         small {{group.desc}}

@@ -1,16 +1,12 @@
 angular.module('platform')
-.directive('groupDockMenu', function(docStore, $rootScope){
+.directive('groupDockMenu', function(docStore, $rootScope, util){
   return {
     restrict: 'E',
     scope: {},
     link: function(scope, elem, attr){
       scope.groups = docStore.get('Group');
 
-      scope.getBg = function(group){
-        return {
-          'background-image': 'url(/upload/'+group.bgPath+')'
-        }
-      }
+      scope.wrapBgImgStyle = util.wrapBgImgStyle;
 
       scope.$on('joinGroup', function(){
         elem.animate({left: 0}, 800, function(){

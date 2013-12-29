@@ -1,11 +1,12 @@
 !!!
 html(ng-app="platform")
   head
-    title platform
+    title Gankr
     meta(charset="utf-8")
     link(rel="stylesheet", href="/vendor/dist/bootstrap.css")
     link(rel="stylesheet", href="/style.css")
     link(rel="stylesheet", href="/font.css")
+
     script(src="http://cdn.staticfile.org/prefixfree/1.0.7/prefixfree.min.js")
     script(src="/vendor/dist/md5.js")
     script(src="/vendor/dist/jquery.js")
@@ -17,21 +18,23 @@ html(ng-app="platform")
     link(rel="stylesheet", href="/vendor/dist/editor.css")
     script(src="/vendor/dist/editor.js")
     script(src="/vendor/dist/marked.js")
+    link(rel="icon", type="image/png", href="/images/favicon.png")
   body
     group-dock-menu
-    //- .group-bg(ng-style="bg", ng-class="{'in-group': inGroup}")
     .container
-      .main
-        group
-      .side
-        userport
-        port-list
-        admin(ng-if="self.info.admin")
+      .logo
+        a(href="/")
+          img(src="/images/logo.png")
+      .main-wrapper
+        .main
+          group
+        .side
+          userport
+          admin(ng-if="self.info.admin")
       side-footer
         
       
     components
-      error-panel
       loading-ball
       observer
     

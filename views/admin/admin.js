@@ -19,7 +19,7 @@ angular.module('platform')
         that.reset();
         that.close();
       }, function(){
-        $scope.$emit('error', {message: '提交失败'});
+        // catch err
       });
     }
   };
@@ -34,7 +34,7 @@ angular.module('platform')
       , function(){
       $scope.groups.splice(i, 1);
     }, function(){
-      $scope.$emit('error', {message: '删除失败'});
+      // catch err
     });
   };
 

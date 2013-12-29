@@ -33,7 +33,7 @@ angular.module('platform')
           self.verify();
           that.close();
         }, function(){
-          $scope.$emit('error', {message: '修改失败'});
+          // catch err
         });
       });
     }

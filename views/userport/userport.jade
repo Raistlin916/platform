@@ -60,6 +60,9 @@ dialog(name="blog")
         .user-name {{self.info.username}}
       .user-side-sp
       .user-side-row
+        .user-control-item(call-dialog="ground") 
+          i.icon-cog
+          span.control-item-name 广场
         .user-control-item(call-dialog="blog") 
           i.icon-quill
           span.control-item-name 博客
