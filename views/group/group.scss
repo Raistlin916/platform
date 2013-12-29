@@ -8,24 +8,27 @@ group {
   .group-list {
     padding: 0;
     margin: 0;
-    .group-item {
-      margin: 0 10px 10px 0;
-      float: left;
-      width: 240px;
-      height: 163px;
-      background-color: white;
-      background-size: cover;
-      cursor: pointer;
-      .group-desc.has-bg {
-        text-shadow: rgb(51, 51, 51) 1px 1px 1px;
-        color: white;
-      }
-      .group-desc {
-        padding: 20px 30px;
-      }
-      &:nth-child(3n+3) {
-        margin-right: 0;
-      }
+  }
+  .group-item {
+    margin: 0 10px 10px 0;
+    float: left;
+    width: 240px;
+    height: 163px;
+    background-color: white;
+    background-size: cover;
+    cursor: pointer;
+    .group-desc.has-bg {
+      text-shadow: rgb(51, 51, 51) 1px 1px 1px;
+      color: white;
+    }
+    .group-desc {
+      padding: 20px 30px;
+    }
+    &:nth-child(3n+3) {
+      margin-right: 0;
+    }
+    &:nth-child(3) {
+      border-radius: 4px 0 4px 4px;
     }
   }
 }

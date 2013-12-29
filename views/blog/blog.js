@@ -28,24 +28,18 @@ angular.module('platform')
         close();
       }
 
-      var flipContainer = $(".flip-container")
-      , transitionDeferred;
-      flipContainer.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', flipTrans);
+      var transitionDeferred;
 
-      function flipTrans(e){
-        if(flipContainer[0] == e.target){
-          if($(e.target).hasClass('turnover')){
-            transitionDeferred = $q.defer();
-            editor.refresh();
-          } else {
-            transitionDeferred.resolve();
-          }
+      scope.$on('flipTransEnd', function(e, side){
+        if(side == 'down'){
+          transitionDeferred = $q.defer();
+          editor.refresh();
         }
-      }
-
-      scope.$on('$destroy', function(){
-        flipContainer.unbind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', flipTrans);
+        if(side == 'up'){
+          transitionDeferred.resolve();
+        }
       });
+
       var editor = new Editor();
       editor.render();
 

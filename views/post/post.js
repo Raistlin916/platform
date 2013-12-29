@@ -197,12 +197,32 @@ angular.module('platform')
     });
   }
 
-}).directive('flipContainer', function(){
+}).directive('flipContainer', function($rootScope){
   return {
     restrict: 'C',
     link: function(scope, elem, attr){
       var backSide = elem.find('.flip-back')
-      , $body = $(document.body);
+      , $body = $(document.body)
+      , scrollTopBefore;
+
+      elem.bind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', flipTrans);
+      scope.$on('$destroy', function(){
+        elem.unbind('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', flipTrans);
+      });
+
+      function flipTrans(e){
+        var target = $(e.target);
+        if(elem.is(target)){
+          $rootScope.$broadcast('flipTransEnd', target.hasClass('turnover') ? 'down' : 'up');
+        }
+      }
+
+      scope.$on('flipTransEnd', function(e, side){
+        if(side == 'up'){
+          backSide.css('display', 'none');
+        }
+      });
+
       scope.flip = function(type, model){
         elem.toggleClass('turnover');
         if(type){
@@ -212,9 +232,21 @@ angular.module('platform')
           scope.flipBackModel = model;
         }
         if(elem.hasClass('turnover')){
-          backSide.css('top', $body.scrollTop());
+          backSide.css('display', '');
+          scrollTopBefore = $body.scrollTop();
+          backSide.css('top', Math.max(scrollTopBefore - 80, 0));
+        } else {
+          $body.scrollTop(scrollTopBefore);
         }
       }
+
+      // 睡醒之后改改效率
+      $(window).on('scroll', function(){
+        if($body.scrollTop() < scrollTopBefore){
+          backSide.css('top', Math.max($body.scrollTop() - 80, 0));
+        }
+      });
+
       scope.$on('flip', function(e, data){
         data = data || {};
         scope.flip(data.type, data.model);
