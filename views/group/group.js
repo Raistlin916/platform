@@ -7,22 +7,13 @@ angular.module('platform')
     templateUrl : '/partials/group.html'
   }
 })
-.controller('Group', function($scope, self, $timeout, docStore, $rootScope, util){
-  $scope.state = 'choose-group';
-  $scope.self = self;
-  $scope.groups = docStore.get('Group');
-
+.controller('Group', function($scope, $location, docStore, util){
   $scope.wrapBgImgStyle = util.wrapBgImgStyle;
 
+  $scope.groups = docStore.get('Group');
 
   $scope.joinGroup = function(group){
-    $scope.state = 'in-group';
-    $timeout(function(){
-      $rootScope.$broadcast('joinGroup', {group: group});
-    });
+    $location.path('/page/groups/' + group._id + '/posts');
   }
-  $scope.$on('quitGroup', function(){
-    $scope.state = 'choose-group';
-  });
 
 });

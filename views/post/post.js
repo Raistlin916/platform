@@ -7,14 +7,33 @@ angular.module('platform')
         controller: 'Post'
     }
 })
-.controller('Post', function($scope, $rootScope, models, self, util, $q){
+.controller('Post', function($scope, models, self, util, $q, $location, $routeParams, docStore){
   $scope.wrapBgImgStyle = util.wrapBgImgStyle;
   // 为了解决翻转和遮罩的冲突
   // 在inputBody中也需要操作flip-util
   $('post').addClass('flip-util');
-  
-  var Post = models.Post, group;
   $scope.self = self;
+
+  var groups = docStore.get('Group')
+  , Post = models.Post;
+
+  groups.$promise.then(function(docs){
+    var exits = docs.some(function(item){
+      if(item._id == $routeParams.gid){
+        $scope.group = item;
+        return true;
+      }
+    });
+    if(!exits){
+      $location.path('/page/error').search({msg: '参数错误'}).replace();
+      return;
+    }
+    init();
+    $scope.loadPage();
+  });
+
+  
+
   $scope.$on('joinGroup', function(e, data){
     $scope.group = data.group;
   });
@@ -27,11 +46,9 @@ angular.module('platform')
 
 
   $scope.quit = function(){
-    $rootScope.$broadcast('quitGroup');
+    $location.path('/page/ground');
   }
   
-  
-
   function validPost(post){
     var d = $q.defer();
     if(post.content == null){
@@ -85,7 +102,7 @@ angular.module('platform')
     }
     data.type = type;
 
-    d.newPost = new models.Post(data);
+    d.newPost = new Post(data);
     $scope.$emit('addNewPost', d);
   }
 
@@ -130,7 +147,7 @@ angular.module('platform')
     $scope.hasMore = true;
     $scope.resetInputData();
   }
-  init();
+  
 
   $scope.loadPage = function(){
     if(!$scope.hasMore){
@@ -166,7 +183,7 @@ angular.module('platform')
   
 
   $scope.deletePost = function(post){
-    confirm('确认删除？') && new models.Post(post).$remove({gid: $scope.group._id, pid: post._id}, function(){
+    confirm('确认删除？') && new Post(post).$remove({gid: $scope.group._id, pid: post._id}, function(){
       util.arrayRemove($scope.posts, post);
     }, function(reason){
       // catch err

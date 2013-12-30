@@ -1,30 +1,35 @@
 angular.module('platform')
-.directive('groupDockMenu', function(docStore, $rootScope, util){
+.directive('groupDockMenu', function(docStore, util, $location){
   return {
     restrict: 'E',
     scope: {},
     link: function(scope, elem, attr){
       scope.groups = docStore.get('Group');
-
       scope.wrapBgImgStyle = util.wrapBgImgStyle;
+      elem.css('left', -150);
 
-      scope.$on('joinGroup', function(){
-        elem.animate({left: 0}, 800, function(){
-          // 动画过程中滚动页面会失效？？
-          initList();
-        });
-      });
+      function show(){
+        elem.animate({left: 0}, 800);
+      }
 
-      scope.$on('quitGroup', function(){
-        elem.animate({left: -150}, 800, function(){
-          initList();
-        });
-      });
+      function hide(){
+        elem.animate({left: -150}, 800);
+      }
 
-      scope.switchGroup = function(group){
-        $(document.body).animate({scrollTop: 0}, 500);
-        $rootScope.$broadcast('switchGroup', {group: group});
+      function lookOut(path){
+        return path.indexOf('/page/groups')!= -1 && path.indexOf('/posts')!= -1;
+      }
+
+      lookOut($location.path()) && show();
+
+
+      scope.joinGroup = function(group){
+        $location.path('/page/groups/' + group._id + '/posts');
       };
+
+      scope.$on('$locationChangeSuccess', function(e, url){
+        lookOut(url) ? show() : hide();
+      });
 
       var cacheList, icons
       , list = elem.find('.dock-menu-list');
@@ -33,7 +38,7 @@ angular.module('platform')
         return elem.find('.dock-menu-icon').css({width: '', height: '', marginBottom: ''});
       }
 
-      elem.css('left', -150);
+      
 
       function saveIconsCacheList(){
         var parentOffset = elem.offset();

@@ -148,7 +148,7 @@ angular.module('platform')
       return;
     }
     return {
-      'background-image': 'url(upload/' + url + ')'
+      'background-image': 'url(/upload/' + url + ')'
     }
   };
   function arrayRemove(array, value) {

@@ -12,6 +12,7 @@
 @import 'blog/blog';
 @import 'dockMenu/dockMenu';
 @import 'sideFooter/sideFooter';
+@import 'error/error';
 @import 'variables';
 // simplify @import('foo/foo') ?
 
@@ -68,6 +69,10 @@ h1, h2, h3 {
 .main {
   float: left;
   width: 740px;
+  & .box {
+    border-radius: 5px 0 5px 5px;
+    margin-bottom: 20px;
+  }
 }
 
 .side {

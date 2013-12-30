@@ -8,9 +8,11 @@ group {
   .group-list {
     padding: 0;
     margin: 0;
+    list-style: none;
   }
   .group-item {
     margin: 0 10px 10px 0;
+    border-radius: 4px;
     float: left;
     width: 240px;
     height: 163px;

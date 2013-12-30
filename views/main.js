@@ -55,14 +55,24 @@ angular.module('platform', ['ngResource', 'infinite-scroll', 'ngRoute'])
   $httpProvider.interceptors.push('httpLoadingInterceptor');
 
   $locationProvider.html5Mode(true);
-  $routeProvider.
-      when('/ground', {
-        template: '<group/>'
-      }).
-      when('/blogs', {
+  // /page 意味着页面，区分数据接口
+  $routeProvider
+      .when('/', {
         template: '<group/>'
       })
-      .when('/settings', {
+      .when('/page/error', {
+        template: '<error/>'
+      })
+      .when('/page/groups/:gid/posts', {
+        template: '<post/>'
+      })
+      .when('/page/ground', {
+        template: '<group/>'
+      })
+      .when('/page/blogs', {
+        template: '<group/>'
+      })
+      .when('/page/settings', {
         template: '<settings/>'
       });
 });
