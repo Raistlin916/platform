@@ -1,0 +1,11 @@
+.box
+  .box-head
+    h3 修改资料
+  .row.box-body
+    .col-lg-4
+      avatar(hash="{{self.info.emailHash}}")
+    .col-lg-8
+      input(type="email", ng-model="self.info.email")
+  .box-foot.clearfix
+    .pull-right
+      button.btn.btn-primary(ng-click="save()") 保存

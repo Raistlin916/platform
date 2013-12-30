@@ -23,7 +23,7 @@ exports.setRoutes = function(app){
   authenticate.init(app);
 
   require('./modelRoutes').init(app);
-  app.get('/', index);
+  app.get('*', index);
 }
 
 

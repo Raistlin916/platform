@@ -14,7 +14,7 @@
   window.md5 = md5Cache;
 })();
 
-angular.module('platform', ['ngResource', 'infinite-scroll'])
+angular.module('platform', ['ngResource', 'infinite-scroll', 'ngRoute'])
 .factory('httpLoadingInterceptor', function($rootScope, $q, $timeout){
     var reqNoResCount = 0
     , atLeast = 1000, tid, d;
@@ -51,8 +51,20 @@ angular.module('platform', ['ngResource', 'infinite-scroll'])
       }
     }
 })
-.config(function ($httpProvider){
+.config(function ($httpProvider, $routeProvider, $locationProvider){
   $httpProvider.interceptors.push('httpLoadingInterceptor');
+
+  $locationProvider.html5Mode(true);
+  $routeProvider.
+      when('/ground', {
+        template: '<group/>'
+      }).
+      when('/blogs', {
+        template: '<group/>'
+      })
+      .when('/settings', {
+        template: '<settings/>'
+      });
 });
 
 

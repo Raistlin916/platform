@@ -39,18 +39,23 @@ angular.module('platform')
         }
       }
     });
-    var GroupUser = $resource('/groups/:gid/users/:uid', {gid: '@gid', uid: '@uid'}, {
-      query: {
-        method: 'get',
-        isArray: true,
-        url: '/userGroups/:uid'
+
+    var User = $resource('/users/:id', {id: '@_id'}, {
+      save: {
+        method: 'post',
+        transformResponse: function(res){
+          console.log(res);
+          res = JSON.parse(res);
+          res.emailHash = md5(res.email);
+          return res;
+        }
       }
     });
+
     return {
       Post: Post,
-      User: $resource('/users/:id', {id: '@_id'}),
+      User: User,
       Group: $resource('/groups/:id', {id: '@_id'}),
-      GroupUser: GroupUser,
       Praise: $resource('/posts/:pid/praises', {pid:'@pid'}),
       Todo: Todo
     }
@@ -100,12 +105,12 @@ angular.module('platform')
     }
   }
   return FieldTester;
-}).factory('self', function($http, $rootScope){
+}).factory('self', function($http, $rootScope, models){
   var ins = {};
   function verify(){
     var p = $http.get('/verify')
     p.then(function(res){
-      ins.info = res.data;
+      ins.info = new models.User(res.data);
       ins.info.emailHash = md5(res.data.email);
       ins.logging = true;
       $rootScope.self = ins;

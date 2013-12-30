@@ -75,7 +75,12 @@ var UserSchema = new Schema({
 UserSchema.path('email').validate(function (email) {
    var emailRegex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
    return emailRegex.test(email);
-}, 'email validate failed.')
+}, 'email validate failed.');
+
+if (!UserSchema.options.toObject) UserSchema.options.toObject = {};
+UserSchema.options.toObject.transform = function (doc, ret, options) {
+  delete ret.pw;
+}
 
 var OnlineUser = new Schema({
   uid: {

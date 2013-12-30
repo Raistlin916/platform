@@ -68,12 +68,12 @@ function updateUser(req, res){
     var d = Q.defer();
     doc.email = req.body.email;
 
-    doc.save(function(err){
-      err ? d.reject(403) : d.resolve(200);
+    doc.save(function(err, doc){
+      err ? d.reject(403) : d.resolve(doc);
     });
     return d.promise;
-  }).then(function(){
-    res.send(200);
+  }).then(function(doc){
+    res.send(doc.toObject());
   }, function(){
     res.send(500);
   });

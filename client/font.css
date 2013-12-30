@@ -32,7 +32,7 @@
 .icon-lightbulb:before {
 	content: "\e602";
 }
-.icon-back:before {
+.icon-reload:before {
 	content: "\e60e";
 }
 .icon-exit:before {
@@ -67,4 +67,7 @@
 }
 .icon-cancel:before {
 	content: "\e60c";
+}
+.icon-grid:before {
+	content: "\e60f";
 }

@@ -7,6 +7,19 @@ angular.module('platform')
     controller: 'Userport'
   }
 })
+.directive('settings', function(self, models){
+  return {
+    restrict: 'E',
+    scope: {},
+    templateUrl : '/partials/settings.html',
+    link: function(scope, elem, attr){
+      scope.self = self;
+      scope.save = function(){
+        self.info.$save();
+      }
+    }
+  }
+})
 .controller('Userport', function($scope, models, self, $q, FieldTester){
   
   $scope.data = {};
@@ -17,27 +30,7 @@ angular.module('platform')
     $scope.errorMessage = info;
   }
 
-  $scope.changeUserInfo = {
-    init: function(){
-      angular.extend(this, self.info);
-    },
-    ok: function(){
-      var that = this;
-      models.User.get({id: that._id}, function(user) {
-        if(user.email == that.email){
-          that.close();
-          return;
-        }
-        user.email = that.email;
-        user.$save().then(function(){
-          self.verify();
-          that.close();
-        }, function(){
-          // catch err
-        });
-      });
-    }
-  };
+  
 
 
   

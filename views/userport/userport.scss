@@ -15,12 +15,16 @@ userport {
   }
   .user-side-row {
     padding: 10px;
+    list-style: none;
+    margin: 0;
   }
 
   .user-control-item {
     position: relative;
-    cursor: pointer;
     margin-bottom: 5px;
+    a {
+      @include side-font;
+    }
   }
   i {
     position: absolute;
@@ -30,5 +34,10 @@ userport {
   .control-item-name {
     margin-left: 22px;
   }
-  
+
+  .icon-grid {
+    font-size: 28px;
+    margin-top: -5px;
+    margin-left: -6px;
+  }
 }

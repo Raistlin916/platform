@@ -1,23 +1,4 @@
-dialog(name="user-setting", controller="changeUserInfo")
-  .box-head
-    h3 修改资料
-  .row.box-body
-    .col-lg-4
-      avatar(hash="{{emailHash}}")
-    .col-lg-8
-      input(type="email", ng-model="email")
-  .box-foot.clearfix
-    .pull-right
-      button.btn.btn-primary(ng-click="ok()") 保存
-      a.cancel(href="javascript:;", ng-click="close()") 取消
 
-dialog(name="blog")
-  .box-head
-    h3 抱歉
-  .box-body
-    p 该功能正在开发中
-  .box-foot.clearfix
-    a.pull-right.cancel(href="javascript:;", ng-click="close()") 关闭
 
 .clearfix(ng-switch="state")
   div(ng-switch-when="out")
@@ -59,16 +40,19 @@ dialog(name="blog")
       .user-side-row
         .user-name {{self.info.username}}
       .user-side-sp
-      .user-side-row
-        .user-control-item(call-dialog="ground") 
-          i.icon-cog
-          span.control-item-name 广场
-        .user-control-item(call-dialog="blog") 
-          i.icon-quill
-          span.control-item-name 博客
-        .user-control-item(call-dialog="user-setting") 
-          i.icon-cog
-          span.control-item-name 设置
+      ul.user-side-row
+        li.user-control-item
+          a(href="/ground")
+            i.icon-grid
+            span.control-item-name 广场
+        li.user-control-item
+          a(href="/blogs")
+            i.icon-quill
+            span.control-item-name 博客
+        li.user-control-item(call-dialog="user-setting") 
+          a(href="/settings")
+            i.icon-cog
+            span.control-item-name 设置
       .user-side-sp
       .user-side-row
         .user-control-item(ng-click="logout()")

@@ -7,11 +7,12 @@ html(ng-app="platform")
     link(rel="stylesheet", href="/style.css")
     link(rel="stylesheet", href="/font.css")
 
-    script(src="http://cdn.staticfile.org/prefixfree/1.0.7/prefixfree.min.js")
+    script(src="/vendor/dist/prefixfree.js")
     script(src="/vendor/dist/md5.js")
     script(src="/vendor/dist/jquery.js")
-    script(src="http://cdn.staticfile.org/angular.js/1.2.5/angular.min.js")
+    script(src="/vendor/dist/angular.js")
     script(src="/vendor/dist/angular-resource.js")
+    script(src="/vendor/dist/angular-route.js")
     script(src="/vendor/dist/ng-infinite-scroll.min.js")
     script(src="/platform_app.js")
 
@@ -25,7 +26,7 @@ html(ng-app="platform")
         a(href="/")
           img(src="/images/logo.png")
       .main-wrapper
-        .main
+        .main(ng-view)
           group
         .side
           userport
