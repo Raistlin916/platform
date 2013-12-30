@@ -223,7 +223,7 @@ angular.module('platform')
           backSide.css('display', 'none');
         }
         if(side == 'down'){
-
+          positiveSide.css('height', backSide.height() + scrollTopBefore);
         }
       });
 
@@ -240,6 +240,7 @@ angular.module('platform')
           scrollTopBefore = $body.scrollTop();
           backSide.css('top', Math.max(scrollTopBefore - 80, 0));
         } else {
+          positiveSide.css('height', 'auto');
           $body.scrollTop(scrollTopBefore);
         }
       }

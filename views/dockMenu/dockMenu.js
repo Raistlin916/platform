@@ -22,6 +22,7 @@ angular.module('platform')
       });
 
       scope.switchGroup = function(group){
+        $(document.body).animate({scrollTop: 0}, 500);
         $rootScope.$broadcast('switchGroup', {group: group});
       };
 
