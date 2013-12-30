@@ -34,7 +34,6 @@ post {
       transform-style: preserve-3d;
     }
     .post-box {
-      border-radius: 5px 0 5px 5px;
       backface-visibility: hidden;
       z-index: 400;
     }
@@ -54,6 +53,7 @@ post {
     width: 100%;
     backface-visibility: hidden;
     transform: rotateY(-.5turn);
+    transition: .5s top ease;
     z-index: 600;
     .box {
       border-radius: 5px 0 5px 5px;
@@ -64,6 +64,7 @@ post {
 
   .post-box {
     position: relative;
+    border-radius: 5px 0 5px 5px;
   }
 
   .top-input {

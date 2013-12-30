@@ -202,6 +202,7 @@ angular.module('platform')
     restrict: 'C',
     link: function(scope, elem, attr){
       var backSide = elem.find('.flip-back')
+      , positiveSide = elem.find('.flip-positive')
       , $body = $(document.body)
       , scrollTopBefore;
 
@@ -220,6 +221,9 @@ angular.module('platform')
       scope.$on('flipTransEnd', function(e, side){
         if(side == 'up'){
           backSide.css('display', 'none');
+        }
+        if(side == 'down'){
+
         }
       });
 
@@ -240,7 +244,8 @@ angular.module('platform')
         }
       }
 
-      // 睡醒之后改改效率
+      // 有transform 不能用position: fixed...我靠
+      // 这坑太大，填不上。用transition让滚动稍微平滑一点好了。
       $(window).on('scroll', function(){
         if($body.scrollTop() < scrollTopBefore){
           backSide.css('top', Math.max($body.scrollTop() - 80, 0));

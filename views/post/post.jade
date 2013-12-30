@@ -9,7 +9,7 @@ mixin input-foot(type)
   .flip-back(ng-switch="flipBackType")
     blog-edit(ng-switch-when="blogEdit")
     blog-viewer(ng-switch-when="blogViewer", blog="flipBackModel", total="true")
-  .box.post-box
+  .box.post-box.flip-positive
     .box-head
       .box-control
         a.cancel(href="javascript:;", ng-click="quit()") 退出

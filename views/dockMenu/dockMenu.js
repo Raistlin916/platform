@@ -10,6 +10,7 @@ angular.module('platform')
 
       scope.$on('joinGroup', function(){
         elem.animate({left: 0}, 800, function(){
+          // 动画过程中滚动页面会失效？？
           initList();
         });
       });
@@ -34,11 +35,12 @@ angular.module('platform')
       elem.css('left', -150);
 
       function saveIconsCacheList(){
+        var parentOffset = elem.offset();
         cacheList = icons.map(function(){
           var item = $(this), offset = item.offset();
-          return {x: offset.left + item.width()/2, y: offset.top + item.height()/2, w: item.width(), h: item.height()};
+          return {x: offset.left + item.width()/2 - parentOffset.left, y: offset.top + item.height()/2 - parentOffset.top, w: item.width(), h: item.height()};
         });
-      }   
+      }
 
       function keepCenter(){
         list.css('top', (elem.height()- list.height())/2);
