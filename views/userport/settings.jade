@@ -1,11 +1,25 @@
 .box
   .box-head
     h3 修改资料
-  .row.box-body
-    .col-lg-4
+  .box-body
+    .avatar-side
       avatar(hash="{{self.info.emailHash}}")
-    .col-lg-8
-      input(type="email", ng-model="self.info.email")
+    form(name="settingsFrom").main-side
+      fieldset
+        .field-title {{self.info.username}}
+        .float-placeholder
+          i.icon-mail
+          input(type="email", placeholder="邮箱", ng-model="self.info.email", required="")
+          b.tooltip 用于gavatar头像业务
+        .float-placeholder
+          i.icon-newspaper
+          input(type="text", placeholder="个人网站", ng-model="self.info.detail.website")
+        .float-placeholder
+          i.icon-github
+          input(type="text", placeholder="github", ng-model="self.info.detail.github")
+        .float-placeholder
+          i.icon-sina-weibo
+          input(type="text", placeholder="微博", ng-model="self.info.detail.weibo")
+
   .box-foot.clearfix
-    .pull-right
-      button.btn.btn-primary(ng-click="save()") 保存
+    button.pull-right.btn.btn-primary(ng-click="save()") 保存设置

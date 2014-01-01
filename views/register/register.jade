@@ -1,0 +1,36 @@
+.box.flat-box
+  .box-head
+    h3 注册账户
+  form(name="registerForm").box-body
+    fieldset
+      .float-placeholder
+        i.icon-user
+        input(type="text", placeholder="用户名", ng-model="data.username", required="", ng-pattern="/[A-Za-z0-9]{6,12}/")
+        b.tooltip 6到12个字母或数字
+      .float-placeholder
+        i.icon-mail
+        input(type="email", placeholder="邮箱", ng-model="data.email", required="")
+        b.tooltip 用于gavatar头像业务
+      .float-placeholder
+        i.icon-key
+        input(type="password", placeholder="密码", ng-model="data.pw", required="", ng-pattern="/[A-Za-z0-9]{6,12}/")
+        b.tooltip 6到20个字母或数字
+      .float-placeholder
+        i.icon-key
+        input(type="password", placeholder="密码确认")
+        b.tooltip 再次输入密码
+    fieldset
+      .field-title 可选
+      .float-placeholder
+        i.icon-newspaper
+        input(type="text", placeholder="个人网站", ng-model="data.website")
+      .float-placeholder
+        i.icon-github
+        input(type="text", placeholder="github", ng-model="data.github")
+      .float-placeholder
+        i.icon-sina-weibo
+        input(type="text", placeholder="微博", ng-model="data.weibo")
+  .box-foot.clearfix
+    .pull-right
+      button.btn.btn-primary(type="button", ng-click="register()") 注册
+      a(href="/page/ground").cancel 取消

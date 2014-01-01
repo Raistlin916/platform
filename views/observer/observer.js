@@ -42,12 +42,12 @@ angular.module('platform')
 
       });
 
-      scope.close = function close(){
+      function close(){
         scope.opened = false;
         scope.loaded = false;
         clearTimeout(tid);
       }
-
+      scope.close = close;
       close();
     },
     templateUrl: '/partials/observer.html'

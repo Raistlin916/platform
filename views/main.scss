@@ -13,6 +13,7 @@
 @import 'dockMenu/dockMenu';
 @import 'sideFooter/sideFooter';
 @import 'error/error';
+@import 'register/register';
 @import 'variables';
 // simplify @import('foo/foo') ?
 
@@ -60,7 +61,7 @@ h1, h2, h3 {
 
 .main-wrapper {
   background: #2C4762;
-  background: linear-gradient(to bottom, #2c4762 0,#395976 800px);
+  background: linear-gradient(to bottom, rgba(44, 71, 98, 0.69) 0, #395976 800px);
   padding: 20px;
   border-radius: 10px;
   min-height: 800px;
@@ -72,6 +73,9 @@ h1, h2, h3 {
   & .box {
     border-radius: 5px 0 5px 5px;
     margin-bottom: 20px;
+  }
+  & > p {
+    @include broad-font;
   }
 }
 
@@ -170,7 +174,7 @@ input[type="text"], input[type="password"], input[type="email"] {
   color: #555555;
   vertical-align: middle;
   background-color: #ffffff;
-  border: 1px solid #cccccc;
+  border: 2px solid #cccccc;
   border-radius: 2px;
   box-shadow: none;
   outline: none;
@@ -204,13 +208,14 @@ input[type="text"].underline {
   border-radius: 4px;
   overflow: hidden;
   box-shadow:  $box-shadow;
-  input[type="text"], input[type="password"] {
+  input[type="text"], input[type="password"], input[type="email"] {
     height: 40px;
   }
   .btn-default {
     border: 1px solid rgba(0,0,0,.2);
   }
   .box-head {
+    @include title-font;
     background: $box-bg-color;
     overflow: hidden;
     padding: 10px;
@@ -225,13 +230,17 @@ input[type="text"].underline {
     border-bottom: 1px solid rgba(0,0,0,0.1);
     border-top: 1px solid rgba(0,0,0,0.1);
     padding: 10px;
-    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.1);
   }
   .box-foot {
     background: $box-bg-color;
     padding: 10px;
   }
+  &.flat-box {
+    border-radius: 0;
+  }
 }
+
+
 
 .bounce-box {
 	animation: pulse .15s forwards ease-in-out .05s;

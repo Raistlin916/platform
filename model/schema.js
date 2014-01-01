@@ -66,6 +66,11 @@ var UserSchema = new Schema({
       type: String,
       required: true
   },
+  detail: {
+    github: String,
+    weibo: String,
+    website: String
+  },
 	joinDate: Date,
 }, {
   versionKey: false,

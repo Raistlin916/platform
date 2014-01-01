@@ -69,11 +69,17 @@ angular.module('platform', ['ngResource', 'infinite-scroll', 'ngRoute'])
       .when('/page/ground', {
         template: '<group/>'
       })
+      .when('/page/register', {
+        template: '<register/>'
+      })
       .when('/page/blogs', {
-        template: '<group/>'
+        template: '<p>开发中…</p><p><a href="/page/ground">返回广场</a></p>'
       })
       .when('/page/settings', {
         template: '<settings/>'
+      })
+      .otherwise({
+        template: '<p>404.</p><p>you shall not pass.</p>'
       });
 });
 

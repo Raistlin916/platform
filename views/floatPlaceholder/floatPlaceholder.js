@@ -1,4 +1,4 @@
-angular.module('platform').directive('floatPlaceholder', function(){
+angular.module('platform').directive('floatPlaceholder', function($timeout){
   return {
     restrict: 'C',
     scope: {},
@@ -15,23 +15,40 @@ angular.module('platform').directive('floatPlaceholder', function(){
             });
           });
         },
-        post: function(scope, elems) {
+        post: function(scope, elem) {
+          var input = elem.find('input');
+
           scope.showPh = false;
-          scope.blur = false;
-          var input = elems[0].querySelector('input');
+          scope.blur = true;
           if(angular.isUndefined(input)) return;
           function checkContent(){
-            scope.showPh = input.value.length > 0;
+            scope.showPh = input.val().length > 0;
+            if(!$(this).hasClass('ng-invalid')){
+              elem.removeClass('error');
+            }
             scope.$digest();
           }
-          angular.element(input).on('focus blur keyup', checkContent)
+          input.on('focus blur keyup paste', checkContent)
             .on('blur', function(){
               scope.blur = true;
+              if($(this).hasClass('ng-invalid')){
+                elem.addClass('error');
+              }
               scope.$digest();
             }).on('focus', function(){
               scope.blur = false;
               scope.$digest();
             });
+
+          scope.$watch('blur', function(n){
+            elem.toggleClass('blur', n);
+          });
+
+          // 当ngModel改变input的value时怎么监听…
+          $timeout(function(){
+            checkContent();
+          });
+
         }
       }
     },

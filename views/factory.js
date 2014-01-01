@@ -44,10 +44,15 @@ angular.module('platform')
       save: {
         method: 'post',
         transformResponse: function(res){
-          console.log(res);
-          res = JSON.parse(res);
-          res.emailHash = md5(res.email);
-          return res;
+          try {
+            res = JSON.parse(res);
+            res.emailHash = md5(res.email);
+            return res;
+          } catch(e){
+            return res;
+          }
+          
+          
         }
       }
     });

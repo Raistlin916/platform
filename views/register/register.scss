@@ -1,0 +1,92 @@
+@import '../variables';
+register {
+
+  & > .box {
+    width: 400px;
+    margin: 0;
+    color: #666;
+    animation: slide-in .6s forwards ease-out .1s;
+    opacity: 0;
+  }
+
+  
+  
+}
+
+fieldset {
+  .field-title {
+    @include title-font;
+    margin-top: 10px; 
+  }
+  max-width: 400px;
+  padding: 5px 30px 10px;
+  & + fieldset{
+    border-top: 1px solid rgba(0,0,0,.1);
+  }
+  .float-placeholder {
+    position: relative;
+    i {
+      position: absolute;
+      right: 10px;
+      top: 34px;
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.4);
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 28px;
+      right: 0;
+      height: 28px;
+      width: 35px;
+      border-left: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      padding-right: 40px;
+    }
+    .tooltip {
+      position: absolute;
+      z-index: 1;
+      left: -9999px;
+      padding: 2px 8px 3px;
+      font-size: 11px;
+      line-height: 16px;
+      font-weight: 400;
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      opacity: 0;
+      transition: margin 0.3s, opacity 0.3s;
+
+      top: 100%;
+      margin-top: 15px;
+      &:after {
+        position: absolute;
+        content: "";
+        bottom: 100%;
+        right: 16px;
+        border-right: 4px solid transparent;
+        border-bottom: 4px solid rgba(0,0,0,0.9);
+        border-left: 4px solid transparent;
+      }
+    }
+    input:focus + .tooltip {
+      right: 0;
+      left: auto;
+      margin-top: 5px;
+      opacity: 1;
+    }
+  }
+}
+
+
+
+@keyframes slide-in {
+  0% { 
+    margin-left: 0;
+    opacity: 0;
+  }
+  100% { 
+    margin-left: 300px;
+    opacity: 1;
+  }
+}

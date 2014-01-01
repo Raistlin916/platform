@@ -14,11 +14,17 @@ var models = require('../../model/schema')
 , User = models.User;
 
 function saveUser(req, res){
-  if(req.body.pw == null || req.body.username == null){
+  var body = req.body;
+  if(body.pw == null || body.username == null || body.email == null){
     res.send(403, '缺少必要信息');
     return;
   }
-  var newUser = new User(req.body);
+  body.detail = {
+    github: body.github,
+    weibo: body.weibo,
+    website: body.website
+  }
+  var newUser = new User(body);
   newUser.pw = md5(newUser.pw);
   newUser.joinDate = new Date;
   newUser.save(function(err){
@@ -29,6 +35,7 @@ function saveUser(req, res){
     // 注册完后加入在线列表
     authenticate.checkin(newUser._id, res)
     .then(function(){
+      console.log(newUser);
       res.send(newUser);
     }, function(){
       res.send(500);
@@ -62,11 +69,16 @@ function updateUser(req, res){
     return;
   }
 
+  var body = req.body;
+
   Q.fcall(function(){
     return User.findOne({_id: req.params.id}).exec();
   }).then(function(doc){
     var d = Q.defer();
-    doc.email = req.body.email;
+    doc.email = body.email;
+    doc.detail.weibo = body.detail.weibo;
+    doc.detail.github = body.detail.github;
+    doc.detail.website = body.detail.website;
 
     doc.save(function(err, doc){
       err ? d.reject(403) : d.resolve(doc);

@@ -7,7 +7,7 @@ angular.module('platform')
     controller: 'Userport'
   }
 })
-.directive('settings', function(self, models){
+.directive('settings', function(self, models, $location){
   return {
     restrict: 'E',
     scope: {},
@@ -15,30 +15,40 @@ angular.module('platform')
     link: function(scope, elem, attr){
       scope.self = self;
       scope.save = function(){
-        self.info.$save();
+        if(scope.settingsFrom.$dirty){
+          self.info.$save();
+        }
       }
+      scope.$watch('self.logging', function(n){
+        if(n == false){
+          $location.path('/page/ground');
+        }
+      });
+
     }
   }
 })
-.controller('Userport', function($scope, models, self, $q, FieldTester){
+.controller('Userport', function($scope, models, self, $q, FieldTester, $location){
   
+  $scope.self = self;
   $scope.data = {};
-  $scope.state = null;
+  $scope.state = "";
   $scope.errorMessage = null;
+
+  
 
   function error(info){
     $scope.errorMessage = info;
   }
 
-  
-
-
-  
-
   $scope.changeState = function(state){
     $scope.data = {};
     $scope.state = state;
     error(null);
+    if(state == 'register'){
+      $location.path('/page/register');
+      return;
+    }
   }
   $scope.login = function(){
     var data = $scope.data
@@ -74,35 +84,26 @@ angular.module('platform')
   function equal(v1, v2){
     return v1 == v2;
   }
-
-  $scope.register = function(){
-    var data = $scope.data
-    , tester = new FieldTester(data)
-    , d = $q.defer();
-    d.resolve();
-    d.promise.then(function(){
-      return tester.run(['username', 'pw', 'email'], emptyString, '用户名|密码|邮箱:不能为空');
-    }).then(function(){
-      return tester.run(['username', 'pw'], longEnough, '用户名|密码:不能少于6个字符');
-    }).then(function(){
-      return tester.run(['email'], emailFormat, '邮箱格式不正确');
-    }).then(function(){
-      return tester.run('pw pwAgain', equal, '两次输入的密码不相同');
-    }).then(function(){
-      var user = new models.User({username: data.username, pw: data.pw, email: data.email});
-      return user.$save();
-    }).then(function(){
-      self.verify();
-    }, function(e){
-      error(e.message || e.data);
-    });
-  }
   
   $scope.self = self;
-  $scope.$watch('self.logging', function(n, o){
-    if(n != undefined){
-      $scope.state = n? 'in' : 'out';
+
+  function judgeState(){
+    if($location.path() == '/page/register'){
+      $scope.state = 'register';
+      if(self.logging){
+        $location.path('/page/ground');
+      }
+    } else {
+      $scope.state = '';
     }
+    
+  }
+  $scope.$watch('self.logging', function(n){
+    judgeState();
+  });
+
+  $scope.$on('$locationChangeSuccess', function(e, url){
+    judgeState();
   });
 
   self.verify();

@@ -1,17 +1,24 @@
 @import '../variables';
 
 .float-placeholder {
+  color: $hint-font-color;
   label {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 100;
     margin: 2px 0 0 0;
-    color: $hint-font-color;
     animation: float .3s forwards ease;
     transition: .3s color ease;
   }
-  label.blur {
-    color: silver;
+  &.blur {
+    color: rgba(0,0,0,.5);
   }
+  &.error {
+    color: $danger-color;
+    input, input:focus {
+      border-color: $danger-color;
+    }
+  }
+  margin-bottom: 5px;
 }
 
 @keyframes float {
