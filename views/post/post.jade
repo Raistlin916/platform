@@ -47,7 +47,7 @@ mixin input-foot(type)
                    
       ul.post-bubble(infinite-scroll="loadPage()", infinite-scroll-disabled="loading")
         li.post-bubble-content(ng-repeat="mp in posts | orderBy:'-date' ")
-          avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}")
+          avatar.avatar-thumbnail(hash="{{mp.author.emailHash}}", ng-click="openUserInfo(mp.author)")
           .post-main
             .post-head
               .close(ng-if="mp.author._id == self.info._id", ng-click="deletePost(mp)") &times;

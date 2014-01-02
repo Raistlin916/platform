@@ -45,27 +45,3 @@ userport {
     color: $danger-color;
   }
 }
-
-settings {
-  .avatar-side {
-    float: left;
-  }
-  .main-side {
-    margin-left: 100px;
-  }
-
-  .input-row {
-    width: 550px;
-    margin-bottom: 15px;
-    label {
-      float: left;
-      text-align: right;
-      width: 80px;
-      padding-top: 7px;
-      cursor: pointer;
-    }
-    .control {
-      margin-left: 100px;
-    }
-  }
-}

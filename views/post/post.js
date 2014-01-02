@@ -14,6 +14,7 @@ angular.module('platform')
   // 在inputBody中也需要操作flip-util
   $('post').addClass('flip-util');
   $scope.self = self;
+  $scope.loading = true;
 
   var groups = docStore.get('Group')
   , Post = models.Post;
@@ -30,21 +31,13 @@ angular.module('platform')
       return;
     }
     init();
-    $scope.loadPage();
+    $scope.loadPage();  
   });
 
-  
 
-  $scope.$on('joinGroup', function(e, data){
-    $scope.group = data.group;
-  });
-
-  $scope.$on('switchGroup', function(e, data){
-    $scope.group = data.group;
-    init();
-    $scope.loadPage();
-  });
-
+  $scope.openUserInfo = function(user){
+    $location.path('/page/users/'+user._id);
+  }
 
   $scope.quit = function(){
     $location.path('/page/ground');
