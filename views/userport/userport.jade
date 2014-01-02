@@ -18,7 +18,7 @@
       .box-foot
         button.btn.btn-primary(type="button", ng-click="login()") 登录
         |  
-        a(href="javascript:;", ng-click="changeState('')") 取消
+        a.cancel(href="javascript:;", ng-click="changeState('')") 取消
   div(ng-switch-when="true")
     .user-side
       .user-side-row

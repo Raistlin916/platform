@@ -45,3 +45,34 @@ userport {
     color: $danger-color;
   }
 }
+
+
+user-info {
+  .box-head {
+    .base-info {
+      margin-left: 80px;
+      .user-joindate {
+        @include illustrate-font;
+      }
+    }
+    .user-avatar {
+      float: left;
+    }
+  }
+  .info-container {
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+  .info-row {
+    height: 40px;
+    i {
+      float: left;
+      font-size: 24px;
+      width: 30px;
+      height: 30px;
+    }
+    .info-content {
+      margin-left: 35px;
+    }
+  }
+}

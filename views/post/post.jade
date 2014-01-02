@@ -21,7 +21,7 @@ mixin input-foot(type)
     .box-body
       .post-bubble.top-input(ng-class="{editing: coverOther}", ng-if="self.logging")
         .post-bubble-content
-          avatar.avatar-thumbnail(hash="{{self.info.emailHash}}")
+          avatar.avatar-thumbnail(hash="{{self.info.emailHash}}", ng-click="openUserInfo(self.info)")
           input-body.post-main
             .input-body-nav
               .icon.icon-lightbulb(ng-click="openInput()", data-target="micro", title="微博")

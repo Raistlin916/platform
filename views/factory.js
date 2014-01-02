@@ -51,8 +51,18 @@ angular.module('platform')
           } catch(e){
             return res;
           }
-          
-          
+        }
+      },
+      get: {
+        method: 'get',
+        transformResponse: function(res){
+          try {
+            res = JSON.parse(res);
+            res.emailHash = md5(res.email);
+            return res;
+          } catch(e){
+            return res;
+          }
         }
       }
     });

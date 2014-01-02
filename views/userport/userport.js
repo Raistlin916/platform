@@ -2,9 +2,23 @@ angular.module('platform')
 .directive('userport', function(){
   return {
     restrict: 'E',
-    scope: true,
+    scope: {},
     templateUrl : '/partials/userport.html',
     controller: 'Userport'
+  }
+})
+.directive('userInfo', function($routeParams, models, $window){
+  return {
+    restrict: 'E',
+    scope: {},
+    templateUrl: '/partials/userInfo.html',
+    controller: function($scope){
+      var uid = $routeParams.uid;
+      $scope.user = models.User.get({id: uid});
+      $scope.back = function(){
+        $window.history.back();
+      }
+    }
   }
 })
 .directive('settings', function(self, models, $location){

@@ -78,9 +78,22 @@ angular.module('platform', ['ngResource', 'infinite-scroll', 'ngRoute'])
       .when('/page/settings', {
         template: '<settings/>'
       })
+      .when('/page/users/:uid', {
+        template: '<user-info/>'
+      })
       .otherwise({
         template: '<p>404.</p><p>you shall not pass.</p>'
       });
+})
+.run(function($rootScope){
+  var scrollTopCache = {}
+  , $body = $(document.body);
+  $rootScope.$on('$locationChangeStart', function(e, newUrl, oldUrl){
+    scrollTopCache[oldUrl] = $body.scrollTop();
+  });
+  $rootScope.$on('$locationChangeSuccess', function(e, newUrl, oldUrl){
+    $(document.body).scrollTop(scrollTopCache[newUrl] || 0);
+  });
 });
 
 
