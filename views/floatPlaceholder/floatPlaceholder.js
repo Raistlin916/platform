@@ -15,7 +15,7 @@ angular.module('platform').directive('floatPlaceholder', function($timeout){
             });
           });
         },
-        post: function(scope, elem) {
+        post: function(scope, elem, attrs) {
           var input = elem.find('input');
 
           scope.showPh = false;
@@ -23,6 +23,7 @@ angular.module('platform').directive('floatPlaceholder', function($timeout){
           if(angular.isUndefined(input)) return;
           function checkContent(){
             scope.showPh = input.val().length > 0;
+
             if(!$(this).hasClass('ng-invalid')){
               elem.removeClass('error');
             }
@@ -48,7 +49,6 @@ angular.module('platform').directive('floatPlaceholder', function($timeout){
           $timeout(function(){
             checkContent();
           });
-
         }
       }
     },

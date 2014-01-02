@@ -8,6 +8,7 @@ angular.module('platform')
     }
 })
 .controller('Post', function($scope, models, self, util, $q, $location, $routeParams, docStore){
+  $(document.body).animate({scrollTop: 0}, 300);
   $scope.wrapBgImgStyle = util.wrapBgImgStyle;
   // 为了解决翻转和遮罩的冲突
   // 在inputBody中也需要操作flip-util

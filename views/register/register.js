@@ -1,5 +1,5 @@
 angular.module('platform')
-.directive('register', function($q, self, models){
+.directive('register', function($q, self, models, $timeout){
   return {
     restrict: 'E',
     scope: {},
@@ -22,6 +22,13 @@ angular.module('platform')
           console.log(reason);
         });
       }
+
+      scope.$watch(function(){
+        return scope.data.pw == scope.data.repw;
+      }, function(n){
+        var repw = scope.registerForm.repw;
+        repw && repw.$setValidity('sameAsPw', n);
+      });
 
     },
     templateUrl : '/partials/register.html'

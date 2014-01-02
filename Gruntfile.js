@@ -4,7 +4,11 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     concat: {
        options: {
-        separator: '\n;'
+        separator: '\n;',
+        banner: '/*** \n'
+        +'  <%= pkg.name %> - v<%= pkg.version %> - code by <%= pkg.author%> \n'
+        +'  package at <%= grunt.template.today("yyyy-mm-dd") %> \n'
+        +'***/\n'
       },
       dist: {
         src: ['views/main.js', 'views/**/*.js'],
